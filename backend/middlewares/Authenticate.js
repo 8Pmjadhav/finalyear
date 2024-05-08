@@ -1,28 +1,31 @@
 import jwt from "jsonwebtoken"
-import { User } from "../models/user.model.js";
+import prisma from "../DB/db.config.js";
 
-export const verifyJWT = async(req, res, next) => {
+export const verifyJWT = async (req, res, next) => {
     try {
-        const token = req.cookies?.accessToken || req.header("Authorization")?.replace("Bearer ", "")
-        
-        // console.log(token);
-        if (!token) {
-            return res.status(401).json({status:401,msg:'unauthorized user'})
+        const token = req?.cookies?.accessToken || req?.header("Authorization")?.replace("Bearer ", "")
+
+        if (!token) {    
+            return res.status(404).json({ status: 404, msg: 'token not found' })
         }
-    
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-    
-        const user = await User.findById(decodedToken?._id).select("-password -refreshToken")
-    
-        if (!user) {
-            
-            throw new ApiError(401, "Invalid Access Token")
+        if (!decodedToken.id) {
+            return res.status(401).json({ status: 401, msg: 'unauthorized user' })
         }
-    
+        const user = await prisma.user.findUnique({
+            where: {
+                id: decodedToken.id
+            },
+        })
+
+        if (!user) {
+            return res.status(401).json({ status: 401, msg: error?.message || "Invalid access token" })
+        }
+        user.password = undefined; user.refreshToken = undefined;
         req.user = user;
-        next()
+        req.user.accessToken = token;
+        next();
     } catch (error) {
-        throw new ApiError(401, error?.message || "Invalid access token")
+        return res.status(401).json({ status: 401, msg: {err:error?.message,means:"there is no user logged in"} || "Invalid access token" })
     }
-    
 }

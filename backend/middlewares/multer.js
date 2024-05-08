@@ -5,8 +5,9 @@ const storage = multer.diskStorage({
       cb(null, "./public/temp")
     },
     filename: function (req, file, cb) {
-      
-      cb(null, file.originalname)
+      console.log(req.user,file.mimetype);
+      const ext = file.mimetype.split('/');
+      cb(null, req.user.username + "_avatar_."+ ext[1]);
     }
   })
   

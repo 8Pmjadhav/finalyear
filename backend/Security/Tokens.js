@@ -1,6 +1,7 @@
 import jwt from 'jsonwebtoken';
 
 export  function GenerateACCESSToken (user){
+    console.log(user);
     return jwt.sign(
         {
             id:user.id,

@@ -14,35 +14,39 @@ datasource db {
 }
 
 model User {
-  id              Int       @id @default(autoincrement())
-  username        String    @unique @db.VarChar(199)
-  email           String    @unique @db.VarChar(199)
-  password        String    @db.VarChar(199)
-  profileImage    String?   @db.VarChar(255)
-  backgroundImage String?   @db.VarChar(255)
-  description     String?
-  refreshToken    String?   @db.VarChar(255)
-  created_At      DateTime  @default(now())
-  updated         DateTime  @default(now())
-  post            Post[]
-  comment         Comment[]
-  likes           Likes[]
+  id           Int      @id @default(autoincrement())
+  username     String   @unique @db.VarChar(199)
+  email        String   @unique @db.VarChar(199)
+  password     String   @db.VarChar(199)
+  avatar_id    String?  @db.VarChar(199)
+  avatar       String?  @db.VarChar(255)
+  backcover_id String?  @db.VarChar(199)
+  backcover    String?  @db.VarChar(255)
+  description  String?
+  refreshToken String?  @db.VarChar(255)
+  created_At   DateTime @default(now())
+  updated_At   DateTime @default(now())
+  post         Post[]
+  reply        Reply[]
+  likes        Likes[]
 }
 
 model Post {
-  id         Int       @id @default(autoincrement())
+  id         Int      @id @default(autoincrement())
   user_id    Int
-  user       User      @relation(fields: [user_id], references: [id])
-  image      String?   @db.VarChar(255)
-  video      String?   @db.VarChar(255)
-  content    String?   @db.VarChar(555)
-  comment    Comment[]
+  user       User     @relation(fields: [user_id], references: [id])
+  image_id   String?  @db.VarChar(199)
+  image      String?  @db.VarChar(255)
+  video_id   String?  @db.VarChar(199)
+  video      String?  @db.VarChar(255)
+  content    String?  @db.VarChar(555)
+  reply      Reply[]
   likes      Likes[]
-  created_At DateTime  @default(now())
-  updated    DateTime  @default(now())
+  created_At DateTime @default(now())
+  updated_At DateTime @default(now())
 }
 
-model Comment {
+model Reply {
   id         Int      @id @default(autoincrement())
   user_id    Int
   user       User     @relation(fields: [user_id], references: [id])
@@ -50,7 +54,7 @@ model Comment {
   post       Post     @relation(fields: [post_id], references: [id])
   content    String?
   created_At DateTime @default(now())
-  updated    DateTime @default(now())
+  updated_At DateTime @default(now())
 }
 
 model Likes {
@@ -60,5 +64,5 @@ model Likes {
   post_id    Int
   post       Post     @relation(fields: [post_id], references: [id])
   created_At DateTime @default(now())
-  updated    DateTime @default(now())
+  updated_At DateTime @default(now())
 }

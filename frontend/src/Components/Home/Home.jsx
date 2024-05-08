@@ -1,5 +1,50 @@
-export default function HeroSection8() {
+import React,{useState,useEffect} from 'react';
+import Loader from '../Loader.jsx';
+import Sidebar from './Sidebar.jsx';
+
+
+import axios from 'axios';
+import { selectAccessToken } from '../../store/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import { Outlet } from 'react-router-dom';
+
+
+export default function Home() {
   
+  const accessToken = useSelector(selectAccessToken);
+  const dispatch = useDispatch();
+
+  const [email,setEmail] = useState('');
+  const [password,setPassword] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState();
+
+  useEffect(() => {
+    setLoading(false); // Set loading to false once authentication state is resolved
+  }, [accessToken]);
+
+  if (loading) {
+    return (
+      <Loader/>
+    ); // Render nothing while loading
+  }
+
+  
+
+  if(accessToken){
+    return (
+      <div className="flex">
+      {/* Sidebar component */}
+      <Sidebar/>
+      {/* Main content */}
+      <div className="flex-1">
+        <h1 className="text-2xl font-bold">Main Content</h1>
+        <Outlet/>
+      </div>
+    </div>
+    )
+  }
+  else{
     return (
       <div className="relative bg-[#466969]">
         <nav className=" relative  flex justify-between z-10 items-center px-5 py-5 w-full ">
@@ -179,5 +224,7 @@ export default function HeroSection8() {
         </div>
       </div>
     )
+  }
+    
   }                
   

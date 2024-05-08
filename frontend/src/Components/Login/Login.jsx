@@ -1,31 +1,73 @@
-import React,{useState} from 'react';
-import { Link } from 'react-router-dom';
+import React,{useState,useEffect} from 'react';
+import { Link, Navigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import encryptData from '../Security/Encryption';
 import axios from 'axios';
+import { selectAccessToken } from '../../store/authSlice';
+import { useDispatch, useSelector } from 'react-redux';
+import Loader from '../Loader.jsx';
+import { isAuthenticated } from '../../hooks/user.js';
 
-export default function Login() {
+export default  function Login() {
+
+  const accessToken = useSelector(selectAccessToken);
+  const dispatch = useDispatch();
 
   const [email,setEmail] = useState('');
   const [password,setPassword] = useState('');
+  const [loading, setLoading] = useState(true);
+  const [errors, setErrors] = useState();
+
+  useEffect(() => {
+    setLoading(false); // Set loading to false once authentication state is resolved
+  }, [accessToken]);
   
+  if(errors){
+    setTimeout(() => {
+      setErrors(null); // Clear the error after 2 seconds
+    }, 3000);
+  }
+
   async function login(e){
     e.preventDefault();
     try {
-      const encryptedData = encryptData({  email, password });
-      await axios.post('/api/user/login', { encryptedData })
-      .then((res)=> console.log(res));
+      await axios.post('/api/user/login', {  email, password })
+      .then(async (res)=> {
+        console.log(res);
+        if(res.status === 200){
+          await isAuthenticated(dispatch);
+          return
+        }
+      }
+      );
       // Handle success
     } catch (error) {
-      console.log(error);
+      const error1 = error.response.data.error;
+      setErrors(error1);
       // Handle error
     }
+    
   }
 
-  return (
+
+  if (loading) {
+    return (
+      <Loader/>
+    ); // Render nothing while loading
+  }
+
+  if(accessToken){
+    return <Navigate to={'/'}/>;
+  }
+  else{
+    return (
     <section>
       <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
+        {errors && ( // Conditionally render error alert
+              <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
+                { errors.email || errors.password || errors.msg}
+              </div>
+            )}
           <div className="mb-2 flex justify-center">
             <svg
               width="50"
@@ -105,5 +147,5 @@ export default function Login() {
         </div>
       </div>
     </section>
-  )
+  )}
 }
