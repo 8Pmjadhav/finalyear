@@ -5,6 +5,9 @@ import { useSelector } from 'react-redux';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
+import {  PasswordInput } from './comps/PasswordInput.jsx';
+import { Danger,Success } from './comps/Alerts.jsx';
+
 
 export default function SignUp() {
   const accessToken = useSelector(selectAccessToken);
@@ -16,6 +19,7 @@ export default function SignUp() {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState();
   const [userCreated,setUserCreated] = useState(false);
+  
 
 
   useEffect(() => {
@@ -64,12 +68,8 @@ export default function SignUp() {
         <div className="flex items-center justify-center px-4 py-10 sm:px-6 sm:py-16 lg:px-8 lg:py-24">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             {(errors || userCreated)  ? ( // Conditionally render error alert
-              errors ? (<div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                {errors}
-              </div>):(
-                <div className="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400" role="alert">
-                <span className="font-medium">Success </span> Account Created successfully , Login Now
-              </div>
+              errors ? <Danger errors={errors}/>:(
+                <Success />
               )
             ):(
 
@@ -140,24 +140,9 @@ export default function SignUp() {
                   </div>
                 </div>
 
-                <div>
-                  <div className="flex items-center justify-between">
-                    <label htmlFor="password" className="text-base font-medium text-gray-900">
-                      {' '}
-                      Password{' '}
-                    </label>
-                  </div>
-                  <div className="mt-2">
-                    <input
-                      required
-                      className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-400 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
-                      type="password"
-                      placeholder="Password"
-                      id="password"
-                      onChange={(e) => setPassword(e.target.value)}
-                      value={password}
-                    ></input>
-                  </div>
+                <div> 
+                    <PasswordInput password={password} setPassword={setPassword}/>
+          
 
                   <br />
                   <div className="flex items-center justify-between">

@@ -30,7 +30,7 @@ export async function generateACCESSandREFRESHtokens(userId) {
                 refreshToken: refreshToken
             }
         });
-        // console.log({accessToken,refreshToken});       
+        //  console.log("gat",{accessToken,refreshToken});       
         return { accessToken, refreshToken };           
     }
     catch (error) {
@@ -99,7 +99,7 @@ export async function register(req, res) {
             }
         })
         await default_images(newUser.id,newUser.username.charAt(0));
-        console.log(newUser);
+        // console.log(newUser);
         return res.json({ status: 200, msg: "User created : ", user: newUser });
 
 
@@ -136,7 +136,6 @@ export async function login(req, res) {
                 })
             }
             const { accessToken, refreshToken } = await generateACCESSandREFRESHtokens(finduser.id);
-            // console.log(accessToken, refreshToken);
 
             return res
                 .status(200)
@@ -193,44 +192,48 @@ export async function refreshAccessToken(req,res) {
     if(!incomingRefreshToken){
         return res.status(401).json({status:401,msg:"unauthorized request!, you dont have refreshToken"});
     }
-
+    // console.log(incomingRefreshToken);
     try{
         const decodedToken = jwt.verify(
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         )
-
+        // console.log(decodedToken);
         const user = await prisma.user.findUnique({
             where:{
                 id:decodedToken?.id
             }
         });
-
+        // console.log(user.id);
         if(!user){
             return res.status(401).json({status:401,msg:"Invalid refreshToken"});
         }
-
+        //console.log({incomingRefreshToken, refreshToken:user.refreshToken});
         if (incomingRefreshToken !== user?.refreshToken) {
-            return res.status(401).json({status:401,msg:"Refresh token is expired or used"});
+            return res.status(401).json({status:401,msg:"Refresh token is expired or inValid"});
             
         }
 
-        const {accessToken,newrefreshToken} = await generateACCESSandREFRESHtokens(user.id);
+        const tokens = await generateACCESSandREFRESHtokens(user.id);
+        accessToken = tokens.accessToken;
+        const newrefreshToken = tokens.refreshToken;
+         console.log({accessToken,newrefreshToken});
 
         return res
             .status(200)
-            .cookie("accessToken",accessToken,options)
-            .cookie("refreshToken",newrefreshToken,options)
+            .cookie("accessToken",accessToken,{httpOnly:true,secure:true,maxAge:60*60*24*1000})
+            .cookie("refreshToken",newrefreshToken,{httpOnly:true,secure:true,maxAge:60*60*24*1000*10})
             .json({
                 status:200,
                 data:{
+                    username:user.username,
                     accessToken,
                     refreshToken:newrefreshToken
                 },
                 msg:"Access token refreshed"
             })
     }
-    catch(error){
-        return res.status(401).json({status:401,err : error?.message + " that is Refresh token is expired or used"});
+    catch(err){
+        return res.status(401).json({status:401,error : err?.message + " that is Refresh token is expired or used"});
     }
 } 

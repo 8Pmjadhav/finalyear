@@ -9,6 +9,7 @@ export const verifyJWT = async (req, res, next) => {
             return res.status(404).json({ status: 404, msg: 'token not found' })
         }
         const decodedToken = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+        console.log('At verifyJWT : ',decodedToken);
         if (!decodedToken.id) {
             return res.status(401).json({ status: 401, msg: 'unauthorized user' })
         }

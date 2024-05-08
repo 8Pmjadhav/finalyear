@@ -12,12 +12,9 @@ import { Outlet } from 'react-router-dom';
 export default function Home() {
   
   const accessToken = useSelector(selectAccessToken);
-  const dispatch = useDispatch();
+  // console.log(accessToken);
 
-  const [email,setEmail] = useState('');
-  const [password,setPassword] = useState('');
   const [loading, setLoading] = useState(true);
-  const [errors, setErrors] = useState();
 
   useEffect(() => {
     setLoading(false); // Set loading to false once authentication state is resolved

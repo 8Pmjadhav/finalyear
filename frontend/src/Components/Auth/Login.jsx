@@ -2,7 +2,7 @@ import React,{useState,useEffect} from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
 import axios from 'axios';
-import { selectAccessToken } from '../../store/authSlice';
+import { selectAccessToken } from '../../store/authSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../Loader.jsx';
 import { isAuthenticated } from '../../hooks/user.js';
@@ -32,8 +32,11 @@ export default  function Login() {
     try {
       await axios.post('/api/user/login', {  email, password })
       .then(async (res)=> {
-        console.log(res);
-        if(res.status === 200){
+        //console.log(res);
+        localStorage.setItem('accessToken', res.data.accessToken);
+        localStorage.setItem('refreshToken', res.data.refreshToken);
+        if(res.request.status === 200){
+          console.log(res);
           await isAuthenticated(dispatch);
           return
         }
