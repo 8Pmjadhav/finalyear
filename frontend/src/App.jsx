@@ -12,9 +12,9 @@ import Loader from "./Components/Loader.jsx";
 
 
 export default function App() {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const dispatch = useDispatch();
-
+  // console.log("Don't take following errors seriously");
   const accessToken = useSelector(selectAccessToken);
 
 
@@ -32,19 +32,21 @@ export default function App() {
   
   },[dispatch]);
 
-  //setLoading(false);
-  return !loading ? (
-    <div className='min-h-screen flex flex-wrap content-between bg-slate-500'>
-      <div className='w-full block'>
+  
+  
+  return loading ? (
+    <Loader />
+  ): (
+    <div className='min-h-screen flex flex-wrap content-between' style={{backgroundColor: 'gray',
+      backgroundImage: 'url(/background/batthern.png)'}}>
+      <div className={`w-full ${!accessToken && 'flex flex-col justify-center items-center'}`}>
         <Header />
-        <main>
+        <main >
          <Outlet />
         </main>
         <Footer />
       </div>
     </div>
-  ) : (
-    <Loader/>
-  )
+  )  
 }
 

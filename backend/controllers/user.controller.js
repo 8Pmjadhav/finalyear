@@ -84,7 +84,7 @@ export async function register(req, res) {
                 errorMsg += 'email is already taken ';
             }
             console.log('already');
-            return res.status(400).json({ status: 400, errors: errorMsg });
+            return res.status(400).json({ status: 400, msg: errorMsg });
         }
 
         const salt = bcryptjs.genSaltSync(10);
@@ -107,7 +107,7 @@ export async function register(req, res) {
     catch (error) {
         if (error instanceof errors.E_VALIDATION_ERROR) {
             console.log(error.messages)
-            return res.json({ error: error.messages })
+            return res.status(400).json({ error: error.messages })
         }
         else {
             return res.status(500).json({ status: 500, msg: "something went wrong on server side" })
@@ -130,9 +130,8 @@ export async function login(req, res) {
         if (finduser) {
             if (!bcryptjs.compareSync(payload.password, finduser.password)) {
                 return res.status(400).json({
-                    errors: {
-                        password: "incorrect password"
-                    }
+                    status: 400,
+                    msg: 'Incorrect password    !!'
                 })
             }
             const { accessToken, refreshToken } = await generateACCESSandREFRESHtokens(finduser.id);

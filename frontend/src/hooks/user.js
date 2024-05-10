@@ -2,9 +2,6 @@ import axios from "axios";
 import { clearAccessToken, setAccessToken } from "../store/authSlice";
 
 
-
-
-  
 export async function isAuthenticated(dispatch) {
     try {
         const accessToken = localStorage.getItem("accessToken");
@@ -16,6 +13,7 @@ export async function isAuthenticated(dispatch) {
                 .then((response) =>{
                     console.log(response.data);
                     if(response.status === 200){
+                        dispatch(setAccessToken({ accessToken:response.data, username:response.data }));
                         localStorage.setItem('refreshToken',response.data.refreshToken);
                         localStorage.setItem('accessToken',response.data.accessToken);
                     }
@@ -35,13 +33,7 @@ export async function isAuthenticated(dispatch) {
                 if (res.status === 200 && res.data.accessToken) {
                     const { accessToken, username } = res.data;
                     dispatch(setAccessToken({ accessToken, username }));
-                } else {
-                    console.log(res);
-                    dispatch(clearAccessToken());
-                }
-                if(res.status === 401){
-                    console.log('error ** 500');
-                }
+                } 
             }).catch(function (error) {
                 //console.log(error.response)
                 if(error.response && error.response.status === 401) console.log("Unauthorized")
@@ -49,7 +41,7 @@ export async function isAuthenticated(dispatch) {
                 // console.log(error.request.response);
                 dispatch(clearAccessToken());
             }) .finally(() => {
-                console.log('finally');
+                // console.log('finally');
             });
     } catch (err) {
         console.error("Error while checking isAuthenticated:", err);
