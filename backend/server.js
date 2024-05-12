@@ -23,7 +23,7 @@ app.use(router);
 import routes from './routes/index.js';
 app.use('/api',routes);
 
-app.get('/',(req,res)=>{
+app.get('/api/status',(req,res)=>{
     return res.json({msg:"Connection successful"})
 })
 

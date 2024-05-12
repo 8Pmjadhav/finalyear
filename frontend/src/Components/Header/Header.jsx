@@ -2,55 +2,67 @@
 
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAccessToken ,selectUsername} from '../../store/authSlice';
-import { BarChart, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench,Contact } from 'lucide-react'
+import { BarChart, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench,Contact, Moon,SunMedium } from 'lucide-react'
 
-import React, { useEffect } from 'react';
+import React, { useEffect,useState } from 'react';
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
 import { logout } from '../../hooks/user';
 
 
 export default function Header() {
-  const [isMenuOpen, setIsMenuOpen] = React.useState(false)
-  const {accessToken} = useSelector(selectAccessToken);
-  const {username} = useSelector(selectUsername);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  const accessToken = useSelector(selectAccessToken);
+  const user = useSelector(selectUsername);
 
   const dispatch = useDispatch();
 
-  useEffect(()=>{},[]);
+  useEffect(() => {
 
+    if (isDarkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [isDarkMode]);
   //console.log(accessToken);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
   return (
-    <div className=" w-full bg-white fixed top-0 left-0 right-0 z-50 ">
+    <div className=" w-full bg-white dark:bg-black fixed top-0 left-0 right-0 z-50 ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img
             className='h-10'
             src='/icons/pj-tweets-high-resolution-logo-transparent.png' />
+            
         </div>
-
+        <button className='sm:ml-52'
+          onClick={()=>{
+            setIsDarkMode(prev => !prev);
+          }}
+        >{isDarkMode ? <SunMedium className="h-8 w-8" color='white'/>:<Moon className="h-8 w-8" /> }</button>
         {accessToken ? (<>
         
           <div className="lg:hidden">
-            <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer" />
+            <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer dark:text-white" />
           </div>
           {isMenuOpen && (
             <div className="w-60 absolute inset-x-0 top-0 z-50 origin-top-right transform p-2 transition lg:hidden">
-              <div className="divide-y-2 divide-gray-50 rounded-lg bg-white shadow-lg ring-1 ring-black ring-opacity-5">
+              <div className="divide-y-2 divide-gray-50 rounded-lg bg-white dark:bg-black shadow-lg ring-1 ring-black ring-opacity-5">
                 <div className="px-5 pb-6 pt-5">
                   <div className="flex items-center justify-between">
                     <div className="inline-flex items-center space-x-2">
-                      <Link to={`/profile/${username}`}>
+                      <Link to={`/profile/${user.username}`}>
                         <img
                           className="inline-block h-10 w-10 rounded-full"
                           src="https://res.cloudinary.com/dooomcx1j/image/upload/v1714796653/avatar/ui9tdfqg7s4lbaotgfu1.jpg"
                           alt="Dan_Abromov"
                         />
-                        <span className="font-bold">  DevUI</span>
+                        <span className="font-bold dark:text-white"> {user.username}</span>
                       </Link>
 
                     </div>
@@ -70,9 +82,9 @@ export default function Header() {
                     <div className="mt-6 flex flex-1 flex-col justify-between">
                       <nav className="-mx-3 space-y-6 ">
                         <div className="space-y-3 ">
-                          <label className="px-3 text-xs font-semibold uppercase text-gray-900">Posts</label>
+                          <label className="px-3 text-xs font-semibold uppercase text-gray-900 dark:text-gray-200">Posts</label>
                           <Link
-                            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+                            className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                             to="/following_post"
                           >
                             <BarChart className="h-5 w-5" aria-hidden="true" />
@@ -115,13 +127,13 @@ export default function Header() {
                           <label className="px-3 text-xs font-semibold uppercase text-gray-900">
                             Customization
                           </label>
-                          <a
+                          <Link
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                            href="#"
+                            to="themes"
                           >
                             <Brush className="h-5 w-5" aria-hidden="true" />
                             <span className="mx-2 text-sm font-medium">Themes</span>
-                          </a>
+                          </Link>
                           <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                             href="#"

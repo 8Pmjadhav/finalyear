@@ -64,7 +64,7 @@ export default function SignUp() {
   else {
     return (
       <section className='pt-20'>
-        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border-4 border-solid border-black relative z-10 lg:w-96 bg-blue-400 rounded-md">
+        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border-2 border-solid dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             {(errors || userCreated) ? ( // Conditionally render error alert
               errors ? <Danger errors={errors} /> : (
@@ -74,15 +74,15 @@ export default function SignUp() {
 
               <div>
                 <Icon />
-                <h2 className="text-center text-2xl font-bold leading-tight text-black">
+                <h2 className="text-center text-2xl font-bold leading-tight text-black dark:text-white">
                   Sign up to create account
                 </h2>
-                <p className="mt-2 text-center text-base text-gray-600">
+                <p className="mt-2 text-center text-base text-gray-600 dark:text-gray-200">
                   Already have an account?{' '}
                   <Link
                     to="/login"
                     title=""
-                    className="font-medium text-black transition-all duration-200 hover:underline"
+                    className="font-medium text-black dark:text-white transition-all duration-200 hover:underline"
                   >
                     Sign In
                   </Link>

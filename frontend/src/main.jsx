@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { RouterProvider, createBrowserRouter,useLocation } from 'react-router-dom'
-import { Home, Contact, Login, SignUp, Following_Posts, AllPosts, GetProfile } from './Components/index.js';
+import { Home, Contact, Login, SignUp, Following_Posts, AllPosts, GetProfile,UpdateProfile } from './Components/index.js';
 import './index.css';
 import { Provider } from 'react-redux';
 import store from './store/store.js';
@@ -23,16 +23,20 @@ const router = createBrowserRouter([
             element: <Contact />
           },
           {
-            path: '/following_post',
+            path: 'following_post',
             element: <Following_Posts />
           },
           {
-            path: '/allposts',
+            path: 'allposts',
             element: <AllPosts />
           },
           {
-            path: '/profile/:username',
+            path: 'profile/:username', // Relative path
             element: <GetProfile />,
+          },
+          {
+            path:'profile/:username/update', // Relative path to render UpdateProfile
+            element: <UpdateProfile/>
           }
         ]
       },
@@ -49,6 +53,8 @@ const router = createBrowserRouter([
     ]
   }
 ])
+
+
 
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>

@@ -47,6 +47,7 @@ export async function getCurrentUser(req,res){
                 status: 200,
                 msg: "User Logged In",
                 username:user.username,
+                avatar:user.avatar,
                 accessToken:user.accessToken,
                 refreshToken:user.refreshToken
             }
@@ -138,8 +139,8 @@ export async function login(req, res) {
 
             return res
                 .status(200)
-                .cookie("accessToken", accessToken, {httpOnly:true,secure:true,maxAge:60*60*24*1000})
-                .cookie("refreshToken", refreshToken,{httpOnly:true,secure:true,maxAge:60*60*24*10*1000})
+                .cookie("accessToken", accessToken, {maxAge:60*60*24*1000})
+                .cookie("refreshToken", refreshToken,{maxAge:60*60*24*10*1000})
                 .json(
                     {
                         status: 200,

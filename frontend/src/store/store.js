@@ -1,8 +1,10 @@
 import {configureStore} from '@reduxjs/toolkit';
 import authSlice from './authSlice';
+import serverStatus from './serverStatus';
 const store = configureStore({
     reducer:{
-        auth:authSlice
+        auth:authSlice,
+        serverStatus:serverStatus
     }
 });
 

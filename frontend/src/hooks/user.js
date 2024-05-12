@@ -1,9 +1,26 @@
 import axios from "axios";
 import { clearAccessToken, setAccessToken } from "../store/authSlice";
+import { serverDown,serverUp } from "../store/serverStatus";
 
 
 export async function isAuthenticated(dispatch) {
     try {
+
+        await axios.get('/api/status')
+          .then((res) => {
+            console.log(res);
+            dispatch(serverDown())
+          })
+          .catch((err) => {
+            //console.log(err);
+            if (err.response && err.response.status === 500) {
+              console.error(err.response)
+              dispatch(serverUp());
+              //return
+            }
+          })
+
+        console.log('hi');
         const accessToken = localStorage.getItem("accessToken");
         const refreshToken = localStorage.getItem("refreshToken");
         // console.log(accessToken,'\n',refreshToken);
@@ -22,7 +39,7 @@ export async function isAuthenticated(dispatch) {
                     if(err.response && err.response.status === 401) {
                         console.log("Unauthorized ,",err.response.data);
                     }
-                        else console.log("An error occured")
+                        else console.log("Login againn An error occured")
                 })
         }
         if(!accessToken)    return;
@@ -37,7 +54,7 @@ export async function isAuthenticated(dispatch) {
             }).catch(function (error) {
                 //console.log(error.response)
                 if(error.response && error.response.status === 401) console.log("Unauthorized")
-                    else console.log("An error occured")
+                    else console.log("Login Again An error occured")
                 // console.log(error.request.response);
                 dispatch(clearAccessToken());
             }) .finally(() => {

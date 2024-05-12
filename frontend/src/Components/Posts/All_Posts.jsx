@@ -1,4 +1,7 @@
-import React from 'react'
+import React from 'react';
+import axios from 'axios';
+import FormData from 'form-data';
+
 
 export function ProductOverviewOne() {
   return (
@@ -170,10 +173,41 @@ export function ProductOverviewOne() {
   )
 }
 
-export default function AllPosts (){
-    return (
-        <>
-        <ProductOverviewOne/>
-        <ProductOverviewOne/></>
-    )
+export default function AllPosts() {
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+  
+    const formData = new FormData(event.target);
+    // console.log(formData);
+  
+    try {
+      const response = await axios.put('/api/profile/updateAvatar', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
+        }
+      });
+  
+      if (response.status === 200) {
+        console.log('Image uploaded successfully');
+        // Optionally, update UI or handle success case
+      } else {
+        console.error('Failed to upload image');
+        // Optionally, handle error case
+      }
+    } catch (error) {
+      console.error('Error uploading image:', error);
+      // Optionally, handle error case
+    }
+  };
+  
+  return (
+    <>
+      <ProductOverviewOne />
+      <ProductOverviewOne />
+      <form onSubmit={handleSubmit} encType="multipart/form-data">
+      <input type="file" name="avatar" />
+      <button type="submit">Submit</button>
+    </form>
+    </>
+  )
 }

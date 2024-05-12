@@ -4,7 +4,8 @@ import { createSlice } from '@reduxjs/toolkit';
 
 const initialState = {
   accessToken: false,
-  username: false
+  username: false,
+  avatar:''
 };
 
 export const authSlice = createSlice({
@@ -14,10 +15,12 @@ export const authSlice = createSlice({
     setAccessToken: (state, action) => {
       state.accessToken = action.payload;
       state.username = action.payload;
+      state.avatar = action.payload;
     },
     clearAccessToken: (state) => {
       state.accessToken = null;
       state.username = null;
+      state.avatar = null;
     },
   },
 });

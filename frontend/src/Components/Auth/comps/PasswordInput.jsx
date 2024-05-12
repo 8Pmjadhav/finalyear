@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
+import { Eye,EyeOff } from "lucide-react";
 
 
 export function PasswordInput({ password, setPassword, isLoginPage }) {
@@ -12,12 +13,12 @@ export function PasswordInput({ password, setPassword, isLoginPage }) {
     return (
         <>
             <div className="flex items-center justify-between">
-                <label htmlFor="password" className="text-base font-medium text-gray-900">
+                <label htmlFor="password" className="text-base font-medium text-gray-900 dark:text-gray-200">
                     {' '}
                     Password{' '}
                 </label>
                 {isLoginPage && (
-                    <Link to="#" title="" className="text-sm font-semibold text-black hover:underline">
+                    <Link to="#" title="" className="text-sm font-semibold text-black dark:text-white hover:underline">
                         {' '}
                         Forgot password?{' '}
                     </Link>
@@ -26,7 +27,7 @@ export function PasswordInput({ password, setPassword, isLoginPage }) {
             <div className="mt-2 relative">
                 <input
                     required
-                    className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10 w-full rounded-md border dark:text-gray-200 border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Password"
                     id="password"
@@ -41,13 +42,9 @@ export function PasswordInput({ password, setPassword, isLoginPage }) {
                     onClick={togglePasswordVisibility}
                 >
                     {showPassword ? (
-                        <img
-                            className="h-5 w-5 text-black-400 hover:text-gray-500"
-                            src="../../../../public/icons/eye-password-hide-svgrepo-com.svg" />
+                        <EyeOff className="h-5 w-5" color='gray'/>
                     ) : (
-                        <img
-                            className="h-5 w-5 text-black-400 hover:text-gray-500"
-                            src="../../../../public/icons/eye-password-show-svgrepo-com.svg" />
+                        <Eye className="h-5 w-5" color='gray'/> 
                     )}
                 </button>
             </div>
@@ -65,7 +62,7 @@ export function ConfirmPasswordInput({ password_confirmation, setPassword_con })
     return (
         <>
             <div className="flex items-center justify-between">
-                <label htmlFor="c_password" className="text-base font-medium text-gray-900">
+                <label htmlFor="c_password" className="text-base font-medium text-gray-900 dark:text-gray-200">
                     {' '}
                     Confirm Password{' '}
                 </label>
@@ -73,7 +70,7 @@ export function ConfirmPasswordInput({ password_confirmation, setPassword_con })
             <div className="mt-2 relative">
                 <input
                     required
-                    className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-800 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm dark:text-gray-200 placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Confirm Password"
                     id="c_password"
@@ -88,13 +85,9 @@ export function ConfirmPasswordInput({ password_confirmation, setPassword_con })
                     onClick={togglePasswordVisibility}
                 >
                     {showPassword ? (
-                        <img
-                            className="h-5 w-5 text-black-400 hover:text-gray-500"
-                            src="../../../../public/icons/eye-password-hide-svgrepo-com.svg" />
+                        <EyeOff className="h-5 w-5" color='gray'/>
                     ) : (
-                        <img
-                            className="h-5 w-5 text-black-400 hover:text-gray-500"
-                            src="../../../../public/icons/eye-password-show-svgrepo-com.svg" />
+                        <Eye className="h-5 w-5" color='gray'/> 
                     )}
                 </button>
             </div>

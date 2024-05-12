@@ -7,9 +7,10 @@ import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../Loader.jsx';
 import { isAuthenticated } from '../../hooks/user.js';
 import {EmailInput,PasswordInput,SubmitButton,Icon} from './comps/comps.jsx'
+import { Error500 } from '../ErrorHandling/Error500.jsx';
 
-export default function Login() {
-
+export default function Login() {  
+  
   const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
 
@@ -45,7 +46,7 @@ export default function Login() {
         );
       // Handle success
     } catch (error) {
-      console.log(error);
+      console.log('err',error);
       const error1 = error.response.data.error?.email || error.response.data.error?.password  // validation error
                         || error.response.data?.msg;                                          // email and password error message
       setErrors(error1);
@@ -54,6 +55,7 @@ export default function Login() {
 
   }
 
+  
 
   if (loading) {
     return (
@@ -64,7 +66,7 @@ export default function Login() {
   if(!accessToken) {
     return (
       <section className='pt-20 '  >
-        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 border-4 border-solid  border-black relative z-10 lg:w-96 bg-blue-400 rounded-md">
+        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 border-2 border-solid   dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             {errors && ( // Conditionally render error alert
               <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -72,15 +74,15 @@ export default function Login() {
               </div>
             )}
             <Icon />
-            <h2 className="text-center text-2xl font-bold leading-tight text-black">
+            <h2 className="text-center text-2xl font-bold leading-tight text-black dark:text-white">
               Sign in to your account
             </h2>
-            <p className="mt-2 text-center text-sm text-gray-600 ">
+            <p className="mt-2 text-center text-sm text-gray-600 dark:text-gray-200">
               Don&apos;t have an account?{' '}
               <Link
                 to="/signup"
                 title=""
-                className="font-semibold text-black transition-all duration-200 hover:underline"
+                className="font-semibold text-black dark:text-white transition-all duration-200 hover:underline"
               >
                 Create a  account
               </Link>
