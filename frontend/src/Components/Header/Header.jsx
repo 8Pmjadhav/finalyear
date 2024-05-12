@@ -59,7 +59,7 @@ export default function Header() {
                       <Link to={`/profile/${user.username}`}>
                         <img
                           className="inline-block h-10 w-10 rounded-full"
-                          src="https://res.cloudinary.com/dooomcx1j/image/upload/v1714796653/avatar/ui9tdfqg7s4lbaotgfu1.jpg"
+                          src={user.avatar}
                           alt="Dan_Abromov"
                         />
                         <span className="font-bold dark:text-white"> {user.username}</span>
@@ -99,14 +99,14 @@ export default function Header() {
                           </Link>
                         </div>
                         <div className="space-y-3 ">
-                          <label className="px-3 text-xs font-semibold uppercase text-gray-900">content</label>
-                          <a
+                          <label className="px-3 text-xs font-semibold uppercase text-gray-900">Posts</label>
+                          <Link
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-                            href="#"
+                            to="/posts/createPost"
                           >
                             <Newspaper className="h-5 w-5" aria-hidden="true" />
-                            <span className="mx-2 text-sm font-medium">Blogs</span>
-                          </a>
+                            <span className="mx-2 text-sm font-medium">Create Post</span>
+                          </Link>
                           <a
                             className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
                             href="#"
