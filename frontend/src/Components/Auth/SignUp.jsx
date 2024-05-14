@@ -49,7 +49,7 @@ export default function SignUp() {
   async function verifyOtp(e) {
     e.preventDefault();
     try {
-      await axios.post('/api/user/verify-otp', { email, otp })
+      await axios.post('/api/user/verifyOTPbeforeSignUp', { email, otp })
         .then((res) => {
           setUserCreated(true);
           setOtpSent(false);
@@ -75,7 +75,7 @@ export default function SignUp() {
       <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border-2 border-solid dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
           {(errors || userCreated) ? (
-            errors ? <Danger errors={errors} /> : <Success />
+            errors ? <Danger errors={errors} /> : <Success text={"Account Created successfully , Login Now"}/>
           ) : (
             <div>
               <Icon />

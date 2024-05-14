@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {register,login,logout, refreshAccessToken, getCurrentUser} from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/Authenticate.js";
-import { verifyOTP } from "../controllers/email.controller.js";
+import { verifyOTPbeforeSignUp } from "../controllers/email.controller.js";
 
 const router = Router();
 
@@ -11,7 +11,7 @@ router.post('/logout',verifyJWT,logout);
 router.post('/refreshToken',refreshAccessToken);
 router.get('/getCurrentUser',verifyJWT,getCurrentUser);
 
-router.post('/verify-otp', verifyOTP);
+router.post('/verifyOTPbeforeSignUp', verifyOTPbeforeSignUp);
 
 
 export default router;

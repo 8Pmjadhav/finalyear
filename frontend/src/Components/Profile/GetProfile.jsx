@@ -13,6 +13,8 @@ export function GetProfile() {
  const dispatch = useDispatch();
  const user1 = useSelector(selectUsername).username;
 
+ 
+
  const [isOpen, setIsOpen] = useState(false);
   const [file,setFile] = useState();
 
@@ -86,7 +88,7 @@ export function GetProfile() {
               {/* Username */}
               <div className="text-center mt-4 md:mt-6">
                 <h2 className="text-2xl md:text-3xl font-bold dark:text-white">@{user.username}</h2>
-                <p className="text-gray-600 dark:text-white">Frontend Developer</p>
+                <p className="text-gray-600 dark:text-white">{}{user.profession}</p>
               </div>
 
               {/* Description */}

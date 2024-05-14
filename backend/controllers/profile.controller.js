@@ -19,6 +19,8 @@ export async function getProfile(req, res) {
                 avatar: true,
                 backcover: true,
                 description: true,
+                profession:true,
+                gender:true,
                 post: true,
                 reply: true,
                 likes: true
@@ -54,7 +56,16 @@ export async function updateProfile(req, res) {
             console.log("Processing description upload");
             const retres = await updateDescription(req.body?.description, user)
         }
-        return res.status(200).json({ status:200,msg:"Profile updated Successfully" });
+        const user2=  await prisma.user.update({
+            where:{
+                id:user.id
+            },
+            data:{
+                profession:req.body?.profession,
+                gender:req.body?.gender
+            }
+        })
+        return res.status(200).json({ status:200,msg:"Profile updated Successfully",user2 });
     } catch (error) {
         return res.status(500).json({ status: 500, msg: error?.message + "Error while updating Profile" });
     }

@@ -2,14 +2,22 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { selectUsername } from '../../store/authSlice';
+import {Success} from '../index.js'
 
 const UpdateProfile = () => {
   const [avatar, setAvatar] = useState(null);
   const [backCover, setBackCover] = useState(null);
   const [description, setDescription] = useState('');
   const [gender, setGender] = useState('');
+  const [profession,setProfession] = useState('');
+  const [msg,setMsg] = useState();
   const user = useSelector(selectUsername);
 
+  if(msg){
+    setTimeout(() => {
+      setMsg(null);
+    }, 3000);
+  }
   const handleSubmit = async (event) => {
     event.preventDefault();
     // Handle form submission, e.g., send data to server
@@ -17,6 +25,7 @@ const UpdateProfile = () => {
     formData.append('avatar', avatar);
     formData.append('backcover', backCover);
     formData.append('description', description);
+    formData.append('profession',profession)
     formData.append('gender', gender);
 
     try {
@@ -27,10 +36,11 @@ const UpdateProfile = () => {
         });
     
         if (response.status === 200) {
-          console.log('Image uploaded successfully');
+          setMsg(response.data.msg);
+          console.log('Profile updated successfully');
           // Optionally, update UI or handle success case
         } else {
-          console.error('Failed to upload image');
+          console.error('Failed to update profile try again');
           // Optionally, handle error case
         }
       } catch (error) {
@@ -44,6 +54,7 @@ const UpdateProfile = () => {
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">Update Profile</h2>
+      {msg && <Success text={"Profile Updated Successfully"}/>}
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
           <label htmlFor="avatar" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
@@ -80,6 +91,22 @@ const UpdateProfile = () => {
             className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-24"
             placeholder="Enter your description here..."
           ></textarea>
+        </div>
+        <div className='mb-4'>
+        <label htmlFor="description" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
+            Profession
+          </label>
+          <div className="mt-2">
+                    <input
+                        required
+                        className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-200 placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                        type="text"
+                        placeholder="Profession"
+                        id="profession"
+                        onChange={(e) => setProfession(e.target.value)}
+                        value={profession}
+                    ></input>
+                </div>
         </div>
         <div className="mb-4">
           <label htmlFor="gender" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
