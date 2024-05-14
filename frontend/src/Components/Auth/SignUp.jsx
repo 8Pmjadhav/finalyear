@@ -3,9 +3,8 @@ import axios from 'axios';
 import Loader from '../Loader.jsx';
 import { useSelector } from 'react-redux';
 import { selectAccessToken } from '../../store/authSlice.js';
-import { Link } from 'react-router-dom';
-import { Success, Danger, UsernameInput, EmailInput, PasswordInput, ConfirmPasswordInput, SubmitButton,Icon } from './comps/comps.jsx'
-
+import { Link, Navigate } from 'react-router-dom';
+import { Success, Danger, UsernameInput, EmailInput, PasswordInput, ConfirmPasswordInput, SubmitButton, OTPInput, Icon } from './comps/comps.jsx'
 
 export default function SignUp() {
   const accessToken = useSelector(selectAccessToken);
@@ -17,8 +16,8 @@ export default function SignUp() {
   const [loading, setLoading] = useState(true);
   const [errors, setErrors] = useState();
   const [userCreated, setUserCreated] = useState(false);
-
-
+  const [otpSent, setOtpSent] = useState(false);
+  const [otp, setOtp] = useState('');
 
   useEffect(() => {
     setLoading(false); // Set loading to false once authentication state is resolved
@@ -28,26 +27,36 @@ export default function SignUp() {
     setTimeout(() => {
       setErrors(null);
       setUserCreated(false);
-      // Clear the error after 2 seconds
+      // Clear the error after 3 seconds
     }, 3000);
   }
 
   async function register(e) {
     e.preventDefault();
-    //console.log(username);
     try {
       await axios.post('/api/user/register', { username, email, password, password_confirmation })
         .then((res) => {
-          //console.log(res);
-          setUserCreated(true);
+          setOtpSent(true);
+          setUserCreated(false);
         });
-      // Handle success
     } catch (error) {
-      //console.log(error);
-      let error1 = error.response.data.error?.username || error.response.data.error?.email || error.response.data.error?.password    // validation
-        || error.response.data?.msg;       //  uname, email , already taken
+      console.log(error);
+      let error1 = error.response.data.error?.username || error.response.data.error?.email || error.response.data.error?.password || error.response.data?.msg;
       setErrors(error1);
-      // Handle error
+    }
+  }
+
+  async function verifyOtp(e) {
+    e.preventDefault();
+    try {
+      await axios.post('/api/user/verify-otp', { email, otp })
+        .then((res) => {
+          setUserCreated(true);
+          setOtpSent(false);
+        });
+    } catch (error) {
+      let error1 = error.response.data?.msg;
+      setErrors(error1);
     }
   }
 
@@ -56,56 +65,56 @@ export default function SignUp() {
       <Loader />
     ); // Render nothing while loading
   }
-  //console.log(errors);
+
   if (accessToken) {
     return <Navigate to={'/'} />;
   }
 
-  else {
-    return (
-      <section className='pt-20'>
-        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border-2 border-solid dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
-          <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
-            {(errors || userCreated) ? ( // Conditionally render error alert
-              errors ? <Danger errors={errors} /> : (
-                <Success />
-              )
-            ) : (
-
-              <div>
-                <Icon />
-                <h2 className="text-center text-2xl font-bold leading-tight text-black dark:text-white">
-                  Sign up to create account
-                </h2>
-                <p className="mt-2 text-center text-base text-gray-600 dark:text-gray-200">
-                  Already have an account?{' '}
-                  <Link
-                    to="/login"
-                    title=""
-                    className="font-medium text-black dark:text-white transition-all duration-200 hover:underline"
-                  >
-                    Sign In
-                  </Link>
-                </p></div>)}
-            <form onSubmit={register} className="mt-8">
-              <div className="space-y-5">
-                <UsernameInput username={username} setUsername={setUsername} />
-                <EmailInput email={email} setEmail={setEmail} />
-
-                <div>
+  return (
+    <section className='pt-20'>
+      <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border-2 border-solid dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
+        <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
+          {(errors || userCreated) ? (
+            errors ? <Danger errors={errors} /> : <Success />
+          ) : (
+            <div>
+              <Icon />
+              <h2 className="text-center text-2xl font-bold leading-tight text-black dark:text-white">
+                {otpSent ? 'Enter OTP' : 'Sign up to create account'}
+              </h2>
+              <p className="mt-2 text-center text-base text-gray-600 dark:text-gray-200">
+                {otpSent ? (
+                  'Check your email for the OTP'
+                ) : (
+                  <>
+                    Already have an account?{' '}
+                    <Link to="/login" className="font-medium text-black dark:text-white transition-all duration-200 hover:underline">
+                      Sign In
+                    </Link>
+                  </>
+                )}
+              </p>
+            </div>
+          )}
+          <form onSubmit={otpSent ? verifyOtp : register} className="mt-8">
+            <div className="space-y-5">
+              {otpSent ? (
+                <OTPInput otp={otp} setOtp={setOtp} />
+              ) : (
+                <>
+                  <UsernameInput username={username} setUsername={setUsername} />
+                  <EmailInput email={email} setEmail={setEmail} />
                   <PasswordInput password={password} setPassword={setPassword} />
-                  <br />
                   <ConfirmPasswordInput password_confirmation={password_confirmation} setPassword_con={setPassword_con} />
-                </div>
-                <div>
-                  <SubmitButton text={'Create Account'} />
-                </div>
+                </>
+              )}
+              <div>
+                <SubmitButton text={otpSent ? 'Verify OTP' : 'Create Account'} />
               </div>
-            </form>
-
-          </div>
+            </div>
+          </form>
         </div>
-      </section>
-    )
-  }
+      </div>
+    </section>
+  );
 }

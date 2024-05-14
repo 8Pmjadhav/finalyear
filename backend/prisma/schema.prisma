@@ -16,32 +16,34 @@ datasource db {
 model Follow {
   id           Int  @id @default(autoincrement())
   follower_id  Int
-  follower     User @relation("Followers", fields: [follower_id], references: [id]) // Define a relation name "Followers" and specify fields and references
+  follower     User @relation("Followers", fields: [follower_id], references: [id],onDelete: Cascade) // Define a relation name "Followers" and specify fields and references
   following_id Int
-  following    User @relation("Followings", fields: [following_id], references: [id]) // Define a relation name "Followings" and specify fields and references
+  following    User @relation("Followings", fields: [following_id], references: [id],onDelete: Cascade) // Define a relation name "Followings" and specify fields and references
 
   @@unique([follower_id, following_id])
 }
 
 model User {
-  id           Int     @id @default(autoincrement())
-  username     String  @unique @db.VarChar(199)
-  email        String  @unique @db.VarChar(199)
-  password     String  @db.VarChar(199)
-  otp          String?  @db.VarChar(55)
-  avatar_id    String? @db.VarChar(199)
-  avatar       String? @db.VarChar(255)
-  backcover_id String? @db.VarChar(199)
-  backcover    String? @db.VarChar(255)
-  profession   String? @db.VarChar(199)
+  id           Int       @id @default(autoincrement())
+  username     String    @unique @db.VarChar(199)
+  email        String    @unique @db.VarChar(199)
+  password     String    @db.VarChar(199)
+  otp          String?   @db.VarChar(55)
+  otpExpires   DateTime?
+  isVerified   Boolean   @default(false)
+  avatar_id    String?   @db.VarChar(199)
+  avatar       String?   @db.VarChar(255)
+  backcover_id String?   @db.VarChar(199)
+  backcover    String?   @db.VarChar(255)
+  profession   String?   @db.VarChar(199)
   description  String?
-  refreshToken String? @db.VarChar(255)
+  refreshToken String?   @db.VarChar(255)
 
   created_At DateTime @default(now())
   updated_At DateTime @default(now())
-  post       Post[]
-  reply      Reply[]
-  likes      Likes[]
+  post       Post[]   
+  reply      Reply[]  
+  likes      Likes[]  
   followers  Follow[] @relation("Followers") // Reference the "Followers" relation
   following  Follow[] @relation("Followings") // Reference the "Followings" relation
 }
@@ -49,7 +51,7 @@ model User {
 model Post {
   id         Int      @id @default(autoincrement())
   user_id    Int
-  user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id],onDelete: Cascade)
   image_id   String?  @db.VarChar(199)
   image      String?  @db.VarChar(255)
   video_id   String?  @db.VarChar(199)
@@ -64,9 +66,9 @@ model Post {
 model Reply {
   id         Int      @id @default(autoincrement())
   user_id    Int
-  user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id],onDelete: Cascade)
   post_id    Int
-  post       Post     @relation(fields: [post_id], references: [id])
+  post       Post     @relation(fields: [post_id], references: [id],onDelete: Cascade)
   content    String?
   created_At DateTime @default(now())
   updated_At DateTime @default(now())
@@ -75,9 +77,9 @@ model Reply {
 model Likes {
   id         Int      @id @default(autoincrement())
   user_id    Int
-  user       User     @relation(fields: [user_id], references: [id])
+  user       User     @relation(fields: [user_id], references: [id],onDelete: Cascade)
   post_id    Int
-  post       Post     @relation(fields: [post_id], references: [id])
+  post       Post     @relation(fields: [post_id], references: [id],onDelete: Cascade)
   created_At DateTime @default(now())
   updated_At DateTime @default(now())
 }

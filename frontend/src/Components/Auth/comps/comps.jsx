@@ -1,6 +1,7 @@
 import { Success, Danger } from "./Alerts";
 import { PasswordInput, ConfirmPasswordInput } from "./PasswordInput";
 import { EmailInput, UsernameInput, SubmitButton } from "./emailInput";
+import { OTPInput } from "./OTPInput";
 
 export function Icon() {
     return (
@@ -12,4 +13,4 @@ export function Icon() {
     )
 }
 
-export { Success, Danger, EmailInput, PasswordInput, ConfirmPasswordInput, UsernameInput, SubmitButton };
+export { Success, Danger, EmailInput, PasswordInput, ConfirmPasswordInput, UsernameInput, SubmitButton,OTPInput };

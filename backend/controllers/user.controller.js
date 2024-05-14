@@ -5,8 +5,7 @@ import bcryptjs from 'bcryptjs';
 import prisma from "../DB/db.config.js";
 import jwt from "jsonwebtoken";
 import { GenerateACCESSToken, GenerateREFRESHToken } from "../Security/Tokens.js";
-import { default_images } from "../defaults/default_images.js";
-
+import { generateOTP,sendOTPEmail } from "./email.controller.js";
 const options={
     httpOnly:true,
     secure:true
@@ -90,16 +89,27 @@ export async function register(req, res) {
 
         const salt = bcryptjs.genSaltSync(10);
         payload.password = bcryptjs.hashSync(payload.password, salt);
-
-        newUser = await prisma.user.create({
-            data: payload,
-            select: {
-                id: true,
-                username: true,
-                email: true
-            }
-        })
-        await default_images(newUser.id,newUser.username.charAt(0));
+  console.log('h0');
+        const otp = generateOTP();
+    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // OTP expires in 10 minutes
+      
+    newUser = await prisma.user.create({
+      data: {
+        ...payload,
+        otp,
+        otpExpires
+      },
+      select: {
+        id: true,
+        username: true,
+        email: true
+      }
+    });
+    console.log('h1');
+    const a = await sendOTPEmail(newUser.email, otp);
+    console.log(a);
+    return res.json({ status: 200, msg: "User created. OTP sent to email.", user: newUser });
+        
         // console.log(newUser);
         return res.json({ status: 200, msg: "User created : ", user: newUser });
 
