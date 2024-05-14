@@ -62,7 +62,7 @@ export default function Header() {
                           src={user.avatar}
                           alt="Dan_Abromov"
                         />
-                        <span className="font-bold dark:text-white"> {user.username}</span>
+                        <span className="font-bold dark:text-white"> @{user.username}</span>
                       </Link>
 
                     </div>

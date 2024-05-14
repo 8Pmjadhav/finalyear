@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Header, Footer,Error500 } from "./Components/index.js";
+import { Header, Footer, Error500 } from "./Components/index.js";
 import axios from 'axios';
 import { Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
@@ -13,20 +13,20 @@ import Loader from "./Components/Loader.jsx";
 
 
 export default function App() {
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const dispatch = useDispatch();
   // console.log("Don't take following errors seriously");
   const accessToken = useSelector(selectAccessToken);
+  const isServerDown = useSelector((state) => state.serverStatus.isDown);
 
 
-  
 
 
 
   useEffect(() => {
     (async () => {
       try {
-        
+
         await isAuthenticated(dispatch);
       } catch (error) {
         console.error('Error fetching authentication status:', error);
@@ -39,20 +39,22 @@ export default function App() {
 
 
 
-  return loading ? (
-    <Loader />
-  ) : (
-    <div className='min-h-screen flex flex-wrap content-between dark:bg-black' style={{
+  return (
+    <>
+    {
+      loading ? ( <Loader />) : (
+    <div className='min-h-screen flex flex-wrap content-between dark:bg-zinc-500' style={{
       backgroundImage: 'url(/background/batthern.png)'
     }}>
       <div className={`w-full ${!accessToken && 'flex flex-col justify-center items-center'}`}>
         <Header />
         <main >
-          {useSelector((state) => state.serverStatus.isDown)? <Error500/>  :<Outlet />}
+          {isServerDown ? <Error500 /> : <Outlet />}
         </main>
         <Footer />
       </div>
     </div>
-  )
+  )}
+  </>)
 }
 

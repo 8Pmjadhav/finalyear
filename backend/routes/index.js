@@ -9,5 +9,6 @@ router.use('/profile',profileRoutes);
 router.use('/user',userRoutes);
 router.use('/posts',postRoutes);
 
+  
 
 export default router;

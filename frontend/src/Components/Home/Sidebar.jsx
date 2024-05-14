@@ -21,7 +21,7 @@ export default function Sidebar({ dispatch }) {
           src={avatar}
           alt="Dan_Abromov"
         />
-        <span className="font-bold text-lg dark:text-white">  {username}</span>
+        <span className="font-bold text-lg dark:text-white">  @{username}</span>
       </Link>
       <div className="mt-6 flex flex-1 flex-col justify-between">
         <nav className="-mx-3 space-y-6 ">

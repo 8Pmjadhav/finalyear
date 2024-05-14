@@ -13,22 +13,37 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model Follow {
+  id           Int  @id @default(autoincrement())
+  follower_id  Int
+  follower     User @relation("Followers", fields: [follower_id], references: [id]) // Define a relation name "Followers" and specify fields and references
+  following_id Int
+  following    User @relation("Followings", fields: [following_id], references: [id]) // Define a relation name "Followings" and specify fields and references
+
+  @@unique([follower_id, following_id])
+}
+
 model User {
-  id           Int      @id @default(autoincrement())
-  username     String   @unique @db.VarChar(199)
-  email        String   @unique @db.VarChar(199)
-  password     String   @db.VarChar(199)
-  avatar_id    String?  @db.VarChar(199)
-  avatar       String?  @db.VarChar(255)
-  backcover_id String?  @db.VarChar(199)
-  backcover    String?  @db.VarChar(255)
+  id           Int     @id @default(autoincrement())
+  username     String  @unique @db.VarChar(199)
+  email        String  @unique @db.VarChar(199)
+  password     String  @db.VarChar(199)
+  otp          String?  @db.VarChar(55)
+  avatar_id    String? @db.VarChar(199)
+  avatar       String? @db.VarChar(255)
+  backcover_id String? @db.VarChar(199)
+  backcover    String? @db.VarChar(255)
+  profession   String? @db.VarChar(199)
   description  String?
-  refreshToken String?  @db.VarChar(255)
-  created_At   DateTime @default(now())
-  updated_At   DateTime @default(now())
-  post         Post[]
-  reply        Reply[]
-  likes        Likes[]
+  refreshToken String? @db.VarChar(255)
+
+  created_At DateTime @default(now())
+  updated_At DateTime @default(now())
+  post       Post[]
+  reply      Reply[]
+  likes      Likes[]
+  followers  Follow[] @relation("Followers") // Reference the "Followers" relation
+  following  Follow[] @relation("Followings") // Reference the "Followings" relation
 }
 
 model Post {

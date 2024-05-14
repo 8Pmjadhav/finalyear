@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 export default function Following_Posts() {
 
-  useEffect(() => {},[]);
+  //useEffect(() => {},[]);
   return (
     <>
       <div className="max-w-xl mx-auto bg-white shadow-md rounded-lg overflow-hidden mb-4">

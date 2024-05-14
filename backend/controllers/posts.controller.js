@@ -20,27 +20,13 @@ export async function getTweets(req, res) {
                         username: true,
                         avatar: true
                     }
-                },
-                reply: {
-                    select: {
-                        id: true,
-                    },
-                },
-                likes: {
-                    select: {
-                        id: true,
-                    },
-                },
+                }
+            
             },
         });
 
         // Calculate counts for replies and likes for each post
-        const postsWithCounts = posts.map(post => ({
-            ...post,
-            replyCount: post.reply.length,
-            likeCount: post.likes.length,
-        }));
-
+       
         return res
             .status(200)
             .json({status:200,posts});
@@ -54,47 +40,46 @@ export async function tweetPost(req, res) {
     try {
         const contents = req.body;
         const user = req.user;
-        
-        console.log(req.files, contents)
-        let image={}, video={};
-        if (req.files?.image[0]?.path) {
-            image = await uploadOnCloudinary(req.files?.image[0]?.path, 'posts/images')
+        console.log('Request Files:', req.files);
+        console.log('Request Body:', req.body);
+        // console.log(req.files, contents);
+
+        let image = false;
+        let video = false;
+
+        if (req.files && req.files.image && req.files.image[0]) {
+            console.log("Processing image upload");
+            image = await uploadOnCloudinary(req.files.image[0].path, 'posts/images');
         }
-        if (req.files?.video[0]?.path) {
-            //console.log("Hiiiiiiiii")
-            video = await uploadOnCloudinary(req.files?.video[0]?.path, 'posts/videos')
+        if (req.files && req.files.video && req.files.video[0]) {
+            console.log("Processing video upload");
+            video = await uploadOnCloudinary(req.files.video[0].path, 'posts/videos');
         }
+
         const tweetData = {
             user_id: user.id,
             content: contents.content,
         };
-        
+
         if (image) {
-            console.log("Hiiiiiiiii 1")
             tweetData.image_id = image.public_id;
             tweetData.image = image.url;
         }
-        
+
         if (video) {
-            console.log("Hiiiiiiiii 2")
             tweetData.video_id = video.public_id;
             tweetData.video = video.url;
         }
 
-        const tweet = await prisma.post.create({
-            data:tweetData
-        }
+        const tweet = await prisma.post.create({ data: tweetData });
 
-        )
-        return res
-            .status(200)
-            .json({
-                status: 200,
-                msg: "Post created",
-                url: tweet.id
-            });
-    }
-    catch (error) {
-        return res.status(500).json({ status: 500, msg: error?.message + "Error while creating Post" });
+        return res.status(200).json({
+            status: 200,
+            msg: "Post created",
+            url: tweet.id
+        });
+    } catch (error) {
+        console.error("Error while creating post:", error);
+        return res.status(500).json({ status: 500, msg: error.message + " Error while creating Post" });
     }
 }

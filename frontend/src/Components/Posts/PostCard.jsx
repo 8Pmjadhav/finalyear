@@ -1,32 +1,38 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 
-const PostCard = ({  post }) => {
+const PostCard = ({ post }) => {
   const [isOpen, setIsOpen] = useState(false);
+  const [file, setFile] = useState();
 
-  const toggleModal = () => {
+  function toggleModal(file) {
     setIsOpen(!isOpen);
+    setFile(file);
   };
-  console.log(post);
+  const videoPath = post.video;
+  const extension = post.video && videoPath.split('.').pop();
+  //  console.log(post.replyCount,extension);
   return (
-    <div className="max-w-lg mx-auto bg-white shadow-md rounded-md overflow-hidden mb-4">
-      <Link to={`/profile/${post.user.username}`}> 
-      <div className="flex items-center p-4">
-        <img src={post.user.avatar} alt={post.user.username} className="w-10 h-10 rounded-full mr-2" />
-        <span className="font-semibold">{post.user.username}</span>
-      </div>
-      </Link> 
+    <div className="max-w-lg mx-auto bg-white dark:bg-stone-900 bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4">
+      <Link to={`/profile/${post.user.username}`}>
+        <div className="flex items-center p-4">
+          <img src={post.user.avatar} alt={post.user.username} className="w-8 h-8 rounded-full mr-2" />
+          <span className="font-semibold dark:text-white"> @{post.user.username}</span>
+        </div>
+      </Link>
       <div className="p-4">
-        <p className="text-gray-700">{post.content}</p>
+        <Link to= {`/posts/viewPost/:${post.id}`} state={{post}}><p className="text-gray-700 dark:text-gray-50">{post.content}</p></Link>
         {(post.image || post.video) && (
-         <div className="relative mt-4 h-52 flex">
-         {post.image && (
-           <img src={post.image} alt="Post Image" className="w-1/2 h-full object-cover" onClick={toggleModal} />
-         )}
-         {post.video && (
-           <video src={post.video} className="w-1/2 h-full object-cover" onClick={toggleModal} controls></video>
-         )}
-       </div>
+          <div className={`relative mt-4 h-60 flex border-2 rounded-md border-black dark:border-white ${(post.image && post.video) ? 'justify-center':""}`}>
+            {post.image && (
+              <img src={post.image} alt="Post Image" className={`${post.video ? "w-1/2" : "w-full"} h-full object-cover`} onClick={() => toggleModal('image')} />
+            )}
+            {post.video && (
+              (extension === 'mp4' || extension === 'mkv') ?
+                (<video src={post.video} className="w-1/2 h-full object-cover" onClick={() => toggleModal('video')} controls></video>)
+                : (<img src={post.video} alt="Post Image" className="w-1/2 h-full object-cover" onClick={() => toggleModal('image1')} />)
+            )}
+          </div>
         )}
         <div className="flex items-center justify-between mt-4">
           <div className="flex items-center">
@@ -58,9 +64,10 @@ const PostCard = ({  post }) => {
           </div>
         </div>
       </div>
-      {isOpen && (
+      {(isOpen && file[0] === 'i') && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={toggleModal}>
-          {post.image && <img src={post.image} alt="Post Image" className="max-w-3/4 max-h-3/4" />}
+          {file === 'image' && (post.image && <img src={post.image} alt="Post Image" className="max-w-3/4 max-h-3/4" />)}
+          {file === 'image1' && (post.video && <img src={post.video} alt="Post Image" className="max-w-3/4 max-h-3/4" />)}
           <button className="absolute top-4 right-4 text-white hover:text-gray-300" onClick={toggleModal}>
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path

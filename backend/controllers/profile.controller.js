@@ -42,17 +42,17 @@ export async function updateProfile(req, res) {
     try {
         const user = req.user;
         console.log(req.files,user);
-        if (req?.files?.avatar[0]?.path) {
+        if (req.files && req.files.avatar && req.files.avatar[0]) {
+            console.log("Processing avatar upload");
             const retres = await updateAvatar(req?.files?.avatar[0]?.path, user)
-            console.log(retres);
         }
-        if (req?.files?.backcover[0]?.path) {
+        if (req.files && req.files.backcover && req.files.backcover[0]) {
+            console.log("Processing backcover upload");
             const retres = await updateBackcover(req?.files?.backcover[0]?.path, user)
-            console.log(retres);
         }
         if (req.body?.description){
+            console.log("Processing description upload");
             const retres = await updateDescription(req.body?.description, user)
-            console.log(retres);
         }
         return res.status(200).json({ status:200,msg:"Profile updated Successfully" });
     } catch (error) {
