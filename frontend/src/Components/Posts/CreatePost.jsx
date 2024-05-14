@@ -75,7 +75,7 @@ const CreatePost = () => {
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-24"
+            className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
             placeholder="Enter your content here..."
           ></textarea>
         </div>

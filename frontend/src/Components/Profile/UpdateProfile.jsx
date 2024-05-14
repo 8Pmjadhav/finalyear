@@ -88,7 +88,7 @@ const UpdateProfile = () => {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-24"
+            className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-24 w-full"
             placeholder="Enter your description here..."
           ></textarea>
         </div>

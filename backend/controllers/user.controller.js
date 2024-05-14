@@ -54,6 +54,7 @@ export async function getCurrentUser(req,res){
 
 }
 
+
 export async function register(req, res) {
     try {
         let newUser = req.body;
@@ -106,8 +107,8 @@ export async function register(req, res) {
       }
     });
     console.log('h1');
-    const a = await sendOTPEmail(newUser.email, otp);
-    console.log(a);
+    await sendOTPEmail(newUser.email, otp);
+    await default_images(user.id, user.username.charAt(0));
     return res.json({ status: 200, msg: "User created. OTP sent to email.", user: newUser });
         
         // console.log(newUser);

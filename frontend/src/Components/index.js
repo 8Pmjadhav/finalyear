@@ -4,6 +4,7 @@ import Contact from "./Contact/Contact";
 
 import Login from "./Auth/Login";
 import SignUp from "./Auth/SignUp";
+import ForgotPassword from "./Auth/ForgotPassword";
 
 import Footer from "./Footer/Footer";
 
@@ -22,4 +23,4 @@ import { Success,Danger } from "./Auth/comps/Alerts";
 
 export {Header,Home,Contact,Login,SignUp,Footer,Following_Posts,
     AllPosts,GetProfile,Error404,Error500,UpdateProfile,CreatePost,ViewPost,
-    Danger,Success} ;
+    Danger,Success,ForgotPassword} ;

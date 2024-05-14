@@ -2,7 +2,9 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Home, Contact, Login, SignUp, Following_Posts, AllPosts, GetProfile,UpdateProfile,CreatePost,ViewPost } from './Components/index.js';
+import { Home, Contact, Login, SignUp, Following_Posts, AllPosts,
+   GetProfile,UpdateProfile,CreatePost,ViewPost,
+   ForgotPassword} from './Components/index.js';
 import './index.css';
 import { Provider } from 'react-redux';
 import store from './store/store.js';
@@ -57,6 +59,10 @@ const router = createBrowserRouter([
       {
         path: 'signup',
         element: <SignUp />
+      },
+      {
+        path: 'forgotPassword',
+        element:<ForgotPassword/>
       }
     ]
   }

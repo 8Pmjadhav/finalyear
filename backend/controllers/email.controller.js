@@ -21,7 +21,7 @@ export async function verifyOTPbeforeSignUp(req, res) {
         const user = await prisma.user.findUnique({
             where: { email }
         });
-
+        
         if (!user || user.otp !== otp || new Date() > new Date(user.otpExpires)) {
             await prisma.user.delete({
                 where: { email }
@@ -37,7 +37,6 @@ export async function verifyOTPbeforeSignUp(req, res) {
                 isVerified: true
             }
         });
-        await default_images(user.id, user.username.charAt(0));
         return res.status(200).json({ status: 200, msg: 'OTP verified successfully' });
 
     } catch (error) {
@@ -125,11 +124,13 @@ export const sendOTPEmail = async (email, otp) => {
         </html>
         `
     };
-    await transporter.sendMail(mailOptions, function (error, info) {
+     transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);
+            return res.status(400).json({status:200,msg:'Wrong email address or SMTP server Problem'});
         } else {
             console.log('Email sent: ' + info.response);
+            return res.status(200).json({status:200,msg:'Check email for OTP'});
         }
     });
 };
@@ -137,3 +138,19 @@ export const sendOTPEmail = async (email, otp) => {
 export const generateOTP = () => {
     return Math.floor(100000 + Math.random() * 900000).toString();
 };
+
+export async function ForgotPasswordGetOTP(req,res){
+    const {email} = req.body;
+
+    const user = await prisma.user.findUnique({
+        where:{
+            email:email
+        }
+    })
+    if(!user){
+        return res.status(400).json({ status: 400, msg: 'Email not found in database' });
+    }
+    const otp = generateOTP();
+     await sendOTPEmail(email,otp);
+    return res.json({ status: 200, msg: " OTP sent to email." });
+}

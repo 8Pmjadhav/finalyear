@@ -43,7 +43,7 @@ export default function App() {
     <>
     {
       loading ? ( <Loader />) : (
-    <div className='min-h-screen flex flex-wrap content-between dark:bg-zinc-500' style={{
+    <div className='min-h-screen flex flex-wrap content-between dark:bg-black' style={{
       backgroundImage: 'url(/background/batthern.png)'
     }}>
       <div className={`w-full ${!accessToken && 'flex flex-col justify-center items-center'}`}>

@@ -18,7 +18,7 @@ export function PasswordInput({ password, setPassword, isLoginPage }) {
                     Password{' '}
                 </label>
                 {isLoginPage && (
-                    <Link to="#" title="" className="text-sm font-semibold text-black dark:text-white hover:underline">
+                    <Link to="/forgotPassword" title="" className="text-sm font-semibold text-black dark:text-white hover:underline">
                         {' '}
                         Forgot password?{' '}
                     </Link>
