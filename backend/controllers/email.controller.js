@@ -1,6 +1,9 @@
 import nodemailer from 'nodemailer';
 import prisma from '../DB/db.config.js';
-import { default_images } from '../defaults/default_images.js';
+import { generateOTP, hashPassword } from './basic.controller.js';
+import { passwordSchema } from '../validations/auth.validations.js';
+import vine, { errors } from "@vinejs/vine";
+import e from 'express';
 
 export const transporter = nodemailer.createTransport({
     host: "smtp.gmail.com",
@@ -21,7 +24,7 @@ export async function verifyOTPbeforeSignUp(req, res) {
         const user = await prisma.user.findUnique({
             where: { email }
         });
-        
+
         if (!user || user.otp !== otp || new Date() > new Date(user.otpExpires)) {
             await prisma.user.delete({
                 where: { email }
@@ -40,6 +43,7 @@ export async function verifyOTPbeforeSignUp(req, res) {
         return res.status(200).json({ status: 200, msg: 'OTP verified successfully' });
 
     } catch (error) {
+        console.log(error);
         return res.status(500).json({ status: 500, msg: 'Something went wrong on server side' });
     }
 }
@@ -124,33 +128,110 @@ export const sendOTPEmail = async (email, otp) => {
         </html>
         `
     };
-     transporter.sendMail(mailOptions, function (error, info) {
+    transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             console.log(error);
-            return res.status(400).json({status:200,msg:'Wrong email address or SMTP server Problem'});
+            return res.status(400).json({ status: 200, msg: 'Wrong email address or SMTP server Problem' });
         } else {
             console.log('Email sent: ' + info.response);
-            return res.status(200).json({status:200,msg:'Check email for OTP'});
+            return res.status(200).json({ status: 200, msg: 'Check email for OTP' });
         }
     });
 };
 
-export const generateOTP = () => {
-    return Math.floor(100000 + Math.random() * 900000).toString();
-};
 
-export async function ForgotPasswordGetOTP(req,res){
-    const {email} = req.body;
 
-    const user = await prisma.user.findUnique({
-        where:{
-            email:email
+export async function ForgotPasswordGetOTP(req, res) {
+    try {
+        const { email } = req.body;
+
+        const user = await prisma.user.findUnique({
+            where: {
+                email: email
+            }
+        })
+        if (!user) {
+            return res.status(400).json({ status: 400, msg: 'Email not found in database' });
         }
-    })
-    if(!user){
-        return res.status(400).json({ status: 400, msg: 'Email not found in database' });
+        const {otp,otpExpires} = generateOTP();
+
+        await prisma.user.update({
+            where: {
+                id: user.id
+            },
+            data: {
+                ...user,
+                otp,
+                otpExpires
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true
+            }
+        });
+        await sendOTPEmail(email, otp);
+        return res.status(200).json({ status: 200, msg: " OTP sent to email." });
+    } catch (error) {
+        return res.status(200).json({ status: 200, msg: " Error while sending  email.", error });
     }
-    const otp = generateOTP();
-     await sendOTPEmail(email,otp);
-    return res.json({ status: 200, msg: " OTP sent to email." });
+}
+
+export async function ForgotPasswordverifyOTP(req, res) {
+    try {
+        const { email, otp } = req.body;
+
+        const user = await prisma.user.findUnique({
+            where: { email }
+        });
+
+        if ( user.otp !== otp || new Date() > new Date(user.otpExpires)) {
+            
+            return res.status(400).json({ status: 400, msg: 'Invalid or expired OTP SignUp again' });
+        }
+
+        
+        return res.status(200).json({ status: 200, msg: 'OTP verified successfully' });
+
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({ status: 500, msg: 'Something went wrong on server side' });
+    }
+}
+
+export async function resetPassword(req, res) {
+
+    try {
+        let { email, password, password_confirmation, otp } = req.body;
+        const validator = vine.compile(passwordSchema);
+        const payload = await validator.validate({password,password_confirmation});
+        password = hashPassword(payload.password);
+
+        const upd = await prisma.user.update({
+            where:{
+                email,
+                otp
+            },
+            data:{
+                password,
+                otp: null,
+                otpExpires:null
+            }
+        });
+        if(upd){
+        
+            return res.status(200).json({status:200,msg:'Password changed successfully login noww '});
+
+        }
+        return res.status(400).json({ status: 400, msg: "First verify otp" })
+    } catch (error) {
+        if (error instanceof errors.E_VALIDATION_ERROR) {
+            console.log(error.messages)
+            return res.status(400).json({ error: error.messages })
+        }
+        else {
+            console.log(error);
+            return res.status(500).json({ status: 500, msg: "something went wrong on server side" })
+        }
+    }
 }

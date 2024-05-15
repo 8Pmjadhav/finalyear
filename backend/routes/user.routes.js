@@ -1,7 +1,7 @@
 import { Router } from "express";
 import {register,login,logout, refreshAccessToken, getCurrentUser} from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/Authenticate.js";
-import { verifyOTPbeforeSignUp,ForgotPasswordGetOTP } from "../controllers/email.controller.js";
+import { verifyOTPbeforeSignUp,ForgotPasswordGetOTP,ForgotPasswordverifyOTP,resetPassword } from "../controllers/email.controller.js";
 
 const router = Router();
 
@@ -13,7 +13,8 @@ router.get('/getCurrentUser',verifyJWT,getCurrentUser);
 
 router.post('/verifyOTP', verifyOTPbeforeSignUp);
 router.post('/forgotPassword/getOTP',ForgotPasswordGetOTP);
-// router.post('/forgotPassword/verifyOTP',ForgotPasswordverifyOTP);
+router.post('/forgotPassword/verifyOTP',ForgotPasswordverifyOTP);
+router.post('/forgotPassword/resetPassword',resetPassword);
 
 
 

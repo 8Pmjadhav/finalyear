@@ -49,7 +49,7 @@ export default function SignUp() {
   async function verifyOtp(e) {
     e.preventDefault();
     try {
-      await axios.post('/api/user/verifyOTPbeforeSignUp', { email, otp })
+      await axios.post('/api/user/verifyOTP', { email, otp })
         .then((res) => {
           setUserCreated(true);
           setOtpSent(false);
@@ -57,6 +57,7 @@ export default function SignUp() {
     } catch (error) {
       let error1 = error.response.data?.msg;
       setErrors(error1);
+      setOtpSent(false);
     }
   }
 

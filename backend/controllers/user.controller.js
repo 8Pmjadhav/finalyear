@@ -1,14 +1,16 @@
 "use strict";
 import vine, { errors } from "@vinejs/vine";
 import { loginSchema, registerSchema } from "../validations/auth.validations.js";
-import bcryptjs from 'bcryptjs';
 import prisma from "../DB/db.config.js";
 import jwt from "jsonwebtoken";
 import { GenerateACCESSToken, GenerateREFRESHToken } from "../Security/Tokens.js";
-import { generateOTP,sendOTPEmail } from "./email.controller.js";
-const options={
-    httpOnly:true,
-    secure:true
+import {  sendOTPEmail } from "./email.controller.js";
+import { hashPassword,generateOTP, checkPassword } from "./basic.controller.js";
+import { default_images } from "../defaults/default_images.js";
+import e from "express";
+const options = {
+    httpOnly: true,
+    secure: true
 }
 
 export async function generateACCESSandREFRESHtokens(userId) {
@@ -30,14 +32,14 @@ export async function generateACCESSandREFRESHtokens(userId) {
             }
         });
         //  console.log("gat",{accessToken,refreshToken});       
-        return { accessToken, refreshToken };           
+        return { accessToken, refreshToken };
     }
     catch (error) {
         throw console.error({ status: 500, msg: "something went wrong while generating tokens" });
     }
 };
 
-export async function getCurrentUser(req,res){
+export async function getCurrentUser(req, res) {
     const user = req.user;
     return res
         .status(200)
@@ -45,10 +47,10 @@ export async function getCurrentUser(req,res){
             {
                 status: 200,
                 msg: "User Logged In",
-                username:user.username,
-                avatar:user.avatar,
-                accessToken:user.accessToken,
-                refreshToken:user.refreshToken
+                username: user.username,
+                avatar: user.avatar,
+                accessToken: user.accessToken,
+                refreshToken: user.refreshToken
             }
         )
 
@@ -75,7 +77,7 @@ export async function register(req, res) {
                 ]
             }
         })
-
+        
         if (finduser) {
             let errorMsg = '';
             if (finduser.username === payload.username) {
@@ -88,31 +90,25 @@ export async function register(req, res) {
             return res.status(400).json({ status: 400, msg: errorMsg });
         }
 
-        const salt = bcryptjs.genSaltSync(10);
-        payload.password = bcryptjs.hashSync(payload.password, salt);
-  console.log('h0');
-        const otp = generateOTP();
-    const otpExpires = new Date(Date.now() + 10 * 60 * 1000); // OTP expires in 10 minutes
-      
-    newUser = await prisma.user.create({
-      data: {
-        ...payload,
-        otp,
-        otpExpires
-      },
-      select: {
-        id: true,
-        username: true,
-        email: true
-      }
-    });
-    console.log('h1');
-    await sendOTPEmail(newUser.email, otp);
-    await default_images(user.id, user.username.charAt(0));
-    return res.json({ status: 200, msg: "User created. OTP sent to email.", user: newUser });
+        payload.password = hashPassword(payload.password);
+        const {otp,otpExpires} = generateOTP();
         
-        // console.log(newUser);
-        return res.json({ status: 200, msg: "User created : ", user: newUser });
+
+        newUser = await prisma.user.create({
+            data: {
+                ...payload,
+                otp,
+                otpExpires
+            },
+            select: {
+                id: true,
+                username: true,
+                email: true
+            }
+        });
+        await sendOTPEmail(newUser.email, otp);
+        await default_images(newUser.id, newUser.username.charAt(0));
+        return res.json({ status: 200, msg: "User created. OTP sent to email to verify.", user: newUser });
 
 
     }
@@ -122,6 +118,7 @@ export async function register(req, res) {
             return res.status(400).json({ error: error.messages })
         }
         else {
+            console.error(error)
             return res.status(500).json({ status: 500, msg: "something went wrong on server side" })
         }
     }
@@ -134,13 +131,26 @@ export async function login(req, res) {
 
         const finduser = await prisma.user.findUnique({
             where: {
-                email: payload.email
+                email: payload.email,
+                
             }
         })
 
 
+
         if (finduser) {
-            if (!bcryptjs.compareSync(payload.password, finduser.password)) {
+            if(!finduser.isVerified){
+                await prisma.user.deleteMany({
+                    where:{
+                        isVerified:false
+                    }
+                });
+                return res.status(400).json({
+                    status: 400,
+                    msg: 'Email not verified SignUp with valid email !!'
+                })
+            }
+            if (!checkPassword(payload.password,finduser.password)) {
                 return res.status(400).json({
                     status: 400,
                     msg: 'Incorrect password    !!'
@@ -150,13 +160,13 @@ export async function login(req, res) {
 
             return res
                 .status(200)
-                .cookie("accessToken", accessToken, {maxAge:60*60*24*1000})
-                .cookie("refreshToken", refreshToken,{maxAge:60*60*24*10*1000})
+                .cookie("accessToken", accessToken, { maxAge: 60 * 60 * 24 * 1000 })
+                .cookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 10 * 1000 })
                 .json(
                     {
                         status: 200,
                         msg: "User Logged In",
-                        username:finduser.username,
+                        username: finduser.username,
                         accessToken,
                         refreshToken
                     }
@@ -171,7 +181,7 @@ export async function login(req, res) {
             return res.status(400).json({ error: error.messages })
         }
         else {
-            return res.status(500).json({ status: 500, msg: "something went wrong in login on server side" })
+            return res.status(500).json({ status: 500, msg: "something went wrong in login on server side" ,error})
         }
     }
 }
@@ -197,54 +207,54 @@ export async function logout(req, res) {
         })
 };
 
-export async function refreshAccessToken(req,res) {
+export async function refreshAccessToken(req, res) {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
-    if(!incomingRefreshToken){
-        return res.status(401).json({status:401,msg:"unauthorized request!, you dont have refreshToken"});
+    if (!incomingRefreshToken) {
+        return res.status(401).json({ status: 401, msg: "unauthorized request!, you dont have refreshToken" });
     }
     // console.log(incomingRefreshToken);
-    try{
+    try {
         const decodedToken = jwt.verify(
             incomingRefreshToken,
             process.env.REFRESH_TOKEN_SECRET
         )
         // console.log(decodedToken);
         const user = await prisma.user.findUnique({
-            where:{
-                id:decodedToken?.id
+            where: {
+                id: decodedToken?.id
             }
         });
         // console.log(user.id);
-        if(!user){
-            return res.status(401).json({status:401,msg:"Invalid refreshToken"});
+        if (!user) {
+            return res.status(401).json({ status: 401, msg: "Invalid refreshToken" });
         }
         //console.log({incomingRefreshToken, refreshToken:user.refreshToken});
         if (incomingRefreshToken !== user?.refreshToken) {
-            return res.status(401).json({status:401,msg:"Refresh token is expired or inValid"});
-            
+            return res.status(401).json({ status: 401, msg: "Refresh token is expired or inValid" });
+
         }
 
         const tokens = await generateACCESSandREFRESHtokens(user.id);
         accessToken = tokens.accessToken;
         const newrefreshToken = tokens.refreshToken;
-         console.log({accessToken,newrefreshToken});
+        console.log({ accessToken, newrefreshToken });
 
         return res
             .status(200)
-            .cookie("accessToken",accessToken,{httpOnly:true,secure:true,maxAge:60*60*24*1000})
-            .cookie("refreshToken",newrefreshToken,{httpOnly:true,secure:true,maxAge:60*60*24*1000*10})
+            .cookie("accessToken", accessToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 1000 })
+            .cookie("refreshToken", newrefreshToken, { httpOnly: true, secure: true, maxAge: 60 * 60 * 24 * 1000 * 10 })
             .json({
-                status:200,
-                data:{
-                    username:user.username,
+                status: 200,
+                data: {
+                    username: user.username,
                     accessToken,
-                    refreshToken:newrefreshToken
+                    refreshToken: newrefreshToken
                 },
-                msg:"Access token refreshed"
+                msg: "Access token refreshed"
             })
     }
-    catch(err){
-        return res.status(401).json({status:401,error : err?.message + " that is Refresh token is expired or used"});
+    catch (err) {
+        return res.status(401).json({ status: 401, error: err?.message + " that is Refresh token is expired or used" });
     }
 } 

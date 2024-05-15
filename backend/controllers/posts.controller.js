@@ -21,7 +21,6 @@ export async function getTweets(req, res) {
                         avatar: true
                     }
                 }
-            
             },
         });
 
@@ -83,3 +82,5 @@ export async function tweetPost(req, res) {
         return res.status(500).json({ status: 500, msg: error.message + " Error while creating Post" });
     }
 }
+
+

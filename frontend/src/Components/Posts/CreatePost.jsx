@@ -2,12 +2,21 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
 import { selectUsername } from '../../store/authSlice';
-
+import {Success} from '../index.js'
+ 
 const CreatePost = () => {
   const [image, setImage] = useState(null);
   const [video, setVideo] = useState(null);
   const [content, setContent] = useState('');
+  const [msg,setMsg] = useState(null);
   const user = useSelector(selectUsername);
+
+
+  if(msg){
+    setTimeout(() => {
+      setMsg(null);
+    }, 3000);
+  }
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -25,6 +34,7 @@ const CreatePost = () => {
         });
     
         if (response.status === 200) {
+          setMsg(response.data.msg);
           console.log('Post created successfully');
           // Optionally, update UI or handle success case
         } else {
@@ -41,6 +51,7 @@ const CreatePost = () => {
 
   return (
     <div className="max-w-md mx-auto mt-8 p-6 bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
+      {msg && <Success text={msg}/>}
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">Create Post</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
