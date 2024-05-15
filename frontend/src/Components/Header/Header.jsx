@@ -1,7 +1,7 @@
 'use client'
 
 import { useDispatch, useSelector } from 'react-redux';
-import { selectAccessToken ,selectUsername} from '../../store/authSlice';
+import {  selectUser} from '../../store/authSlice';
 import { BarChart, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench,Contact, Moon,SunMedium } from 'lucide-react'
 
 import React, { useEffect,useState } from 'react';
@@ -13,8 +13,7 @@ import { logout } from '../../hooks/user';
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isDarkMode, setIsDarkMode] = useState(true);
-  const accessToken = useSelector(selectAccessToken);
-  const user = useSelector(selectUsername);
+  const user = useSelector(selectUser);
 
   const dispatch = useDispatch();
 
@@ -32,7 +31,7 @@ export default function Header() {
   }
 
   return (
-    <div className=" w-full bg-white dark:bg-black fixed top-0 left-0 right-0 z-50 ">
+    <div className=" w-full bg-white dark:bg-black border-b-2 border-s-slate-500 fixed top-0 left-0 right-0 z-50 ">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img
@@ -45,7 +44,7 @@ export default function Header() {
             setIsDarkMode(prev => !prev);
           }}
         >{isDarkMode ? <SunMedium className="h-8 w-8" color='white'/>:<Moon className="h-8 w-8" /> }</button>
-        {accessToken ? (<>
+        {user ? (<>
         
           <div className="lg:hidden">
             <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer dark:text-white" />

@@ -3,15 +3,14 @@ import { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
 import { Error404 } from '../index.js'
 import { useDispatch, useSelector } from "react-redux";
-import { selectUsername } from "../../store/authSlice.js";
+import { selectUser } from "../../store/authSlice.js";
 
 export function GetProfile() {
   const [user, setUser] = useState({});
   const [edit, setEdit] = useState(false);
   const params = useParams();
   const { username } = params;
- const dispatch = useDispatch();
- const user1 = useSelector(selectUsername).username;
+ const user1 = useSelector(selectUser).username;
 
  
 

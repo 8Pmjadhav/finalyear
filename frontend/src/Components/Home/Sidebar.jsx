@@ -4,11 +4,11 @@ import { Link } from 'react-router-dom';
 
 import { logout } from '../../hooks/user';
 import { useSelector } from 'react-redux';
-import { selectUsername } from '../../store/authSlice';
+import { selectUser } from '../../store/authSlice';
 
 
 export default function Sidebar({ dispatch }) {
-  const {username,avatar} = useSelector(selectUsername);
+  const {username,avatar} = useSelector(selectUser);
 
   
 

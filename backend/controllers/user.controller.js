@@ -47,6 +47,7 @@ export async function getCurrentUser(req, res) {
             {
                 status: 200,
                 msg: "User Logged In",
+                id:user.id,
                 username: user.username,
                 avatar: user.avatar,
                 accessToken: user.accessToken,

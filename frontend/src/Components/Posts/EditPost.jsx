@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-
+import { useSelector } from 'react-redux';
+import { selectUsername } from '../../store/authSlice';
 import {Success} from '../index.js'
  
-const CreatePost = () => {
-  const [image, setImage] = useState(null);
-  const [video, setVideo] = useState(null);
-  const [content, setContent] = useState('');
+const EditPost = ({post}) => {
+  const [image, setImage] = useState(post.image);
+  const [video, setVideo] = useState(post.video);
+  const [content, setContent] = useState(post.content);
   const [msg,setMsg] = useState(null);
 
 
@@ -25,7 +26,7 @@ const CreatePost = () => {
     formData.append('content', content);
 
     try {
-        const response = await axios.post(`/api/posts/postTweet`, formData, {
+        const response = await axios.post(`/api/posts/EditTweet`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data'
           }
@@ -85,7 +86,7 @@ const CreatePost = () => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
-            placeholder="Enter your content here..."
+            placeholder={content}
           ></textarea>
         </div>
         
@@ -94,7 +95,7 @@ const CreatePost = () => {
             type="submit"
             className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-200"
           >
-            Create Post
+            Edit Post
           </button>
         </div>
       </form>
@@ -102,6 +103,6 @@ const CreatePost = () => {
   );
 };
 
-export default CreatePost;
+export default EditPost;
 
 

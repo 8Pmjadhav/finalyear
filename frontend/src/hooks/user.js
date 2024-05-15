@@ -48,8 +48,9 @@ export async function isAuthenticated(dispatch) {
             .then((res) => {
                 //console.log(res);
                 if (res.status === 200 && res.data.accessToken) {
-                    const { accessToken, username, avatar } = res.data;
-                    dispatch(setAccessToken({ accessToken, username, avatar }));
+                    const { accessToken, username, avatar ,id} = res.data;
+                    const user = {username, avatar ,id}
+                    dispatch(setAccessToken({accessToken, user }));
                 }
             }).catch(function (error) {
                 //console.log(error.response)

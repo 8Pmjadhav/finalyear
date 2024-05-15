@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { selectUsername } from '../../store/authSlice';
 import {Success} from '../index.js'
 
 const UpdateProfile = () => {
@@ -11,7 +9,6 @@ const UpdateProfile = () => {
   const [gender, setGender] = useState('');
   const [profession,setProfession] = useState('');
   const [msg,setMsg] = useState();
-  const user = useSelector(selectUsername);
 
   if(msg){
     setTimeout(() => {

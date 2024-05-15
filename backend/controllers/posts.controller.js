@@ -35,6 +35,42 @@ export async function getTweets(req, res) {
     }
 }
 
+export async function viewTweet(req, res) {
+    try {
+        const {post_id} = req.query
+        const user = req.user;
+        const post = await prisma.post.findUnique({
+            where: {
+                id:Number(post_id)
+            },
+            include: {
+                user: {
+                    select: {
+                        username: true,
+                        avatar: true
+                    }
+                },
+                reply:{
+                    
+                },
+                likes:{
+
+                }
+            },
+
+        });
+
+        // Calculate counts for replies and likes for each post
+       
+        return res
+            .status(200)
+            .json({status:200,post});
+
+    } catch (error) {
+        return res.status(500).json({ status: 500, msg: error?.message + "Error while getting Post" });
+    }
+}
+
 export async function tweetPost(req, res) {
     try {
         const contents = req.body;
