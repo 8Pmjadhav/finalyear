@@ -91,7 +91,7 @@ export async function updateAvatar(Local_path, user,/**req,res */) {
         })
 
         if (oldImage) {
-            const dele = await deleteOnCloudinary(oldImage.avatar_id, "new_avatar", 'image');
+            const dele = await deleteOnCloudinary(oldImage.avatar_id);
         }
         const newURL = await uploadOnCloudinary(Local_path, 'new_avatar');
         const newImage = await prisma.user.update({
@@ -135,7 +135,7 @@ export async function updateBackcover(Local_path, user/*req, res*/) {
         })
 
         if (oldImage) {
-            const dele = await deleteOnCloudinary(oldImage.backcover_id, "backcover", 'image');
+            const dele = await deleteOnCloudinary(oldImage.backcover_id);
         }
         const newURL = await uploadOnCloudinary(Local_path, 'backcover');
         const newImage = await prisma.user.update({

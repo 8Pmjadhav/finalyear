@@ -2,7 +2,7 @@ import { Router } from "express";
 import { verifyJWT } from "../middlewares/Authenticate.js";
 
 import { upload } from "../middlewares/multer.js";
-import { getTweets, tweetPost, viewTweet } from "../controllers/posts.controller.js";
+import { deletePost, getTweets, tweetPost, viewTweet } from "../controllers/posts.controller.js";
 
 const router = Router();
 
@@ -13,6 +13,7 @@ router.post('/postTweet', verifyJWT, upload.fields([
 ]), tweetPost);
 
 router.get('/getTweets',verifyJWT,getTweets);
-router.get('/viewTweet',verifyJWT,viewTweet);
+router.delete('/deleteTweet/:post_id',verifyJWT,deletePost);
+router.get('/viewTweet/:post_id',verifyJWT,viewTweet);
 
 export default router;

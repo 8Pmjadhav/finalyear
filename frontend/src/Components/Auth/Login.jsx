@@ -35,8 +35,6 @@ export default function Login() {
       await axios.post('/api/user/login', { email, password })
         .then(async (res) => {
           //console.log(res);
-          localStorage.setItem('accessToken', res.data.accessToken);
-          localStorage.setItem('refreshToken', res.data.refreshToken);
           if (res.request.status === 200) {
             console.log(res);
             await isAuthenticated(dispatch);

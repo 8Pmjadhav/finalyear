@@ -51,7 +51,7 @@ export async function getCurrentUser(req, res) {
                 username: user.username,
                 avatar: user.avatar,
                 accessToken: user.accessToken,
-                refreshToken: user.refreshToken
+                // refreshToken: user.refreshToken
             }
         )
 
@@ -161,8 +161,8 @@ export async function login(req, res) {
 
             return res
                 .status(200)
-                .cookie("accessToken", accessToken, { maxAge: 60 * 60 * 24 * 1000 })
-                .cookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 10 * 1000 })
+                .cookie("accessToken", accessToken, { maxAge: 60 * 60 * 24 * 1000 * 2 })
+                // .cookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 10 * 1000 })
                 .json(
                     {
                         status: 200,
@@ -201,7 +201,7 @@ export async function logout(req, res) {
     return res
         .status(200)
         .clearCookie("accessToken", options)
-        .clearCookie("refreshToken", options)
+        // .clearCookie("refreshToken", options)
         .json({
             status: 200,
             msg: "user logged out"
