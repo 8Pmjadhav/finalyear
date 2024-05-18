@@ -1,11 +1,9 @@
 import { useEffect, useState } from "react";
-import { Header, Footer, Error500 } from "./Components/index.js";
-import axios from 'axios';
+import { Header, Footer, Error500,Loader } from "./Components/index.js";
 import { Outlet } from "react-router-dom";
 import { useDispatch, useSelector } from 'react-redux';
 import { selectAccessToken } from "./store/authSlice.js";
 import { isAuthenticated } from "./hooks/user.js";
-import Loader from "./Components/Loader.jsx";
 
 //import 'dotenv/config';
 
@@ -43,9 +41,10 @@ export default function App() {
     <>
     {
       loading ? ( <Loader />) : (
-    <div className='min-h-screen flex flex-wrap content-between dark:bg-black' style={{
-      backgroundImage: 'url(/background/batthern.png)'
-    }}>
+    <div className='min-h-screen flex flex-wrap content-between  bg-cover bg-fixed'
+    style={{
+      backgroundColor : '#948979'
+    }} >
       <div className={`w-full ${!accessToken && 'flex flex-col justify-center items-center'}`}>
         <Header />
         <main >

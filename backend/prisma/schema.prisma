@@ -76,11 +76,14 @@ model Reply {
 }
 
 model Likes {
-  id         Int      @id @default(autoincrement())
-  user_id    Int
-  user       User     @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  post_id    Int
-  post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  id      Int  @id @default(autoincrement())
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  post_id Int
+  post    Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
+
   created_At DateTime @default(now())
   updated_At DateTime @default(now())
+
+  @@unique([user_id, post_id]) // Composite unique constraint
 }

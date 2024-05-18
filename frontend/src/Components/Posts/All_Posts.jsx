@@ -21,7 +21,10 @@ export default function AllPosts() {
   async function getPosts() {
     try {
       await axios.get(`/api/posts/getTweets`)
-        .then((res) => { setPosts(res.data.posts) })
+        .then((res) => { 
+          // console.log(res.data);
+          setPosts(res.data.posts)
+         })
 
 
     } catch (error) {
@@ -38,7 +41,7 @@ export default function AllPosts() {
     <>
 
       {loading ? (<Loader />) : (
-        posts.slice().reverse().map(post => (
+        posts.map(post => (
           <PostCard key={post.id} post={post} setRefetch0={setRefetch0} />
         )))
       }

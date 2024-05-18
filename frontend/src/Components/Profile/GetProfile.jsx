@@ -4,18 +4,19 @@ import { Link, useParams } from "react-router-dom";
 import { Error404 } from '../index.js'
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice.js";
+import { Pencil } from "lucide-react";
 
 export function GetProfile() {
   const [user, setUser] = useState({});
   const [edit, setEdit] = useState(false);
   const params = useParams();
   const { username } = params;
- const user1 = useSelector(selectUser).username;
+  const user1 = useSelector(selectUser).username;
 
- 
 
- const [isOpen, setIsOpen] = useState(false);
-  const [file,setFile] = useState();
+
+  const [isOpen, setIsOpen] = useState(false);
+  const [file, setFile] = useState();
 
   function toggleModal(file) {
     setIsOpen(!isOpen);
@@ -26,7 +27,7 @@ export function GetProfile() {
     try {
       const response = await axios.get(`/api/profile/profile?username=${username}`);
       setUser(response.data);
-      // console.log(response.data);
+      console.log(response.data);
     } catch (error) {
       setUser(false)
       console.error("Error fetching profile:", error.response.data);
@@ -36,11 +37,11 @@ export function GetProfile() {
     if (user1 === username) {
       setEdit(true);
     }
-    else{
+    else {
       setEdit(false);
     }
     getProfile();
-  }, [user1,username])
+  }, [user1, username])
   //getProfile();
   if (!user) {
     return (
@@ -50,21 +51,9 @@ export function GetProfile() {
   else {
     return (
       <div>
-        <div className="bg-gray-100 min-h-screen dark:bg-slate-800">
-          {/* Header */}
-          <header className="bg-blue-500 text-white py-4 flex justify-between">
-            <div className="container mx-auto px-4">
-              <h1 className="text-2xl font-bold">Profile</h1>
-            </div>
-            {edit && <Link to={`/profile/${user1}/update`}>
-              <button className="bg-black mr-5 text-white px-4 py-2 rounded hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
-                Edit
-              </button>
-            </Link>}
-          </header>
-
+        <div className=" min-h-screen dark:text-white text-black ">          
           {/* Profile Content */}
-          <div className="container mx-auto px-4 py-8 md:py-12 lg:py-16 ">
+          <div className="container mx-auto lg:px-4  ">
             <div className="max-w-4xl mx-auto bg-white dark:bg-black shadow-md rounded-lg overflow-hidden">
               {/* Avatar and Backcover */}
               <div className="relative">
@@ -72,22 +61,27 @@ export function GetProfile() {
                   className="w-full h-40 md:h-64 object-cover object-center"
                   src={user.backcover}
                   alt="Backcover"
-                  onClick={() => toggleModal('backcover')} 
+                  onClick={() => toggleModal('backcover')}
                 />
                 <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2">
                   <img
                     className="w-24 h-24 md:w-36 md:h-36 rounded-full border-4 border-white"
                     src={user.avatar}
                     alt="Avatar"
-                    onClick={() => toggleModal('avatar')} 
+                    onClick={() => toggleModal('avatar')}
                   />
+                  {edit && <Link to={`/profile/${user1}/update`}>
+                    <button className="absolute bottom-0 right-0 dark:bg-black bg-white mr-5  px-2 py-2 rounded-2xl hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+                      <Pencil className="h-5 w-5 "/>
+                    </button>
+                  </Link>}
                 </div>
               </div>
 
               {/* Username */}
               <div className="text-center mt-4 md:mt-6">
                 <h2 className="text-2xl md:text-3xl font-bold dark:text-white">@{user.username}</h2>
-                <p className="text-gray-600 dark:text-white">{}{user.profession}</p>
+                <p className="text-gray-600 dark:text-white">{ }{user.profession}</p>
               </div>
 
               {/* Description */}
@@ -110,22 +104,23 @@ export function GetProfile() {
               </div>
             </div>
           </div>
+
         </div>
         {isOpen && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={toggleModal}>
-          {file === 'avatar' && (user.avatar && <img src={user.avatar} alt="Avatar Image" className="max-w-2/4 max-h-2/4" />)}
-          {file === 'backcover' && (user.backcover && <img src={user.backcover} alt="Backcover Image" className="max-w-3/4 max-h-3/4" />)}
-          <button className="absolute top-4 right-4 text-white hover:text-gray-300" onClick={toggleModal}>
-            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
-              <path
-                fillRule="evenodd"
-                d="M5.293 6.707a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414L11.414 10l3.293 3.293a1 1 0 1 1-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 0 1-1.414-1.414L8.586 10 5.293 6.707z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </button>
-        </div>
-      )}
+          <div className="fixed lg:top-32 lg:left-20 top-0 left-0 lg:h-2/5 lg:w-2/5 h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={toggleModal}>
+            {file === 'avatar' && (user.avatar && <img src={user.avatar} alt="Avatar Image" className="h-full " />)}
+            {file === 'backcover' && (user.backcover && <img src={user.backcover} alt="Backcover Image" className="max-w-3/4 max-h-3/4" />)}
+            <button className="absolute top-4 right-4 text-white hover:text-gray-300" onClick={toggleModal}>
+              <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                <path
+                  fillRule="evenodd"
+                  d="M5.293 6.707a1 1 0 0 1 1.414-1.414L10 8.586l3.293-3.293a1 1 0 1 1 1.414 1.414L11.414 10l3.293 3.293a1 1 0 1 1-1.414 1.414L10 11.414l-3.293 3.293a1 1 0 0 1-1.414-1.414L8.586 10 5.293 6.707z"
+                  clipRule="evenodd"
+                />
+              </svg>
+            </button>
+          </div>
+        )}
       </div>
     );
   }

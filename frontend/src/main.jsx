@@ -2,9 +2,12 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import App from './App.jsx'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
-import { Home, Contact, Login, SignUp, Following_Posts, AllPosts,
-   GetProfile,UpdateProfile,CreatePost,ViewPost,
-   ForgotPassword} from './Components/index.js';
+import {
+  Home, Contact, Login, SignUp, ForgotPassword,
+  GetProfile, UpdateProfile,
+  Following_Posts, AllPosts,
+  CreatePost, ViewPost, EditPost
+} from './Components/index.js';
 import './index.css';
 import { Provider } from 'react-redux';
 import store from './store/store.js';
@@ -37,21 +40,26 @@ const router = createBrowserRouter([
             element: <GetProfile />,
           },
           {
-            path:'profile/:username/update', // Relative path to render UpdateProfile
-            element: <UpdateProfile/>
+            path: 'profile/:username/update', // Relative path to render UpdateProfile
+            element: <UpdateProfile />
           },
           {
-            path:'posts/createPost',
-            element:<CreatePost/>
+            path: 'posts/createPost',
+            element: <CreatePost />
           },
           {
-            path:'posts/viewPost/:id',
-            element:<ViewPost/>
+            path: 'posts/viewPost/:id',
+            element: <ViewPost />,
+            
+          },
+          {
+            path: 'posts/viewPost/:id/editPost',
+            element: <EditPost />
           }
         ]
       },
 
-      
+
       {
         path: 'login',
         element: <Login />
@@ -62,7 +70,7 @@ const router = createBrowserRouter([
       },
       {
         path: 'forgotPassword',
-        element:<ForgotPassword/>
+        element: <ForgotPassword />
       }
     ]
   }

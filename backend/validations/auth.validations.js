@@ -5,7 +5,7 @@ import { CustomErrorReporter } from "./CustomErrorReporter.js";
 vine.errorReporter = () => new CustomErrorReporter();
 
 export const registerSchema = vine.object({
-  username: vine.string().minLength(2).maxLength(8),
+  username: vine.string().minLength(2).maxLength(12),
   email: vine.string().email(),
   password: vine.string().minLength(8).maxLength(50).confirmed(),
 });

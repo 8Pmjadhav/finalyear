@@ -1,62 +1,107 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import axios from 'axios';
-import { useSelector } from 'react-redux';
-import { selectUsername } from '../../store/authSlice';
-import {Success} from '../index.js'
- 
-const EditPost = ({post}) => {
-  const [image, setImage] = useState(post.image);
-  const [video, setVideo] = useState(post.video);
-  const [content, setContent] = useState(post.content);
-  const [msg,setMsg] = useState(null);
+import { useLocation, useNavigate,useParams } from 'react-router-dom';
+
+import { Success,Error404,GoBackButton,SubmitButton } from '../index.js'
+import { Trash2 } from 'lucide-react';
+
+const EditPost = () => {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const params = useParams()
+  const pid = params.id ;
+  const [loading,setLoading] = useState(false);
+
+  const [post, setPost] = useState(pid);
+
+  const [image, setImage] = useState('');
+  const [video, setVideo] = useState('');
+  const [content, setContent] = useState('');
+  // console.log(image,video,content);
+  const [msg, setMsg] = useState(null);
+  const [deleteiv,setDeleteiv] = useState({
+    image:false,
+    video:false
+  })
+
+  useEffect(() => {
+    (async () => {
+        try {
+            await axios.get(`/api/posts/viewTweet/${pid}`)
+                .then((res) => {
+                    const post = res.data.postData;
+                    setPost(post);
+                    setContent(post.content);
+                    setImage(post.image);
+                    setVideo(post.video);
+                    
+                })
+        } catch (error) {
+            setPost(null);
+            navigate(location.pathname, { replace: true, state: null });
+            console.log(error);
+        }
+    })();
+}, [ navigate, location.pathname])
+
+if (!post) return <Error404 />
 
 
-  if(msg){
+  if (msg) {
     setTimeout(() => {
       setMsg(null);
     }, 3000);
   }
 
   const handleSubmit = async (event) => {
+    setLoading(true);
     event.preventDefault();
     // Handle form submission, e.g., send data to server
     const formData = new FormData();
+    console.log(image,video,content);
     formData.append('image', image);
     formData.append('video', video);
     formData.append('content', content);
 
     try {
-        const response = await axios.post(`/api/posts/EditTweet`, formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data'
-          }
-        });
-    
-        if (response.status === 200) {
-          setMsg(response.data.msg);
-          console.log('Post created successfully');
-          // Optionally, update UI or handle success case
-        } else {
-          console.error('Failed to create post');
-          // Optionally, handle error case
+      const response = await axios.put(`/api/posts/editTweet/${post.id}`, formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data'
         }
-      } catch (error) {
-        console.error('Error posting tweet:', error);
+      });
+
+      if (response.status === 200) {
+        setMsg(response.data.msg);
+        console.log('Post created successfully');
+        setLoading(false);
+        navigate(`/posts/viewPost/${post.id}`)
+        // Optionally, update UI or handle success case
+      } else {
+        console.error('Failed to create post');
         // Optionally, handle error case
       }
+    } catch (error) {
+      console.error('Error posting tweet:', error);
+      // Optionally, handle error case
+    }
     // Send formData to backend API for processing
     console.log('Form submitted:', formData);
   };
+  const videoPath = post?.video;
+  const extension = post?.video && videoPath?.split('.').pop();
 
   return (
-    <div className="max-w-md mx-auto mt-8 p-6 bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
-      {msg && <Success text={msg}/>}
-      <h2 className="text-2xl font-semibold mb-6 dark:text-white">Create Post</h2>
+    <div className="lg:w-3/4  mx-auto mt-0 p-6 dark:text-white bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
+        {msg && <Success text={msg} />}
+      <h2 className="text-2xl font-semibold mb-6 dark:text-white">Edit Post</h2>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
+          
           <label htmlFor="image" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Image
+            Image     
           </label>
+          <div className='flex space-x-3'>
+          
           <input
             type="file"
             id="image"
@@ -64,11 +109,26 @@ const EditPost = ({post}) => {
             onChange={(e) => setImage(e.target.files[0])}
             className="appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           />
+          {post.image && (<div className='flex space-x-1'>
+            <img src={post.image} className='h-10 w-10 sm-4 ' alt='no file'/>
+            <button
+            type='button'
+            onClick={()=>{
+              setDeleteiv(prev => ({...prev,image:!prev.image}))
+            }}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-200"
+          >
+            {deleteiv.image ? <Trash2 fill='red' className='h-8 items-center '/>:<Trash2 className='h-8 items-center '/>}</button>
+          </div>
+          ) }
+          </div>
         </div>
         <div className="mb-4">
           <label htmlFor="video" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Video
+            Video/Image no. 2
           </label>
+          <div className='flex space-x-3'>
+          
           <input
             type="file"
             id="video"
@@ -76,7 +136,19 @@ const EditPost = ({post}) => {
             onChange={(e) => setVideo(e.target.files[0])}
             className="appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           />
-        </div>
+          {post.video && (<div className='flex space-x-1'>
+              {(extension === 'mp4' || extension === 'mkv') ? <a href={post.video} className='text-blue-500 underline'>video</a> :<img src={post.video} className='h-10 w-10 sm-4 dark:text-white' alt='no file'/>}
+            <button
+            type='button'
+            onClick={()=>{
+              setDeleteiv(prev => ({...prev,video:!prev.video}))
+            }}
+            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-200"
+          >
+            {deleteiv.video ? <Trash2 fill='red' className='h-8 items-center '/>:<Trash2 className='h-8 items-center dark:text-white'/>}</button>
+          </div>
+          )  }
+        </div></div>
         <div className="mb-4">
           <label htmlFor="content" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
             content
@@ -86,17 +158,13 @@ const EditPost = ({post}) => {
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
-            placeholder={content}
+            placeholder="Enter your content here..."
           ></textarea>
         </div>
-        
-        <div className="text-center">
-          <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-4 rounded focus:outline-none focus:ring focus:ring-blue-200"
-          >
-            Edit Post
-          </button>
+
+        <div className="text-center space-x-5">
+        <GoBackButton/>
+        <SubmitButton loading={loading} tb={'Edit Post'} ta={'Editing'} />
         </div>
       </form>
     </div>

@@ -23,6 +23,32 @@ export async function doReply(req, res) {
     }
 }
 
+export async function editReply(req, res) {
+    const user = req.user;
+    const {reply_id} = req.params;
+    const { replyContent } = req.body;
+
+    // console.log(req.body);
+    try {
+        const reply = await prisma.reply.update({
+            where:{
+                id:Number(reply_id),
+                user_id:user.id
+            },
+            data: {
+                content:String(replyContent),
+                updated_At:new Date()
+            }
+        })
+        if (reply) {
+            console.log(reply ,'success');
+            res.status(200).json({ status: 200, msg: "Replied edited successfully",r:reply });
+        }
+    } catch (error) {
+        res.status(400).json({ status: 200, msg: "Error while editing replying" });
+    }
+}
+
 export async function deleteReply(req, res) {
     const user = req.user;
     const {reply_id} = req.params;

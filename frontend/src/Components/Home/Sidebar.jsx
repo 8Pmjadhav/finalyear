@@ -1,5 +1,5 @@
-import { BarChart, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench,Contact } from 'lucide-react';
-import React, { useState } from 'react';
+import { BarChart, Wallet, Newspaper, BellRing, Paperclip, SunMedium,Moon, Wrench, Contact } from 'lucide-react';
+import React, { useState,useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import { logout } from '../../hooks/user';
@@ -7,10 +7,19 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/authSlice';
 
 
-export default function Sidebar({ dispatch }) {
-  const {username,avatar} = useSelector(selectUser);
 
-  
+export default function Sidebar({ dispatch }) {
+  const { username, avatar } = useSelector(selectUser);
+  const [isDarkMode, setIsDarkMode] = useState(true);
+  useEffect(() => {
+
+    if (isDarkMode) {
+      document.body.classList.add('dark');
+    } else {
+      document.body.classList.remove('dark');
+    }
+  }, [isDarkMode]);
+
 
   return (
 
@@ -71,13 +80,14 @@ export default function Sidebar({ dispatch }) {
             <label className="px-3 text-xs font-semibold uppercase text-gray-900 dark:text-gray-200">
               Customization
             </label>
-            <a
-              className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
-              href="#"
-            >
-              <Brush className="h-5 w-5" aria-hidden="true" />
-              <span className="mx-2 text-sm font-medium">Themes</span>
-            </a>
+            
+              <button className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
+
+                onClick={() => {
+                  setIsDarkMode(prev => !prev);
+                }}
+              >{isDarkMode ? <SunMedium className="h-5 w-5" color='white'  /> : <Moon className="h-5 w-5"  />}
+              <span className="mx-2 text-sm font-medium">Themes</span></button>
             <a
               className="flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700"
               href="#"

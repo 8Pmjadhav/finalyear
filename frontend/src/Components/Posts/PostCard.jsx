@@ -1,13 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/authSlice.js';
-import { SubmitButton } from '../Auth/comps/emailInput';
+import ReactLoading from 'react-loading';
 import { GetTime } from './basic.jsx';
 import { MessageCircleCode, ThumbsUp } from 'lucide-react';
 
-const PostCard = ({ post,setRefetch0 }) => {
+const PostCard = ({ post, setRefetch0 ,setRefetch }) => {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const [loading,setLoading] = useState(false);
+
+
   const [isOpen, setIsOpen] = useState(false);
   const [file, setFile] = useState();             // which one img or img1 or video should open big
   const [liked, setLiked] = useState(false)
@@ -17,25 +23,44 @@ const PostCard = ({ post,setRefetch0 }) => {
     if (user.username === post.user.username) {
       setEdit(true);
     }
-    if (user.id === post.likes?.user_id) {
-      console.log(user.id, post.likes);
+    const isliked = post?.likes.find((ele)=> ele.user_id===user.id)
+    if (isliked ) {
+      //  console.log(user.id, post.likes);
       setLiked(true);
     }
   }, [user, post])
+// console.log(post);
 
-  async function deletePost() {
+async function deletePost() {
+  setLoading(true);
     try {
       await axios.delete(`/api/posts/deleteTweet/${post.id}`)
         .then((res) => {
-          // console.log(res);
-          setRefetch0(prev => !prev);
-          // setNewReply('');
-          // setLikes(res.data.postData.likes);
+          setRefetch0 && setRefetch0(prev => !prev);
+          setRefetch && setRefetch(prev => !prev);
+          setLoading(false);
+          location.pathname[7]==='v' && navigate(-1);
+          
+          
         })
     } catch (error) {
       console.log(error);
     }
   }
+
+  async function likePost() {
+    try {
+      await axios.delete(`/api/posts/likeTweet/${post.id}`)
+        .then((res) => {
+          setRefetch0 && setRefetch0(prev => !prev);
+          setRefetch && setRefetch(prev => !prev);
+          
+        })
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
   function toggleModal(file) {
     setIsOpen(!isOpen);
     setFile(file);
@@ -46,34 +71,37 @@ const PostCard = ({ post,setRefetch0 }) => {
 
   //  console.log(post.replyCount,extension);
   return (
-    <div className="max-w-lg mx-auto bg-white dark:bg-stone-900 bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4">
+    <div className="max-w-lg mx-auto bg-white dark:bg-black bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4">
       <div className='flex justify-between'>
         <Link to={`/profile/${post.user.username}`}>
           <div className="flex items-center p-4">
             <img src={post.user.avatar} alt={post.user.username} className="w-8 h-8 rounded-full mr-2" />
-            <span className="font-semibold dark:text-white"> @{post.user.username}</span>
+            <span className="font-semibold dark:text-white"> @{post.user.username}{ edit && ' (You)'}</span>
           </div>
         </Link>
         {edit &&
           (<div className='flex items-center p-4 space-x-3'>
-            <Link to='/post/:id'>
+            <Link to={`/posts/viewPost/${post.id}/editPost`} >
               <button
                 type="submit"
                 className="inline-flex w-full items-center justify-center rounded-md bg-green-500  px-2.5 py-1  font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
               >
                 Edit
               </button></Link>
-              <button
-                type="submit"
-                onClick={deletePost}
-                className="inline-flex w-full items-center justify-center rounded-md bg-red-500  px-2.5 py-1 font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
-              >
-                Delete
-              </button>
+            <button
+              type="submit"
+              onClick={deletePost}
+              className="inline-flex w-full items-center justify-center rounded-md bg-red-500  px-2.5 py-1 font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
+            >
+              {loading ? (
+            <div className='flex space-x-2 text-green-400'>{'Deleting..'} 
+            <ReactLoading type='spin' color='#153448' height={'20px'} width={'20px'} />
+            </div>):'Delete'}
+            </button>
           </div>
           )}</div>
       <div className="p-4">
-        <Link to={`/posts/viewPost/:${post.id}`} state={{ post }}>
+        <Link to={`/posts/viewPost/${post.id}`}state={{ id:post.id }}>
           <p className="text-gray-700 dark:text-gray-50">{post.content}</p>
         </Link>
         {(post?.image || post?.video) && (
@@ -83,19 +111,25 @@ const PostCard = ({ post,setRefetch0 }) => {
             )}
             {post?.video && (
               (extension === 'mp4' || extension === 'mkv') ?
-                (<video src={post.video} className="w-1/2 h-full object-cover" onClick={() => toggleModal('video')} controls></video>)
+                (<video src={post.video} className={`${post.image ? "w-1/2" : "w-full"} h-full object-cover`} onClick={() => toggleModal('video')} controls></video>)
                 : (<img src={post.video} alt="Post Image" className="w-1/2 h-full object-cover" onClick={() => toggleModal('image1')} />)
             )}
           </div>
         )}
+
         <div className="flex items-center justify-between mt-4 text-sm dark:text-white">
           <GetTime timestamp={post.created_At} />
           <div className='flex justify-center space-x-1'>
-            <div className='h-5'>{post.replyCount || 0} &middot; </div>
-            <MessageCircleCode className='h-4 pt-0.5' />
-            <div>{post.replyCount || 0} &middot; </div>
+            <div className='flex justify-center space-x-1'>
+              {post._count.reply || 0} &middot; </div>
+            <Link to={`/posts/viewPost/${post.id}`}>
+              <MessageCircleCode className='h-4 pt-0.5' />
+            </Link>
+
+            <div>{post._count.likes || 0} &middot; </div>
             <button type='submit' onClick={() => {
               setLiked(prev => !prev);
+              likePost();
             }}>
               {liked ? <ThumbsUp fill='orange' className='h-4' /> : <ThumbsUp className='h-4' />}
             </button>
@@ -103,10 +137,10 @@ const PostCard = ({ post,setRefetch0 }) => {
         </div>
       </div>
       {(isOpen && file[0] === 'i') && (
-        <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={toggleModal}>
-          {file === 'image' && (post.image && <img src={post.image} alt="Post Image" className="max-w-3/4 max-h-3/4" />)}
-          {file === 'image1' && (post.video && <img src={post.video} alt="Post Image" className="max-w-3/4 max-h-3/4" />)}
-          <button className="absolute top-4 right-4 text-white hover:text-gray-300" onClick={toggleModal}>
+        <div className="fixed lg:top-32 lg:left-20 top-0 left-0 lg:h-2/5 lg:w-2/5 h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={toggleModal}>
+          {file === 'image' && (post.image && <img src={post.image} alt="Post Image" />)}
+          {file === 'image1' && (post.video && <img src={post.video} alt="Post Image" />)}
+          <button className="absolute top-2 right-2 text-red-800 hover:text-gray-300" onClick={toggleModal}>
             <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
               <path
                 fillRule="evenodd"

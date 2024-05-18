@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import {  selectUser} from '../../store/authSlice';
 import { BarChart, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench,Contact, Moon,SunMedium } from 'lucide-react'
 
-import React, { useEffect,useState } from 'react';
+import React, { useState } from 'react';
 import { Link, NavLink } from "react-router-dom";
 import { Menu, X, ChevronDown, ChevronRight } from 'lucide-react'
 import { logout } from '../../hooks/user';
@@ -12,26 +12,21 @@ import { logout } from '../../hooks/user';
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isDarkMode, setIsDarkMode] = useState(true);
   const user = useSelector(selectUser);
 
   const dispatch = useDispatch();
 
-  useEffect(() => {
-
-    if (isDarkMode) {
-      document.body.classList.add('dark');
-    } else {
-      document.body.classList.remove('dark');
-    }
-  }, [isDarkMode]);
+  
   //console.log(accessToken);
   const toggleMenu = () => {
     setIsMenuOpen(!isMenuOpen)
   }
 
   return (
-    <div className=" w-full bg-white dark:bg-black border-b-2 border-s-slate-500 fixed top-0 left-0 right-0 z-50 ">
+    <div className=" w-full bg-cover border-b-2 border-s-slate-500  fixed top-0 left-0 right-0 z-50 "
+    style={{
+      backgroundColor : '#0C359E'
+    }}>
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img
@@ -39,11 +34,7 @@ export default function Header() {
             src='/icons/pj-tweets-high-resolution-logo-transparent.png' />
             
         </div>
-        <button className='sm:ml-52'
-          onClick={()=>{
-            setIsDarkMode(prev => !prev);
-          }}
-        >{isDarkMode ? <SunMedium className="h-8 w-8" color='white'/>:<Moon className="h-8 w-8" /> }</button>
+        
         {user ? (<>
         
           <div className="lg:hidden">

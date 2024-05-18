@@ -65,6 +65,7 @@ export async function updateProfile(req, res) {
                 gender:req.body?.gender
             }
         })
+        user2.password=undefined;user2.refreshToken=undefined;
         return res.status(200).json({ status:200,msg:"Profile updated Successfully",user2 });
     } catch (error) {
         return res.status(500).json({ status: 500, msg: error?.message + "Error while updating Profile" });

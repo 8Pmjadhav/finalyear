@@ -15,12 +15,23 @@ import Following_Posts from "./Posts/Following_Posts";
 import AllPosts from "./Posts/All_Posts";
 import ViewPost from "./Posts/ViewPost";
 import CreatePost from "./Posts/CreatePost";
+import EditPost from "./Posts/EditPost";
+import PostCard from "./Posts/PostCard";
+import ReplyCard from "./Posts/ReplyCard";
 
 import { Error404 } from "./ErrorHandling/Error404";
 import { Error500 } from "./ErrorHandling/Error500";
 
-import { Success,Danger } from "./Auth/comps/Alerts";
+import { Success, Danger } from "./Auth/comps/Alerts";
+import Loader from "./Loader";
 
-export {Header,Home,Contact,Login,SignUp,Footer,Following_Posts,
-    AllPosts,GetProfile,Error404,Error500,UpdateProfile,CreatePost,ViewPost,
-    Danger,Success,ForgotPassword} ;
+import { GoBackButton,SubmitButton } from "./common";
+
+export {
+    Header, Home, Contact, Login, SignUp, Footer, ForgotPassword,
+    UpdateProfile, GetProfile,
+    AllPosts, Following_Posts, CreatePost, ViewPost, EditPost, PostCard, ReplyCard,
+    Danger, Success, Error500, Error404, Loader ,
+    GoBackButton , SubmitButton
+};
+

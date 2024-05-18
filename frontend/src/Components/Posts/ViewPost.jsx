@@ -1,36 +1,39 @@
 import axios from "axios";
-import PostCard from "./PostCard";
-import { useLocation } from "react-router-dom";
+import {  useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SendHorizonal } from "lucide-react";
-import ReplyCard from "./ReplyCard";
-import {Error404} from '../index.js'
+import {Error404,PostCard,ReplyCard,Loader,GoBackButton} from '../index.js'
 
 export default function ViewPost() {
-    const location = useLocation();
-    const { post } = location.state || false ;
-    if(!post) return <Error404/>
+    const params = useParams()
+    const pid = params.id ;
+    // console.log(location);
+    const [post,setPost] = useState(pid);
+    const [loading,setLoading] = useState(true);
+
     const [reply, setreply] = useState([]);
     const [likes, setLikes] = useState([]);
     const [refetch,setRefetch] = useState(false);
-    const [notfound,setNotfound] = useState(false);
 
     const [newReply , setNewReply] = useState("");
 
     useEffect(() => {
         (async () => {
             try {
-                await axios.get(`/api/posts/viewTweet/${post.id}`)
+                await axios.get(`/api/posts/viewTweet/${pid}`)
                     .then((res) => {
-                         console.log(res);
+                        setPost(res.data.postData);
                         setreply(res.data.postData.reply);
                         setLikes(res.data.postData.likes);
+                        setLoading(false);
                     })
             } catch (error) {
                 console.log(error);
             }
         })();
-    }, [post,refetch])
+    }, [refetch])
+    if(!post) return <Error404/>
+
 
     // console.log(reply, likes);
     async function postReply(e){
@@ -49,9 +52,10 @@ export default function ViewPost() {
     }
 
 
-    return (
+    return (loading ? (<Loader/>):
         <>
-            <PostCard post={post} />
+            <GoBackButton />
+            <PostCard post={post} setRefetch={setRefetch} />
             <div className="max-w-lg mx-auto bg-white dark:bg-stone-900 bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4">
                 <form className="flex w-full  space-x-1 " onSubmit={postReply}>
                     <input
@@ -70,7 +74,7 @@ export default function ViewPost() {
                 </form>
             </div>
             {
-                reply.slice().reverse().map((rep)=>(
+                reply.map((rep)=>(
                     <ReplyCard key={rep.id} reply={rep} setRefetch={setRefetch}/>
                 ))
             }
