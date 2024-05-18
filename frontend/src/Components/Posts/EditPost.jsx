@@ -58,10 +58,11 @@ if (!post) return <Error404 />
     event.preventDefault();
     // Handle form submission, e.g., send data to server
     const formData = new FormData();
-    console.log(image,video,content);
+    // console.log(image,video,content);
     formData.append('image', image);
     formData.append('video', video);
     formData.append('content', content);
+    formData.append('deleteiv',JSON.stringify(deleteiv)); 
 
     try {
       const response = await axios.put(`/api/posts/editTweet/${post.id}`, formData, {

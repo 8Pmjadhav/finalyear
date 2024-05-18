@@ -71,7 +71,8 @@ async function deletePost() {
 
   //  console.log(post.replyCount,extension);
   return (
-    <div className="max-w-lg mx-auto bg-white dark:bg-black bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4">
+    <div className="max-w-lg mx-auto bg-white dark:bg-black bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4"
+     >
       <div className='flex justify-between'>
         <Link to={`/profile/${post.user.username}`}>
           <div className="flex items-center p-4">

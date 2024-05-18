@@ -5,8 +5,9 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import {
   Home, Contact, Login, SignUp, ForgotPassword,
   GetProfile, UpdateProfile,
-  Following_Posts, AllPosts,
-  CreatePost, ViewPost, EditPost
+  Following_Posts, GetPosts,
+  CreatePost, ViewPost, EditPost,
+  
 } from './Components/index.js';
 import './index.css';
 import { Provider } from 'react-redux';
@@ -32,12 +33,34 @@ const router = createBrowserRouter([
             element: <Following_Posts />
           },
           {
-            path: 'allposts',
-            element: <AllPosts />
+            path: 'getposts/:flag',
+            element: <GetPosts />
           },
           {
             path: 'profile/:username', // Relative path
             element: <GetProfile />,
+            children:[
+              // {
+              //   path:'posts',
+              //   element:,
+              // },
+              // {
+              //   path:'replies',
+              //   element:,
+              // },
+              // {
+              //   path:'likes',
+              //   element:,
+              // },
+              // {
+              //   path:'follwers',
+              //   element:,
+              // },
+              // {
+              //   path:'following',
+              //   element:,
+              // }
+            ]
           },
           {
             path: 'profile/:username/update', // Relative path to render UpdateProfile

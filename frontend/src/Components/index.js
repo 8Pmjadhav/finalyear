@@ -12,7 +12,7 @@ import { GetProfile } from "./Profile/GetProfile";
 import UpdateProfile from "./Profile/UpdateProfile";
 
 import Following_Posts from "./Posts/Following_Posts";
-import AllPosts from "./Posts/All_Posts";
+import GetPosts from "./Posts/Get_Posts";
 import ViewPost from "./Posts/ViewPost";
 import CreatePost from "./Posts/CreatePost";
 import EditPost from "./Posts/EditPost";
@@ -30,7 +30,7 @@ import { GoBackButton,SubmitButton } from "./common";
 export {
     Header, Home, Contact, Login, SignUp, Footer, ForgotPassword,
     UpdateProfile, GetProfile,
-    AllPosts, Following_Posts, CreatePost, ViewPost, EditPost, PostCard, ReplyCard,
+    GetPosts, Following_Posts, CreatePost, ViewPost, EditPost, PostCard, ReplyCard,
     Danger, Success, Error500, Error404, Loader ,
     GoBackButton , SubmitButton
 };

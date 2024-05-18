@@ -12,7 +12,7 @@ router.post('/postTweet', verifyJWT, upload.fields([
     { name: 'video', maxCount: 1 }
 ]), tweetPost);
 
-router.get('/getTweets',verifyJWT,getTweets);
+router.get('/getTweets/',verifyJWT,getTweets);
 router.delete('/deleteTweet/:post_id',verifyJWT,deletePost);
 router.get('/viewTweet/:post_id',verifyJWT,viewTweet);
 router.delete('/likeTweet/:post_id',verifyJWT,likePost);

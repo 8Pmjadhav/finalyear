@@ -43,7 +43,7 @@ export default function App() {
       loading ? ( <Loader />) : (
     <div className='min-h-screen flex flex-wrap content-between  bg-cover bg-fixed'
     style={{
-      backgroundColor : '#948979'
+      backgroundColor : '#8697C4'
     }} >
       <div className={`w-full ${!accessToken && 'flex flex-col justify-center items-center'}`}>
         <Header />

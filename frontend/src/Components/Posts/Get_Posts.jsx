@@ -2,11 +2,14 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import PostCard from './PostCard';
 import Loader from '../Loader';
+import { useParams } from 'react-router-dom';
 
 
 
 
-export default function AllPosts() {
+export default function GetPosts(props) {
+  const params = useParams();
+  const {flag,auser} = params || props;
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refetch0, setRefetch0] = useState(false);
@@ -20,7 +23,12 @@ export default function AllPosts() {
 
   async function getPosts() {
     try {
-      await axios.get(`/api/posts/getTweets`)
+      await axios.get(`/api/posts/getTweets`,{
+        params:{
+          flag,
+          auser
+        }
+      })
         .then((res) => { 
           // console.log(res.data);
           setPosts(res.data.posts)
@@ -39,9 +47,8 @@ export default function AllPosts() {
 
   return (
     <>
-
       {loading ? (<Loader />) : (
-        posts.map(post => (
+        posts?.map(post => (
           <PostCard key={post.id} post={post} setRefetch0={setRefetch0} />
         )))
       }
