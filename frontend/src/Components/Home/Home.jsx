@@ -37,7 +37,7 @@ export default function Home() {
       {/* Sidebar component */}
       <Sidebar  dispatch={dispatch}/>
       {/* Main content */}
-      <div className="flex-1 lg:p-10 pt-5  w-full  lg:ml-72 "
+      <div className="flex-1 lg:p-10 pt-5  w-full   "
       >
         <Outlet/>
       </div>

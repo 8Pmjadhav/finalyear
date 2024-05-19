@@ -1,18 +1,43 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
-import { Link, useParams, NavLink } from "react-router-dom";
-import { Error404 } from '../index.js'
+import { Link, useParams, NavLink, Outlet } from "react-router-dom";
+import { Error404, SubmitButton } from '../index.js'
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice.js";
 import { Pencil } from "lucide-react";
 
 export function GetProfile() {
-  const [user, setUser] = useState({});
+  const [user, setUser] = useState();
   const [edit, setEdit] = useState(false);
+  const [follow, setFollow] = useState(false);
+  const [refetch, setRefecth] = useState(false);
+
   const params = useParams();
   const { username } = params;
-  const user1 = useSelector(selectUser).username;
+  const user1 = useSelector(selectUser);
 
+  let flag = 1;
+  useEffect(() => {
+    (async () => {
+      await getProfile();
+
+    })()
+
+  }, [refetch])
+
+  useEffect(() => {
+    const ch = user?.following.find((ele) => ele.follower_id === user1.id)
+    if (ch) {
+      console.log('j1');
+      setFollow(true);
+    }
+    if (user1.username === username) {
+      setEdit(true);
+    }
+    else {
+      setEdit(false);
+    }
+  }, [user]);
 
 
   const [isOpen, setIsOpen] = useState(false);
@@ -22,26 +47,36 @@ export function GetProfile() {
     setIsOpen(!isOpen);
     setFile(file);
   };
-
   async function getProfile() {
     try {
-      const response = await axios.get(`/api/profile/profile?username=${username}`);
-      setUser(response.data);
-      console.log(response.data);
+      await axios.get(`/api/profile/profile?username=${username}`)
+        .then((response) => {
+          setUser(response.data);
+          console.log(response.data);
+        });
+
     } catch (error) {
       setUser(false)
       console.error("Error fetching profile:", error.response.data);
     }
   }
-  useEffect(() => {
-    if (user1 === username) {
-      setEdit(true);
+
+  async function followUser() {
+    try {
+      await axios.post('/api/follow/follow_un_User', { user_id: user.id })
+        .then((res) => {
+          setRefecth(prev => !prev);
+          setFollow(prev => !prev);
+        });
+
+      // console.log(response.data);
+    } catch (error) {
+      console.error("Error fetching follow status:", error.response.data);
     }
-    else {
-      setEdit(false);
-    }
-    getProfile();
-  }, [user1, username])
+  }
+
+
+
   //getProfile();
   if (!user) {
     return (
@@ -51,10 +86,10 @@ export function GetProfile() {
   else {
     return (
       <div>
-        <div className=" min-h-screen dark:text-white text-black ">
+        <div className=" min-h-screen lg:mx-40 dark:text-white ">
           {/* Profile Content */}
           <div className="container mx-auto  ">
-            <div className="max-w-4xl mx-auto bg-white dark:bg-black shadow-md rounded-lg overflow-hidden">
+            <div className="max-w-xl mx-auto bg-white dark:bg-black border border-gray-600 shadow-md rounded-lg overflow-hidden">
               {/* Avatar and Backcover */}
               <div className="relative">
                 <img
@@ -70,7 +105,7 @@ export function GetProfile() {
                     alt="Avatar"
                     onClick={() => toggleModal('avatar')}
                   />
-                  {edit && <Link to={`/profile/${user1}/update`}>
+                  {edit && <Link to={`/profile/${user1.username}/update`}>
                     <button className="absolute bottom-0 right-0 dark:bg-black bg-white mr-5  px-2 py-2 rounded-2xl hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
                       <Pencil className="h-5 w-5 " />
                     </button>
@@ -79,72 +114,87 @@ export function GetProfile() {
               </div>
 
               {/* Username */}
-              <div className="text-center mt-4 md:mt-6">
-                <h2 className="text-2xl md:text-3xl font-bold dark:text-white">@{user.username}</h2>
-                <p className="text-gray-600 dark:text-white">{ }{user.profession}</p>
-              </div>
+              <div className="flex justify-between mt-4 md:mt-6 px-6 md:px-8">
+                <div className="text-center ">
+                  <h2 className="text-2xl md:text-3xl font-bold dark:text-white">@{user.username}{edit && ' (You)'}</h2>
+                  <p className="text-gray-600 dark:text-white">{ }{user.profession}</p>
+                </div>
+                {!edit && <button
+                  type='submit'
+                  onClick={followUser}
+                  className="inline-flex w-1/6 h-12 items-center justify-center rounded-md bg-green-500  px-2.5 py-1  font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
+                >
+                  {follow ? 'Following' : 'follow'}
+                </button>}</div>
 
               {/* Description */}
               <div className="px-6 py-4 md:px-8 md:py-6">
                 <p className="text-gray-700 dark:text-white text-sm md:text-base">
                   {user.description}
                 </p>
+
               </div>
 
               {/* Followers and Following */}
-              <div className="flex justify-around border-t border-gray-200 dark:text-white py-4">
+              <div className="flex justify-around border-y border-gray-200 dark:text-white py-4">
                 <div className="text-center">
-                  <h3 className="text-lg font-bold">100</h3>
+                  <h3 className="text-lg font-bold">{user._count?.following}</h3>
                   <p className="text-gray-600">Followers</p>
                 </div>
-                <div className="text-center">
-                  <h3 className="text-lg font-bold">150</h3>
-                  <p className="text-gray-600">Following</p>
-                </div>
+                <Link
+                  className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
+                              ${location.pathname === `/profile/${user.username}/followers/${flag = 2}/${user.id}` && 'bg-blue-600'}`} to={`followers/${flag = 2}/${user.id}`}
+                >
+                  <div className="text-center">
+                    <h3 className="text-lg font-bold">{user._count?.followers}</h3>
+                    <p className="text-gray-600">Following</p>
+                  </div>
+                </Link>
+
               </div>
+              <header className="shadow sticky top-0 max-w-xl">
+                <nav className=" border-gray-200 px-4 lg:px-6 py-2.5">
+                  <div className="flex  justify-between items-center mx-auto">
+
+
+                    <ul className="flex  mt-4 font-medium justify-between flex-grow lg:mt-0">
+                      <li>
+                        <Link
+                          className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
+                              ${location.pathname === `/profile/${user.username}/posts/${flag = 1}/${user.id}` && 'bg-blue-600'}`} to={`posts/${flag = 1}/${user.id}`}
+                        >
+                          <span className="mx-2 text-sm font-medium">{user._count?.post} (Posts)</span>
+                        </Link>
+
+                      </li>
+                      <li>
+                        <Link
+                          className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
+                              ${location.pathname === `/profile/${user.username}/replies/${user.id}` && 'bg-blue-600'}`} to={`replies/${user.id}`}
+                        >
+                          <span className="mx-2 text-sm font-medium">{user._count?.reply} (Replies)</span>
+                        </Link>
+
+                      </li>
+                      <li>
+                        <Link
+                          className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
+                              ${location.pathname === `/profile/${user.username}/likes/${flag = 2}/${user.id}` && 'bg-blue-600'}`} to={`likes/${flag = 2}/${user.id}`}
+                        >
+                          <span className="mx-2 text-sm font-medium">{user._count?.likes} (likes)</span>
+                        </Link>
+
+
+                      </li>
+
+                    </ul>
+                  </div>
+                </nav>
+              </header>
             </div>
           </div>
-          <header className="shadow sticky top-0">
-            <nav className="bg-white border-gray-200 px-4 lg:px-6 py-2.5">
-              <div className="flex  justify-between items-center mx-auto">
 
-
-                <ul className="flex  mt-4 font-medium justify-between flex-grow lg:mt-0">
-                  <li>
-                    <NavLink
-                      to='#'
-                      className={({ isActive }) =>
-                        `${isActive ? 'text-red-700' : 'text-gray-700'}block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                      }
-                    >
-                      About
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to='#'
-                      className={({ isActive }) =>
-                        `${isActive ? 'text-red-700' : 'text-gray-700'}block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                      }
-                    >
-                      Contact
-                    </NavLink>
-                  </li>
-                  <li>
-                    <NavLink
-                      to='#'
-                      className={({ isActive }) =>
-                        `${isActive ? 'text-red-700' : 'text-gray-700'}block py-2 pr-4 pl-3 duration-200 border-b border-gray-100 hover:bg-gray-50 lg:hover:bg-transparent lg:border-0 hover:text-orange-700 lg:p-0`
-                      }
-                    >
-                      Github
-                    </NavLink>
-                  </li>
-
-                </ul>
-              </div>
-            </nav>
-          </header>
+          <Outlet />
         </div>
         {isOpen && (
           <div className="fixed lg:top-32 lg:left-20 top-0 left-0 lg:h-2/5 lg:w-2/5 h-full bg-black bg-opacity-75 flex justify-center items-center z-50" onClick={toggleModal}>

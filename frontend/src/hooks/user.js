@@ -35,14 +35,16 @@ export async function isAuthenticated(dispatch) {
                 }
             }).catch(function (error) {
                 //console.log(error.response)
+                dispatch(clearAccessToken());
+
                 if (error.response && error.response.status === 401) console.log("Unauthorized")
                 else {
-                    console.log("Login Again An error occured",error.response.data);
+                    
+                    console.log("Login Again ",error.response.data);
                     return;
                     
                 }
                 // console.log(error.request.response);
-                dispatch(clearAccessToken());
             }).finally(() => {
                 // console.log('finally');
             });

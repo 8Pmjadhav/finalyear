@@ -10,6 +10,9 @@ import Footer from "./Footer/Footer";
 
 import { GetProfile } from "./Profile/GetProfile";
 import UpdateProfile from "./Profile/UpdateProfile";
+import GetUserReplies from "./Profile/UserReplies";
+import PeopleCard from "./Profile/PeopleCard";
+import GetPeople from "./Profile/GetPeople";
 
 import Following_Posts from "./Posts/Following_Posts";
 import GetPosts from "./Posts/Get_Posts";
@@ -29,7 +32,7 @@ import { GoBackButton,SubmitButton } from "./common";
 
 export {
     Header, Home, Contact, Login, SignUp, Footer, ForgotPassword,
-    UpdateProfile, GetProfile,
+    UpdateProfile, GetProfile,GetUserReplies,GetPeople,PeopleCard,
     GetPosts, Following_Posts, CreatePost, ViewPost, EditPost, PostCard, ReplyCard,
     Danger, Success, Error500, Error404, Loader ,
     GoBackButton , SubmitButton

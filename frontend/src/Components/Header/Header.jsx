@@ -14,7 +14,7 @@ export default function Header() {
   const location = useLocation();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = useSelector(selectUser);
-  const { username, avatar } = user;
+  if(user) {const { username, avatar } = user;}
   const [isDarkMode, setIsDarkMode] = useState(true);
   useEffect(() => {
 
@@ -34,10 +34,8 @@ export default function Header() {
   }
 
   return (
-    <div className=" w-full bg-cover border-b-2 border-s-slate-500 dark:text-white fixed top-0 left-0 right-0 z-50 "
-      style={{
-        backgroundColor: '#0C359E'
-      }}>
+    <div className="lg:mx-96 md:mx-60 bg-cover border-b-2 border-gray-600 dark:text-white backdrop-blur-2xl fixed top-0 left-0 right-0 z-50  "
+      >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img

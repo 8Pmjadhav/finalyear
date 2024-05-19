@@ -1,41 +1,41 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {PostCard,Loader} from '../index.js'
+
 import { useParams } from 'react-router-dom';
+import {ReplyCard,Loader} from '../index.js'
 
 
 
 
-export default function GetPosts(props) {
+export default function GetUserReplies(props) {
   const params = useParams();
-  const { flag, user_id } = params || props;
-  const [posts, setPosts] = useState([]);
+  const {  user_id } = params || props;
+  const [replies, setReplies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refetch0, setRefetch0] = useState(false);
-  // console.log(flag, user_id);
+//   console.log( user_id);
   useEffect(() => {
     (async () => {
-      await getPosts()
+      await getReplies()
     }
     )();
-  }, [refetch0,flag]);
+  }, [refetch0]);
 
-  async function getPosts() {
+  async function getReplies() {
     try {
-      await axios.get(`/api/posts/getTweets`, {
+      await axios.get(`/api/reply/getUserReplies`, {
         params: {
-          flag,
           user_id
         }
       })
         .then((res) => {
           // console.log(res.data);
-          setPosts(res.data.posts)
+          setReplies(res.data.replies)
         })
 
 
     } catch (error) {
-      console.error('Error posting tweet:', error);
+      console.error('Error gating replies:', error);
       // Optionally, handle error case
     }
     finally {
@@ -48,10 +48,10 @@ export default function GetPosts(props) {
     <>
       {loading ? (<Loader />) : (
         
-        posts?.map((post) => (
-          <div>
+        replies?.map(reply => (
+          <div className='items-end'>
           
-          <PostCard key={post.id} post={post} setRefetch0={setRefetch0} />
+          <ReplyCard key={reply.id} reply={reply} setRefetch={setRefetch0} />
           
           </div>
         )))

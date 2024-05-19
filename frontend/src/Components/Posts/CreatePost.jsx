@@ -67,7 +67,7 @@ const CreatePost = () => {
             id="image"
             accept="image/*"
             onChange={(e) => setImage(e.target.files[0])}
-            className="appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+            className=" w-full appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           />
         </div>
         <div className="mb-4">
@@ -79,7 +79,7 @@ const CreatePost = () => {
             id="video"
             accept="video/*"
             onChange={(e) => setVideo(e.target.files[0])}
-            className="appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+            className="w-full appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           />
         </div>
         <div className="mb-4">

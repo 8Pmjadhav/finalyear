@@ -70,3 +70,32 @@ export async function deleteReply(req, res) {
 
 
 }
+
+export async function getUserReplies(req, res) {
+    // const user = req.user;
+    const {user_id} = req.query;
+    
+    try {
+        const reply = await prisma.reply.findMany({
+            where: {
+                user_id:Number(user_id),
+            },
+            include:{
+                user:{
+                    select:{
+                        username:true,
+                        avatar:true
+                    }
+                }
+            }
+        })
+        if (reply) {
+            // console.log(reply);
+            res.status(200).json({ status: 200, msg: "Replies fetched successfully",replies:reply });
+        }
+    } catch (error) {
+        res.status(400).json({ status: 400, msg: "Error while gating user reply" });
+    }
+
+
+}

@@ -161,7 +161,7 @@ export async function login(req, res) {
 
             return res
                 .status(200)
-                .cookie("accessToken", accessToken, { maxAge: 60 * 60 * 24 * 1000 * 2 })
+                .cookie("accessToken", accessToken, { maxAge:1000* 60 *60 * 24   })
                 // .cookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 10 * 1000 })
                 .json(
                     {

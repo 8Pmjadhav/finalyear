@@ -41,12 +41,11 @@ export default function App() {
     <>
     {
       loading ? ( <Loader />) : (
-    <div className='min-h-screen flex flex-wrap content-between  bg-cover bg-fixed'
-    style={{
-      backgroundColor : '#8697C4'
-    }} >
-      <div className={`w-full ${!accessToken && 'flex flex-col justify-center items-center'}`}>
-        <Header />
+    <div className='min-h-screen  flex flex-wrap content-between dark:bg-black dark:text-white bg-cover bg-fixed'
+     >
+     
+      <div className={`w-full lg:mx-96  md:mx-40 ${!accessToken && 'flex flex-col justify-center items-center'}`}>
+         <Header />
         <main >
           {isServerDown ? <Error500 /> : <Outlet />}
         </main>

@@ -4,7 +4,7 @@ import { deleteOnCloudinary, uploadOnCloudinary } from "../utils/cloudinary.js";
 export async function getProfile(req, res) {
     try {
         const profilerUsername = req.query.username;
-        // const currentUser = req.user;
+         const user = req.user;
         // if (profilerUsername === currentUser.username) {
         //     return res.redirect('/api/user/updateUser');
         // }
@@ -21,9 +21,20 @@ export async function getProfile(req, res) {
                 description: true,
                 profession:true,
                 gender:true,
-                post: true,
-                reply: true,
-                likes: true
+                _count:{
+                    select:{
+                        post:true,
+                        reply:true,
+                        likes:true,
+                        followers:true,
+                        following:true
+                    }
+                },
+                following:{
+                    where:{
+                        follower_id:user.id
+                    }
+                }
             }
         });
 
@@ -37,6 +48,7 @@ export async function getProfile(req, res) {
             .json(profiler);
     }
     catch (error) {
+        console.error(error);
         return res.status(500).json({ status: 500, msg: error?.message + "Error while gating Profile" });
     }
 }

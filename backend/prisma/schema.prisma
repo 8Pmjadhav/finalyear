@@ -41,7 +41,7 @@ model User {
   refreshToken String?   @db.VarChar(255)
 
   created_At DateTime @default(now())
-  updated_At DateTime @default(now())
+  updated_At DateTime @updatedAt
   post       Post[]
   reply      Reply[]
   likes      Likes[]
@@ -61,7 +61,7 @@ model Post {
   reply      Reply[]
   likes      Likes[]
   created_At DateTime @default(now())
-  updated_At DateTime @default(now())
+  updated_At DateTime @updatedAt
 }
 
 model Reply {
@@ -72,7 +72,7 @@ model Reply {
   post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
   content    String?
   created_At DateTime @default(now())
-  updated_At DateTime @default(now())
+  updated_At DateTime @updatedAt
 }
 
 model Likes {
@@ -83,7 +83,7 @@ model Likes {
   post    Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
 
   created_At DateTime @default(now())
-  updated_At DateTime @default(now())
+  updated_At DateTime @updatedAt
 
   @@unique([user_id, post_id]) // Composite unique constraint
 }

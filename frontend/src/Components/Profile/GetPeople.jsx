@@ -1,41 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import {PostCard,Loader} from '../index.js'
+
 import { useParams } from 'react-router-dom';
+import {PeopleCard,Loader} from '../index.js'
 
 
 
 
-export default function GetPosts(props) {
+export default function GetPeople(props) {
   const params = useParams();
   const { flag, user_id } = params || props;
-  const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [people,setPeople] = useState();
   const [refetch0, setRefetch0] = useState(false);
-  // console.log(flag, user_id);
+//   console.log( user_id);
   useEffect(() => {
     (async () => {
-      await getPosts()
+      await getPeople()
     }
     )();
-  }, [refetch0,flag]);
+  }, [refetch0]);
 
-  async function getPosts() {
+  async function getPeople() {
     try {
-      await axios.get(`/api/posts/getTweets`, {
+      await axios.get(`/api/follow/getPeople`, {
         params: {
-          flag,
+            flag,
           user_id
         }
       })
         .then((res) => {
-          // console.log(res.data);
-          setPosts(res.data.posts)
+          console.log(res.data);
+          setPeople(res.data.people)
         })
 
 
     } catch (error) {
-      console.error('Error posting tweet:', error);
+      console.error('Error gating People:', error);
       // Optionally, handle error case
     }
     finally {
@@ -43,15 +44,14 @@ export default function GetPosts(props) {
     }
   }
 
-
   return (
     <>
       {loading ? (<Loader />) : (
         
-        posts?.map((post) => (
-          <div>
+        people?.map(p => (
+          <div className='items-end'>
           
-          <PostCard key={post.id} post={post} setRefetch0={setRefetch0} />
+          <PeopleCard key={p.id} user={p?.following || p?.followers} setRefetch={setRefetch0} />
           
           </div>
         )))

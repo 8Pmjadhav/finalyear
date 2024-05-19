@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/authSlice.js';
 import ReactLoading from 'react-loading';
 import { GetTime } from './basic.jsx';
-import { MessageCircleCode, ThumbsUp } from 'lucide-react';
+import { MessageCircleCode, ThumbsUp,Trash2,Pencil } from 'lucide-react';
 
 const PostCard = ({ post, setRefetch0 ,setRefetch }) => {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ const PostCard = ({ post, setRefetch0 ,setRefetch }) => {
       //  console.log(user.id, post.likes);
       setLiked(true);
     }
-  }, [user, post])
+  }, [ post])
 // console.log(post);
 
 async function deletePost() {
@@ -71,8 +71,9 @@ async function deletePost() {
 
   //  console.log(post.replyCount,extension);
   return (
-    <div className="max-w-lg mx-auto bg-white dark:bg-black bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4"
+    <div className="max-w-xl mx-auto bg-white dark:bg-black bottom-2 border border-gray-600  shadow-md rounded-md overflow-hidden mb-1"
      >
+      <hr className='border border-gray-600 ' />
       <div className='flex justify-between'>
         <Link to={`/profile/${post.user.username}`}>
           <div className="flex items-center p-4">
@@ -87,7 +88,7 @@ async function deletePost() {
                 type="submit"
                 className="inline-flex w-full items-center justify-center rounded-md bg-green-500  px-2.5 py-1  font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
               >
-                Edit
+                <Pencil className="h-5 w-5"/>
               </button></Link>
             <button
               type="submit"
@@ -95,9 +96,8 @@ async function deletePost() {
               className="inline-flex w-full items-center justify-center rounded-md bg-red-500  px-2.5 py-1 font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
             >
               {loading ? (
-            <div className='flex space-x-2 text-green-400'>{'Deleting..'} 
             <ReactLoading type='spin' color='#153448' height={'20px'} width={'20px'} />
-            </div>):'Delete'}
+            ):<Trash2 className='h-5 w-5'/>}
             </button>
           </div>
           )}</div>
@@ -106,7 +106,7 @@ async function deletePost() {
           <p className="text-gray-700 dark:text-gray-50">{post.content}</p>
         </Link>
         {(post?.image || post?.video) && (
-          <div className={`relative mt-4 h-60 flex border-2 rounded-md border-black dark:border-white ${(post?.image && post?.video) ? 'justify-center' : ""}`}>
+          <div className={`relative mt-4 h-72 flex border-2 rounded-md border-black dark:border-white ${(post?.image && post?.video) ? 'justify-center' : ""}`}>
             {post?.image && (
               <img src={post.image} alt="Post Image" className={`${post.video ? "w-1/2" : "w-full"} h-full object-cover`} onClick={() => toggleModal('image')} />
             )}

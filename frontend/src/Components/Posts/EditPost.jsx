@@ -92,7 +92,7 @@ if (!post) return <Error404 />
   const extension = post?.video && videoPath?.split('.').pop();
 
   return (
-    <div className="lg:w-3/4  mx-auto mt-0 p-6 dark:text-white bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
+    <div className=" max-w-md mx-auto mt-0 p-6 dark:text-white bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
         {msg && <Success text={msg} />}
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">Edit Post</h2>
       <form onSubmit={handleSubmit}>

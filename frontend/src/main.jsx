@@ -4,7 +4,7 @@ import App from './App.jsx'
 import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import {
   Home, Contact, Login, SignUp, ForgotPassword,
-  GetProfile, UpdateProfile,
+  GetProfile, UpdateProfile,GetUserReplies,GetPeople,
   Following_Posts, GetPosts,
   CreatePost, ViewPost, EditPost,
   
@@ -40,26 +40,26 @@ const router = createBrowserRouter([
             path: 'profile/:username', // Relative path
             element: <GetProfile />,
             children:[
-              // {
-              //   path:'posts',
-              //   element:,
-              // },
-              // {
-              //   path:'replies',
-              //   element:,
-              // },
-              // {
-              //   path:'likes',
-              //   element:,
-              // },
-              // {
-              //   path:'follwers',
-              //   element:,
-              // },
-              // {
-              //   path:'following',
-              //   element:,
-              // }
+              {
+                path:'posts/:flag/:user_id',
+                element:<GetPosts/>,
+              },
+              {
+                path:'replies/:user_id',
+                element: <GetUserReplies/>,
+              },
+              {
+                path:'likes/:flag/:user_id',
+                element:<GetPosts/>,
+              },
+              {
+                path:'followers/:flag/:user_id',
+                element:<GetPeople/>,
+              },
+              {
+                path:'following/:flag/:user_id',
+                element:<GetPeople/>,
+              }
             ]
           },
           {

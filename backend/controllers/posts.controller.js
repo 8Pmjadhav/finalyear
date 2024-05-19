@@ -5,8 +5,9 @@ export async function getTweets(req, res) {
   try {
     const currentDate = new Date();
     const user = req.user;
-    let {flag}  = req.query;  const {auser} = req.query;
-    flag = Number(flag);
+    let {flag,user_id}  = req.query;  
+    flag = Number(flag);user_id = Number(user_id);
+    // console.log(req.query,flag,user_id);
   
     // Calculate the date 5 days ago
     const fiveDaysAgo = new Date(currentDate.getTime() - 5 * 24 * 60 * 60 * 1000);
@@ -48,7 +49,7 @@ export async function getTweets(req, res) {
     else if(flag===1){
        posts = await prisma.post.findMany({
         where: {
-          user_id:user.id
+          user_id:user_id
         },
         include: {
           user: {
@@ -75,6 +76,43 @@ export async function getTweets(req, res) {
           }
         ]
       });
+      console.log(posts);
+    }
+    else if(flag === 2){
+      posts = await prisma.post.findMany({
+        where: {
+          likes:{
+            some:{
+              user_id:user_id
+            }
+          }
+        },
+        include: {
+          user: {
+            select: {
+              username: true,
+              avatar: true
+            }
+          },
+          _count:{
+            select:{
+              reply:true,
+              likes:true
+            }
+          },
+          likes:{
+            where:{
+              user_id:user.id
+            }
+          }
+        },
+        orderBy:[
+          {
+            created_At:'desc'
+          }
+        ]
+      });
+      console.log(posts);
     }
     
 

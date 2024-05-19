@@ -1,13 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import { ArrowRight } from 'lucide-react';
 import axios from 'axios';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import Loader from '../Loader.jsx';
-import { isAuthenticated } from '../../hooks/user.js';
-import { EmailInput, PasswordInput, SubmitButton, ConfirmPasswordInput, Icon, OTPInput, Success, Danger } from './comps/comps.jsx'
-import { Error500 } from '../ErrorHandling/Error500.jsx';
+import { EmailInput, PasswordInput, SubmitButton, ConfirmPasswordInput, OTPInput, Success, Danger } from './comps/comps.jsx'
 
 export default function ForgotPassword() {
 

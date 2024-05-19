@@ -54,9 +54,8 @@ export default function ViewPost() {
 
     return (loading ? (<Loader/>):
         <>
-            <GoBackButton />
             <PostCard post={post} setRefetch={setRefetch} />
-            <div className="max-w-lg mx-auto bg-white dark:bg-stone-900 bottom-2 border-2 border-black dark:border-white shadow-md rounded-md overflow-hidden mb-4">
+            <div className="max-w-xl mx-auto  bottom-2 border-2 border-gray-600  shadow-md rounded-md overflow-hidden mb-4">
                 <form className="flex w-full  space-x-1 " onSubmit={postReply}>
                     <input
                         className="flex-1 h-10 w-full rounded-md dark:text-white  bg-transparent px-3 py-1 text-sm placeholder:text-gray-600 dark:placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
