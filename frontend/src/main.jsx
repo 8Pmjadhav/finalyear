@@ -7,7 +7,7 @@ import {
   GetProfile, UpdateProfile,GetUserReplies,GetPeople,
   Following_Posts, GetPosts,
   CreatePost, ViewPost, EditPost,
-  
+  HandleSearch
 } from './Components/index.js';
 import './index.css';
 import { Provider } from 'react-redux';
@@ -25,12 +25,30 @@ const router = createBrowserRouter([
         element: <Home />,
         children: [
           {
+            path:'search/:searchQuery',
+            element:<HandleSearch/>,
+            children:[
+              {
+                path:'posts/:flag',
+                element:<GetPosts/>
+              },
+              {
+                path:'people/:flag',
+                element:<GetPeople/>
+              },
+              {
+                path:'replies/:flag',
+                element:<GetUserReplies/>
+              }
+            ]
+          },
+          {
             path: 'contact',
             element: <Contact />
           },
           {
-            path: 'following_post',
-            element: <Following_Posts />
+            path: 'following_post/:flag',
+            element: <GetPosts />
           },
           {
             path: 'getposts/:flag',

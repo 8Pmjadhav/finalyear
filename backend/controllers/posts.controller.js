@@ -5,19 +5,57 @@ export async function getTweets(req, res) {
   try {
     const currentDate = new Date();
     const user = req.user;
-    let {flag,user_id}  = req.query;  
-    flag = Number(flag);user_id = Number(user_id);
+    let {flag,user_id,searchQuery}  = req.query;  
+    flag = Number(flag);user_id = Number(user_id);searchQuery=String(searchQuery);
     // console.log(req.query,flag,user_id);
   
     // Calculate the date 5 days ago
-    const fiveDaysAgo = new Date(currentDate.getTime() - 5 * 24 * 60 * 60 * 1000);
+    const OneYearAgo = new Date(currentDate.getTime() - 365 * 24 * 60 * 60 * 1000);
     let posts = null;
-    if(flag===0){
+    // flag=10 following posts
+    if(flag===10){
+      posts = await prisma.post.findMany({
+        where: {
+          user:{
+            following:{
+              some:{
+                follower_id:user.id
+              }
+            }
+          }
+        },
+        include: {
+          user: {
+            select: {
+              username: true,
+              avatar: true
+            }
+          },
+          _count:{
+            select:{
+              reply:true,
+              likes:true
+            }
+          },
+          likes:{
+            where:{
+              user_id:user.id
+            }
+          }
+        },
+        orderBy:[
+          {
+            created_At:'desc'
+          }
+        ]
+      });
+    }
+    else if(flag===0){
        posts = await prisma.post.findMany({
         where: {
           created_At: {
             // Filter posts created after the calculated date
-            gte: fiveDaysAgo,
+            gte: OneYearAgo,
           },
         },
         include: {
@@ -76,7 +114,7 @@ export async function getTweets(req, res) {
           }
         ]
       });
-      console.log(posts);
+      // console.log(posts);
     }
     else if(flag === 2){
       posts = await prisma.post.findMany({
@@ -113,6 +151,42 @@ export async function getTweets(req, res) {
         ]
       });
       console.log(posts);
+    }
+    else if(flag === 3){
+      posts = await prisma.post.findMany({
+        where: {
+            content:{
+              // contains:`${searchQuery} | ${searchQuery.toUpperCase()} | ${searchQuery.toLowerCase()}`,
+              contains:searchQuery,
+              mode:'insensitive'
+            }
+        },
+        include: {
+          user: {
+            select: {
+              username: true,
+              avatar: true
+            }
+          },
+          _count:{
+            select:{
+              reply:true,
+              likes:true
+            }
+          },
+          likes:{
+            where:{
+              user_id:user.id
+            }
+          }
+        },
+        orderBy:[
+          {
+            created_At:'desc'
+          }
+        ]
+      });
+      // console.log(posts);
     }
     
 

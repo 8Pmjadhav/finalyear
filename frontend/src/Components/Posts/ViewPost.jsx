@@ -3,6 +3,8 @@ import {  useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SendHorizonal } from "lucide-react";
 import {Error404,PostCard,ReplyCard,Loader,GoBackButton} from '../index.js'
+import ReactLoading from 'react-loading';
+
 
 export default function ViewPost() {
     const params = useParams()
@@ -10,6 +12,7 @@ export default function ViewPost() {
     // console.log(location);
     const [post,setPost] = useState(pid);
     const [loading,setLoading] = useState(true);
+    const [reply_loading,setReply_loading] = useState(false);
 
     const [reply, setreply] = useState([]);
     const [likes, setLikes] = useState([]);
@@ -18,6 +21,7 @@ export default function ViewPost() {
     const [newReply , setNewReply] = useState("");
 
     useEffect(() => {
+        setReply_loading(true);
         (async () => {
             try {
                 await axios.get(`/api/posts/viewTweet/${pid}`)
@@ -31,6 +35,7 @@ export default function ViewPost() {
                 console.log(error);
             }
         })();
+        setReply_loading(false);
     }, [refetch])
     if(!post) return <Error404/>
 
@@ -38,6 +43,7 @@ export default function ViewPost() {
     // console.log(reply, likes);
     async function postReply(e){
         e.preventDefault();
+        setReply_loading(true);
         try {
             await axios.post(`/api/reply/post/${post.id}/doReply`,{newReply})
                 .then((res) => {
@@ -49,6 +55,7 @@ export default function ViewPost() {
         } catch (error) {
             console.log(error);
         }
+        setReply_loading(false);
     }
 
 
@@ -67,12 +74,14 @@ export default function ViewPost() {
                     <button
                         type="submit"
                         className="hover:bg-slate-400"
+                        disabled = {reply_loading}
                     >
-                        <SendHorizonal fill="aqua" strokeWidth={1} className="h-8 w-8 mx-2"/>
+                       {reply_loading ?   <ReactLoading type='spin' color='#153448' height={'20px'} width={'20px'} className="mx-2" />
+                        :<SendHorizonal fill="aqua" strokeWidth={1} className="h-8 w-8 mx-2"/>}
                     </button>
                 </form>
             </div>
-            {
+            {reply_loading ? <Loader/> :
                 reply.map((rep)=>(
                     <ReplyCard key={rep.id} reply={rep} setRefetch={setRefetch}/>
                 ))

@@ -1,7 +1,7 @@
 import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useParams, NavLink, Outlet } from "react-router-dom";
-import { Error404, SubmitButton } from '../index.js'
+import { Error404, Loader } from '../index.js'
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice.js";
 import { Pencil } from "lucide-react";
@@ -11,6 +11,7 @@ export function GetProfile() {
   const [edit, setEdit] = useState(false);
   const [follow, setFollow] = useState(false);
   const [refetch, setRefecth] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   const params = useParams();
   const { username } = params;
@@ -23,12 +24,11 @@ export function GetProfile() {
 
     })()
 
-  }, [refetch])
+  }, [refetch,username])
 
   useEffect(() => {
-    const ch = user?.following.find((ele) => ele.follower_id === user1.id)
+    const ch = user?.following?.find((ele) => ele.follower_id === user1.id)
     if (ch) {
-      console.log('j1');
       setFollow(true);
     }
     if (user1.username === username) {
@@ -52,13 +52,14 @@ export function GetProfile() {
       await axios.get(`/api/profile/profile?username=${username}`)
         .then((response) => {
           setUser(response.data);
-          console.log(response.data);
+          // console.log(response.data);
         });
 
     } catch (error) {
       setUser(false)
       console.error("Error fetching profile:", error.response.data);
     }
+    setLoading(false);
   }
 
   async function followUser() {
@@ -80,7 +81,7 @@ export function GetProfile() {
   //getProfile();
   if (!user) {
     return (
-      <Error404 />
+      <>{loading ? <Loader/>:<Error404 />}</>
     )
   }
   else {
@@ -115,14 +116,14 @@ export function GetProfile() {
 
               {/* Username */}
               <div className="flex justify-between mt-4 md:mt-6 px-6 md:px-8">
-                <div className="text-center ">
+                <div className="text-start ">
                   <h2 className="text-2xl md:text-3xl font-bold dark:text-white">@{user.username}{edit && ' (You)'}</h2>
                   <p className="text-gray-600 dark:text-white">{ }{user.profession}</p>
                 </div>
                 {!edit && <button
                   type='submit'
                   onClick={followUser}
-                  className="inline-flex w-1/6 h-12 items-center justify-center rounded-md bg-green-500  px-2.5 py-1  font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
+                  className="inline-flex w-2/6 h-12 items-center justify-center rounded-md bg-green-500  px-2.5 py-1  font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
                 >
                   {follow ? 'Following' : 'follow'}
                 </button>}</div>
@@ -137,10 +138,15 @@ export function GetProfile() {
 
               {/* Followers and Following */}
               <div className="flex justify-around border-y border-gray-200 dark:text-white py-4">
+              <Link
+                  className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
+                              ${location.pathname === `/profile/${user.username}/following/${flag = 1}/${user.id}` && 'bg-blue-600'}`} to={`following/${flag = 1}/${user.id}`}
+                >
                 <div className="text-center">
                   <h3 className="text-lg font-bold">{user._count?.following}</h3>
                   <p className="text-gray-600">Followers</p>
                 </div>
+                </Link>
                 <Link
                   className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
                               ${location.pathname === `/profile/${user.username}/followers/${flag = 2}/${user.id}` && 'bg-blue-600'}`} to={`followers/${flag = 2}/${user.id}`}

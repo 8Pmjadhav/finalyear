@@ -6,6 +6,7 @@
 
 generator client {
   provider = "prisma-client-js"
+  previewFeatures = ["fullTextSearch"]
 }
 
 datasource db {
@@ -45,6 +46,7 @@ model User {
   post       Post[]
   reply      Reply[]
   likes      Likes[]
+  notifications Notifications[]
   followers  Follow[] @relation("Followers") // Reference the "Followers" relation
   following  Follow[] @relation("Followings") // Reference the "Followings" relation
 }
@@ -86,4 +88,12 @@ model Likes {
   updated_At DateTime @updatedAt
 
   @@unique([user_id, post_id]) // Composite unique constraint
+}
+
+model Notifications{
+  id      Int  @id @default(autoincrement())
+  user_id Int
+  user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  message String @db.VarChar(255)
+  created_At DateTime @default(now())
 }

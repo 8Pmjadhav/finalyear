@@ -58,7 +58,7 @@ const UpdateProfile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 sm:mt-2 p-6 bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
+    <div className="max-w-md mx-auto mt-8 sm:mt-2 p-6 bg-white dark:bg-black rounded-lg shadow-md border border-gray-600">
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">Update Profile</h2>
       {msg && <Success text={"Profile Updated Successfully"}/>}
       <form onSubmit={handleSubmit}>
@@ -71,7 +71,7 @@ const UpdateProfile = () => {
             id="avatar"
             accept="image/*"
             onChange={(e) => setAvatar(e.target.files[0])}
-            className="appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+            className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           />
         </div>
         <div className="mb-4">
@@ -83,7 +83,7 @@ const UpdateProfile = () => {
             id="backCover"
             accept="image/*"
             onChange={(e) => setBackCover(e.target.files[0])}
-            className="appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+            className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           />
         </div>
         <div className="mb-4">
@@ -94,7 +94,7 @@ const UpdateProfile = () => {
             id="description"
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-24 w-full"
+            className="resize-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-24 w-full"
             placeholder="Enter your description here..."
           ></textarea>
         </div>
@@ -104,7 +104,7 @@ const UpdateProfile = () => {
           </label>
           <div className="mt-2">
                     <input
-                        className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-200 placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                        className="flex h-10 w-full rounded-md border border-gray-600 bg-transparent dark:bg-gray-800 px-3 py-2 text-sm dark:text-gray-200 placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                         type="text"
                         placeholder="Profession"
                         id="profession"
@@ -121,7 +121,7 @@ const UpdateProfile = () => {
             id="gender"
             value={gender}
             onChange={(e) => setGender(e.target.value)}
-            className="appearance-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+            className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           >
             <option value="">Select Gender</option>
             <option value="male">Male</option>

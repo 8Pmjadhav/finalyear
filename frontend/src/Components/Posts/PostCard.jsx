@@ -93,6 +93,7 @@ async function deletePost() {
             <button
               type="submit"
               onClick={deletePost}
+              disabled={loading}
               className="inline-flex w-full items-center justify-center rounded-md bg-red-500  px-2.5 py-1 font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
             >
               {loading ? (

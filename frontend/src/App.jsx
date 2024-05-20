@@ -41,7 +41,7 @@ export default function App() {
     <>
     {
       loading ? ( <Loader />) : (
-    <div className='min-h-screen  flex flex-wrap content-between dark:bg-black dark:text-white bg-cover bg-fixed'
+    <div className='min-h-screen font-mono flex flex-wrap content-between dark:bg-black dark:text-white bg-cover bg-fixed'
      >
      
       <div className={`w-full lg:mx-96  md:mx-40 ${!accessToken && 'flex flex-col justify-center items-center'}`}>

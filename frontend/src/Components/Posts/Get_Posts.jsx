@@ -8,7 +8,7 @@ import { useParams } from 'react-router-dom';
 
 export default function GetPosts(props) {
   const params = useParams();
-  const { flag, user_id } = params || props;
+  const { flag, user_id , searchQuery } = params || props;
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refetch0, setRefetch0] = useState(false);
@@ -18,14 +18,15 @@ export default function GetPosts(props) {
       await getPosts()
     }
     )();
-  }, [refetch0,flag]);
+  }, [refetch0,flag,searchQuery]);
 
   async function getPosts() {
     try {
       await axios.get(`/api/posts/getTweets`, {
         params: {
           flag,
-          user_id
+          user_id,
+          searchQuery
         }
       })
         .then((res) => {

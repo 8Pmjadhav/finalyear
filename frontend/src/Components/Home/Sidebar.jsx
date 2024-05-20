@@ -38,7 +38,7 @@ export default function Sidebar({ dispatch }) {
             <label className="px-3 text-xs font-semibold uppercase text-gray-900 dark:text-gray-200">Posts</label>
             <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                  ${location.pathname === '/following_post' && 'bg-blue-600'}`}              to="/following_post"
+                  ${location.pathname === '/following_post/10' && 'bg-blue-600'}`}              to="/following_post/10"
             >
               <BarChart className="h-5 w-5" aria-hidden="true" />
               <span className="mx-2 text-sm font-medium">Following Posts</span>
@@ -51,9 +51,6 @@ export default function Sidebar({ dispatch }) {
               <Wallet className="h-5 w-5" aria-hidden="true" />
               <span className="mx-2 text-sm font-medium">Get Posts</span>
             </Link>
-          </div>
-          <div className="space-y-3 ">
-            <label className="px-3 text-xs font-semibold uppercase text-gray-900 dark:text-gray-200">Posts</label>
             <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
                   ${location.pathname === '/posts/createPost' && 'bg-blue-600'}`} to="/posts/createPost"
@@ -61,21 +58,8 @@ export default function Sidebar({ dispatch }) {
               <Newspaper className="h-5 w-5" aria-hidden="true" />
               <span className="mx-2 text-sm font-medium">Create Post</span>
             </Link>
-            <a
-              className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-              ${location.pathname === '/allposts' && 'bg-blue-600'}`} href="#"
-            >
-              <BellRing className="h-5 w-5" aria-hidden="true" />
-              <span className="mx-2 text-sm font-medium">Notifications</span>
-            </a>
-            <a
-              className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                  ${location.pathname === '/allposts' && 'bg-blue-600'}`} href="#"
-            >
-              <Paperclip className="h-5 w-5" aria-hidden="true" />
-              <span className="mx-2 text-sm font-medium">Checklists</span>
-            </a>
           </div>
+          
 
           <div className="space-y-3 ">
             <label className="px-3 text-xs font-semibold uppercase text-gray-900 dark:text-gray-200">

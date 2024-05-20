@@ -5,18 +5,27 @@ import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice";
 import { Merge, Pencil, Trash2 } from "lucide-react";
+import ReactLoading from 'react-loading';
+import {Loader} from '../index.js';
+
+
 
 export default function ReplyCard({ reply, setRefetch }) {
     const [edit, setEdit] = useState(false);
     const [editry, setEditry] = useState(false);
     const [replyContent, setReplyContent] = useState(reply.content);
+    const [loading,setLoading] = useState(false);
+    const [deleteLoading,setDeleteLoading] = useState(false);
+
     const user = useSelector(selectUser);
 
+
     useEffect(() => {
+        setLoading(false);
         if (user.username === reply.user.username) {
             setEdit(true);
         }
-
+        
     }, [user, reply])
 
     async function submitEditedReply() {
@@ -35,11 +44,14 @@ export default function ReplyCard({ reply, setRefetch }) {
 
 
     async function deleteReply() {
+        setDeleteLoading(true);
         try {
             await axios.delete(`/api/reply/deleteReply/${reply.id}`)
                 .then((res) => {
                     // console.log(res);
+                    setDeleteLoading(false);
                     setRefetch(prev => !prev);
+                    
                     // setNewReply('');
                     // setLikes(res.data.postData.likes);
                 })
@@ -49,7 +61,8 @@ export default function ReplyCard({ reply, setRefetch }) {
     }
 
     return (
-
+        
+        <>{loading ? <Loader/> :
         <div className="max-w-xl mx-auto  bottom-2  dark:text-white border border-gray-600 shadow-md rounded-md overflow-hidden mb-1">
             <hr className='border border-gray-600 ' />
 
@@ -80,9 +93,12 @@ export default function ReplyCard({ reply, setRefetch }) {
                         <button
                             type="submit"
                             onClick={deleteReply}
+                            disabled={deleteLoading}
                             className="inline-flex w-full items-center justify-center rounded-md bg-red-500  px-2.5 py-1 font-semibold leading-7 text-white dark:text-black hover:bg-gray-600"
                         >
-                            <Trash2 className='h-5 w-5' />
+                            {deleteLoading ? (
+                                <ReactLoading type='spin' color='#153448' height={'20px'} width={'20px'} />
+                            ) : <Trash2 className='h-5 w-5' />}
                         </button>
                     </div>
                     )}</div>
@@ -92,7 +108,7 @@ export default function ReplyCard({ reply, setRefetch }) {
                         id="content"
                         value={replyContent}
                         onChange={(e) => setReplyContent(e.target.value)}
-                        className="resize border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
+                        className="resize border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
                     ></textarea>
                 )}
                 <div className="text-sm mt-3">
@@ -100,6 +116,6 @@ export default function ReplyCard({ reply, setRefetch }) {
                 </div>
 
             </div>
-        </div>
+        </div>}</>
     )
 }

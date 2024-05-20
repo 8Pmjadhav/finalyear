@@ -27,7 +27,7 @@ export function PasswordInput({ password, setPassword, isLoginPage }) {
             <div className="mt-2 relative">
                 <input
                     required
-                    className="flex h-10 w-full rounded-md border dark:text-gray-200 border-gray-300 bg-transparent px-3 py-2 text-sm placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10 w-full rounded-md border border-gray-600 bg-transparent px-3 py-2 text-sm placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Password"
                     id="password"
@@ -70,7 +70,7 @@ export function ConfirmPasswordInput({ password_confirmation, setPassword_con })
             <div className="mt-2 relative">
                 <input
                     required
-                    className="flex h-10 w-full rounded-md border border-gray-300 bg-transparent px-3 py-2 text-sm dark:text-gray-200 placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
+                    className="flex h-10 w-full rounded-md border border-gray-600 bg-transparent px-3 py-2 text-sm dark:text-gray-200 placeholder:text-gray-800 dark:placeholder:text-gray-500 focus:outline-none focus:ring-1 focus:ring-gray-400 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
                     type={showPassword ? 'text' : 'password'}
                     placeholder="Confirm Password"
                     id="c_password"

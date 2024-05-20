@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Loader from '../Loader.jsx';
+import {Loader,SubmitButton} from '../index.js';
 import { useSelector } from 'react-redux';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { Link, Navigate } from 'react-router-dom';
-import { Success, Danger, UsernameInput, EmailInput, PasswordInput, ConfirmPasswordInput, SubmitButton, OTPInput, Icon } from './comps/comps.jsx'
+import { Success, Danger, UsernameInput, EmailInput, PasswordInput, ConfirmPasswordInput, OTPInput, Icon } from './comps/comps.jsx'
 
 export default function SignUp() {
   const accessToken = useSelector(selectAccessToken);
@@ -14,6 +14,8 @@ export default function SignUp() {
   const [password, setPassword] = useState('');
   const [password_confirmation, setPassword_con] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sloading, setSLoading] = useState(false);     // loading after submit
+
   const [errors, setErrors] = useState();
   const [userCreated, setUserCreated] = useState(false);
   const [otpSent, setOtpSent] = useState(false);
@@ -33,6 +35,7 @@ export default function SignUp() {
 
   async function register(e) {
     e.preventDefault();
+    setSLoading(true);
     try {
       await axios.post('/api/user/register', { username, email, password, password_confirmation })
         .then((res) => {
@@ -44,10 +47,12 @@ export default function SignUp() {
       let error1 = error.response.data.error?.username || error.response.data.error?.email || error.response.data.error?.password || error.response.data?.msg;
       setErrors(error1);
     }
+    setSLoading(false);
   }
 
   async function verifyOtp(e) {
     e.preventDefault();
+    setSLoading(true);
     try {
       await axios.post('/api/user/verifyOTP', { email, otp })
         .then((res) => {
@@ -59,6 +64,7 @@ export default function SignUp() {
       setErrors(error1);
       setOtpSent(false);
     }
+    setSLoading(false);
   }
 
   if (loading) {
@@ -73,7 +79,7 @@ export default function SignUp() {
 
   return (
     <section className='pt-20'>
-      <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border-2 border-solid dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
+      <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border border-gray-600 relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
           {(errors || userCreated) ? (
             errors ? <Danger errors={errors} /> : <Success text={"Account Created successfully , Login Now"}/>
@@ -110,7 +116,7 @@ export default function SignUp() {
                 </>
               )}
               <div>
-                <SubmitButton text={otpSent ? 'Verify OTP' : 'Create Account'} />
+                <SubmitButton loading={sloading} tb={otpSent ? 'Verify OTP' : 'Create Account'} ta={otpSent ? 'Verifing.. ' : 'Creating.. '}/>
               </div>
             </div>
           </form>

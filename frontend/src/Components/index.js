@@ -10,7 +10,7 @@ import Footer from "./Footer/Footer";
 
 import { GetProfile } from "./Profile/GetProfile";
 import UpdateProfile from "./Profile/UpdateProfile";
-import GetUserReplies from "./Profile/UserReplies";
+import GetUserReplies from "./Profile/GetUserReplies";
 import PeopleCard from "./Profile/PeopleCard";
 import GetPeople from "./Profile/GetPeople";
 
@@ -30,11 +30,14 @@ import Loader from "./Loader";
 
 import { GoBackButton,SubmitButton } from "./common";
 
+import HandleSearch from "./Header/HandleSearch";
+
 export {
     Header, Home, Contact, Login, SignUp, Footer, ForgotPassword,
     UpdateProfile, GetProfile,GetUserReplies,GetPeople,PeopleCard,
     GetPosts, Following_Posts, CreatePost, ViewPost, EditPost, PostCard, ReplyCard,
     Danger, Success, Error500, Error404, Loader ,
-    GoBackButton , SubmitButton
+    GoBackButton , SubmitButton,
+    HandleSearch
 };
 

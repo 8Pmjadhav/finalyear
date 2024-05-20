@@ -4,10 +4,9 @@ import { ArrowRight } from 'lucide-react';
 import axios from 'axios';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
-import Loader from '../Loader.jsx';
 import { isAuthenticated } from '../../hooks/user.js';
-import {EmailInput,PasswordInput,SubmitButton,Icon} from './comps/comps.jsx'
-import { Error500 } from '../ErrorHandling/Error500.jsx';
+import {EmailInput,PasswordInput,Icon} from './comps/comps.jsx'
+import {Error500,Loader,SubmitButton} from '../index.js';
 
 export default function Login() {  
   
@@ -17,6 +16,8 @@ export default function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(true);
+  const [sloading, setSLoading] = useState(false);     // loading after submit
+
   const [errors, setErrors] = useState();
 
   useEffect(() => {
@@ -30,7 +31,9 @@ export default function Login() {
   }
 
   async function login(e) {
+    
     e.preventDefault();
+    setSLoading(true);
     try {
       await axios.post('/api/user/login', { email, password })
         .then(async (res) => {
@@ -50,7 +53,7 @@ export default function Login() {
       setErrors(error1);
       // Handle error
     }
-
+    setSLoading(false);
   }
 
   
@@ -64,7 +67,7 @@ export default function Login() {
   if(!accessToken) {
     return (
       <section className='pt-20 '  >
-        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 border-2 border-solid   dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
+        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 border border-gray-600 relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             {errors && ( // Conditionally render error alert
               <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
@@ -90,7 +93,7 @@ export default function Login() {
               <EmailInput email={email} setEmail={setEmail}/>
               <PasswordInput password={password} setPassword={setPassword} isLoginPage={true}/>
                 <div>
-                  <SubmitButton text={'Get Started'}/>
+                  <SubmitButton loading={sloading} tb={'Get Started'} ta={'Signing In.. '}/>
                 </div>
               </div>
             </form>

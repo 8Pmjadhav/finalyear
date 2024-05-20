@@ -9,7 +9,7 @@ import {ReplyCard,Loader} from '../index.js'
 
 export default function GetUserReplies(props) {
   const params = useParams();
-  const {  user_id } = params || props;
+  const {  user_id,flag,searchQuery } = params || props;
   const [replies, setReplies] = useState([]);
   const [loading, setLoading] = useState(true);
   const [refetch0, setRefetch0] = useState(false);
@@ -25,7 +25,9 @@ export default function GetUserReplies(props) {
     try {
       await axios.get(`/api/reply/getUserReplies`, {
         params: {
-          user_id
+          flag,
+          user_id,
+          searchQuery
         }
       })
         .then((res) => {

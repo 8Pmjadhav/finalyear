@@ -8,65 +8,105 @@ export async function follow_un_User(req, res) {
         const { user_id } = req.body;
 
         const unfollow = await prisma.follow.deleteMany({
-            where:{
-                follower_id:user.id,
-                following_id:Number(user_id)
+            where: {
+                follower_id: user.id,
+                following_id: Number(user_id)
             }
         })
-        if(!unfollow.count){
+        if (!unfollow.count) {
             await prisma.follow.create({
-                data:{
-                    follower_id:user.id,
-                    following_id:Number(user_id)
+                data: {
+                    follower_id: user.id,
+                    following_id: Number(user_id)
                 }
             })
-            return res.status(200).json({status:200,msg:'following'});
+            return res.status(200).json({ status: 200, msg: 'following' });
         }
-        return res.status(200).json({status:200,msg:'follow'});
+        return res.status(200).json({ status: 200, msg: 'follow' });
     } catch (error) {
-        return res.status(400).json({status:400,msg:'error while setting follow status'});
+        return res.status(400).json({ status: 400, msg: 'error while setting follow status' });
     }
 
 }
 
-export async function getPeople(req,res){
+export async function getPeople(req, res) {
     try {
         // const user = req.user;
-        let { flag,user_id } = req.query;
-        flag = Number(flag); user_id = Number(user_id);
+        let { flag, user_id, searchQuery } = req.query;
+        flag = Number(flag); user_id = Number(user_id); searchQuery = String(searchQuery);
         let people = null;
-        if(flag===1){
+        if (flag === 1) {                       // Followers of user
             people = await prisma.follow.findMany({
-            where:{
-                following_id:Number(user_id)
-            },
-            include:{
-                follower:{
-                    select:{
-                        username:true,
-                        avatar:true
-                    }
-                }
-            }
-        })
-        }
-        else if(flag === 2){
-            people = await prisma.follow.findMany({
-                where:{
-                    follower_id:Number(user_id)
+                where: {
+                    following_id: Number(user_id)
                 },
-                include:{
-                    following:{
-                        select:{
-                            username:true,
-                            avatar:true
+                include: {
+                    follower: {
+                        select: {
+                            id: true,
+                            username: true,
+                            avatar: true,
+                            _count: {
+                                select: {
+                                    followers: true,
+                                    following: true
+                                }
+                            }
                         }
                     }
                 }
             })
         }
-        return res.status(200).json({status:200,msg:'followers fetched successfully',people});
+        else if (flag === 2) {                // user Followings
+            people = await prisma.follow.findMany({
+                where: {
+                    follower_id: Number(user_id)
+                },
+                include: {
+                    following: {
+                        select: {
+                            id: true,
+                            username: true,
+                            avatar: true,
+                            _count: {
+                                select: {
+                                    followers: true,
+                                    following: true
+                                }
+                            }
+                        },
+                    }
+                },
+
+
+            })
+        }
+        else if (flag === 3) {
+            people = await prisma.user.findMany({
+                where: {
+                    username: {
+                        contains: searchQuery,
+                        mode: 'insensitive'
+                    }
+                },
+
+                select: {
+                    id: true,
+                    username: true,
+                    avatar: true,
+                    _count: {
+                        select: {
+                            followers: true,
+                            following: true
+                        }
+                    }
+                }
+
+
+            })
+        }
+        return res.status(200).json({ status: 200, msg: 'followers fetched successfully', people });
     } catch (error) {
-        return res.status(400).json({status:400,msg:'error while fetching followers'});
+        return res.status(400).json({ status: 400, msg: 'error while fetching followers' });
     }
 }

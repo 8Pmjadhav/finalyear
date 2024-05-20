@@ -9,7 +9,7 @@ import {PeopleCard,Loader} from '../index.js'
 
 export default function GetPeople(props) {
   const params = useParams();
-  const { flag, user_id } = params || props;
+  const { flag, user_id ,searchQuery} = params || props;
   const [loading, setLoading] = useState(true);
   const [people,setPeople] = useState();
   const [refetch0, setRefetch0] = useState(false);
@@ -19,18 +19,19 @@ export default function GetPeople(props) {
       await getPeople()
     }
     )();
-  }, [refetch0]);
+  }, [refetch0,flag,user_id,searchQuery]);
 
   async function getPeople() {
     try {
       await axios.get(`/api/follow/getPeople`, {
         params: {
             flag,
-          user_id
+          user_id,
+          searchQuery
         }
       })
         .then((res) => {
-          console.log(res.data);
+          // console.log(res.data);
           setPeople(res.data.people)
         })
 
@@ -51,7 +52,7 @@ export default function GetPeople(props) {
         people?.map(p => (
           <div className='items-end'>
           
-          <PeopleCard key={p.id} user={p?.following || p?.followers} setRefetch={setRefetch0} />
+          <PeopleCard key={p.id} user={p?.following || p?.follower || p} setRefetch={setRefetch0} />
           
           </div>
         )))

@@ -37,7 +37,6 @@ export async function editReply(req, res) {
             },
             data: {
                 content:String(replyContent),
-                updated_At:new Date()
             }
         })
         if (reply) {
@@ -73,22 +72,51 @@ export async function deleteReply(req, res) {
 
 export async function getUserReplies(req, res) {
     // const user = req.user;
-    const {user_id} = req.query;
+    const {flag,user_id,searchQuery} = req.query;
     
     try {
-        const reply = await prisma.reply.findMany({
-            where: {
-                user_id:Number(user_id),
-            },
-            include:{
-                user:{
-                    select:{
-                        username:true,
-                        avatar:true
+        // flag 1 for search reply content
+        let reply = null;
+        if(flag){
+             reply = await prisma.reply.findMany({
+                where: {
+                    content:{
+                        contains:String(searchQuery),
+                        mode:'insensitive'
                     }
+                },
+                include:{
+                    user:{
+                        select:{
+                            username:true,
+                            avatar:true
+                        }
+                    }
+                },
+                orderBy:{
+                    created_At:'desc'
                 }
-            }
-        })
+            })
+        }
+        else{
+             reply = await prisma.reply.findMany({
+                where: {
+                    user_id:Number(user_id),
+                },
+                include:{
+                    user:{
+                        select:{
+                            username:true,
+                            avatar:true
+                        }
+                    }
+                },
+                orderBy:{
+                    created_At:'desc'
+                }
+            })
+        }
+        
         if (reply) {
             // console.log(reply);
             res.status(200).json({ status: 200, msg: "Replies fetched successfully",replies:reply });
