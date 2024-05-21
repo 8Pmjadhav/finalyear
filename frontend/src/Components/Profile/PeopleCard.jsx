@@ -1,10 +1,9 @@
 import { useState, useEffect } from "react";
-import { Link, useLocation } from "react-router-dom";
-import axios from "axios";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice";
 
-export default function PeopleCard({ user, setRefetch }) {
+export default function PeopleCard({ user }) {
      const user1 = useSelector(selectUser);         // logged in user
     const [edit, setEdit] = useState(false);
     let flag;

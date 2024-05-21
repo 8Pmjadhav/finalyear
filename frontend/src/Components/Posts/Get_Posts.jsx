@@ -23,6 +23,9 @@ export default function GetPosts(props) {
   async function getPosts() {
     try {
       await axios.get(`/api/posts/getTweets`, {
+        headers:{
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+        },
         params: {
           flag,
           user_id,

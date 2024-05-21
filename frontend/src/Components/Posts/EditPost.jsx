@@ -27,7 +27,11 @@ const EditPost = () => {
   useEffect(() => {
     (async () => {
         try {
-            await axios.get(`/api/posts/viewTweet/${pid}`)
+            await axios.get(`/api/posts/viewTweet/${pid}`,{
+              headers:{
+                'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+              }
+            })
                 .then((res) => {
                     const post = res.data.postData;
                     setPost(post);
@@ -67,6 +71,7 @@ if (!post) return <Error404 />
     try {
       const response = await axios.put(`/api/posts/editTweet/${post.id}`, formData, {
         headers: {
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
           'Content-Type': 'multipart/form-data'
         }
       });
@@ -92,7 +97,7 @@ if (!post) return <Error404 />
   const extension = post?.video && videoPath?.split('.').pop();
 
   return (
-    <div className=" max-w-md mx-auto mt-0 p-6 dark:text-white bg-white dark:bg-black rounded-lg shadow-md border-2 border-solid dark:border-white">
+    <div className=" max-w-md mx-auto mt-0 p-6 dark:text-white bg-white dark:bg-black rounded-lg shadow-md border border-gray-600">
         {msg && <Success text={msg} />}
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">Edit Post</h2>
       <form onSubmit={handleSubmit}>
@@ -158,7 +163,7 @@ if (!post) return <Error404 />
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
-            className="resize-none border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
+            className="resize border rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
             placeholder="Enter your content here..."
           ></textarea>
         </div>

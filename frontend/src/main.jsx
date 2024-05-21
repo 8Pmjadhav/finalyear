@@ -5,8 +5,7 @@ import { RouterProvider, createBrowserRouter } from 'react-router-dom'
 import {
   Home, Contact, Login, SignUp, ForgotPassword,
   GetProfile, UpdateProfile,GetUserReplies,GetPeople,
-  Following_Posts, GetPosts,
-  CreatePost, ViewPost, EditPost,
+   GetPosts,CreatePost, ViewPost, EditPost,
   HandleSearch
 } from './Components/index.js';
 import './index.css';

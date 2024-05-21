@@ -1,4 +1,4 @@
-import { BarChart, Wallet, Newspaper, BellRing, Paperclip, SunMedium, Moon, Wrench, Contact } from 'lucide-react';
+import { BarChart, Wallet, Newspaper,  SunMedium, Moon, Wrench, Contact } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
@@ -23,7 +23,7 @@ export default function Sidebar({ dispatch }) {
 
   return (
 
-    <aside className={`flex h-screen w-52 flex-col overflow-y-auto border-r dark:border-r-gray-600  px-5 py-8 hidden sm:hidden md:block fixed top-10`}>
+    <aside className={`flex h-screen w-52 flex-col  border-r dark:border-r-gray-600  px-5 py-8  hidden   md:block fixed top-10`}>
       <Link to={`/profile/${username}`}>
         <img
           className="inline-block h-10 w-10 rounded-full"

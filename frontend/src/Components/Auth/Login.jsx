@@ -37,12 +37,9 @@ export default function Login() {
     try {
       await axios.post('/api/user/login', { email, password })
         .then(async (res) => {
-          //console.log(res);
-          if (res.request.status === 200) {
-            console.log(res);
-            await isAuthenticated(dispatch);
-            return
-          }
+          //console.log(res);   
+          localStorage.setItem('accessToken',res.data.accessToken);
+          await isAuthenticated(dispatch);
         }
         );
       // Handle success
@@ -67,7 +64,7 @@ export default function Login() {
   if(!accessToken) {
     return (
       <section className='pt-20 '  >
-        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 border border-gray-600 relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
+        <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-14 border border-gray-600 relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             {errors && ( // Conditionally render error alert
               <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">

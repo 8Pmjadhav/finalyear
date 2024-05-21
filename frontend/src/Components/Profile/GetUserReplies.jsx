@@ -24,6 +24,9 @@ export default function GetUserReplies(props) {
   async function getReplies() {
     try {
       await axios.get(`/api/reply/getUserReplies`, {
+        headers:{
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+        },
         params: {
           flag,
           user_id,

@@ -5,10 +5,7 @@ import { useParams, Link, Outlet } from "react-router-dom"
 export default function HandleSearch() {
   const params = useParams();
   const [searchQuery, setSearchQuery] = useState();
-  const user = {
-    username: 'arvind',
-    user_id: 1
-  }
+  
   let flag = 1;
   useEffect(() => {
     setSearchQuery(params.searchQuery);
@@ -30,7 +27,7 @@ export default function HandleSearch() {
                       className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
                               ${location.pathname === `/search/${searchQuery}/posts/${flag = 3}` && 'bg-blue-600'}`} to={`posts/${flag = 3}`}
                     >
-                      <span className="mx-2 text-sm font-medium">{user._count?.post} (Posts)</span>
+                      <span className="mx-2 text-sm font-medium"> (Posts)</span>
                     </Link>
 
                   </li>
@@ -39,7 +36,7 @@ export default function HandleSearch() {
                       className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
                               ${location.pathname === `/search/${searchQuery}/people/${flag = 3}` && 'bg-blue-600'}`} to={`people/${flag = 3}`}
                     >
-                      <span className="mx-2 text-sm font-medium">{user._count?.post} (People)</span>
+                      <span className="mx-2 text-sm font-medium"> (People)</span>
                     </Link>
 
                   </li>
@@ -48,7 +45,7 @@ export default function HandleSearch() {
                       className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
                               ${location.pathname === `/search/${searchQuery}/replies/${flag = 1}` && 'bg-blue-600'}`} to={`replies/${flag = 1}`}
                     >
-                      <span className="mx-2 text-sm font-medium">{user._count?.post} (replies)</span>
+                      <span className="mx-2 text-sm font-medium"> (replies)</span>
                     </Link>
 
                   </li>

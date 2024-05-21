@@ -31,6 +31,7 @@ const CreatePost = () => {
     try {
         const response = await axios.post(`/api/posts/postTweet`, formData, {
           headers: {
+            'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'multipart/form-data'
           }
         });

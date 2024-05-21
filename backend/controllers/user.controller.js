@@ -1,13 +1,13 @@
 "use strict";
 import vine, { errors } from "@vinejs/vine";
-import { loginSchema, registerSchema } from "../validations/auth.validations.js";
+import { loginSchema, passwordSchema, registerSchema } from "../validations/auth.validations.js";
 import prisma from "../DB/db.config.js";
 import jwt from "jsonwebtoken";
 import { GenerateACCESSToken, GenerateREFRESHToken } from "../Security/Tokens.js";
 import {  sendOTPEmail } from "./email.controller.js";
 import { hashPassword,generateOTP, checkPassword } from "./basic.controller.js";
 import { default_images } from "../defaults/default_images.js";
-import e from "express";
+
 const options = {
     httpOnly: true,
     secure: true
@@ -169,7 +169,7 @@ export async function login(req, res) {
                         msg: "User Logged In",
                         username: finduser.username,
                         accessToken,
-                        refreshToken
+                        // refreshToken
                     }
                 )
 
@@ -207,6 +207,57 @@ export async function logout(req, res) {
             msg: "user logged out"
         })
 };
+
+export async function changePassword(req, res) {
+    try {
+        let passwords = req.body;
+        const user = req.user;
+        //user = JSON.parse(user);
+        //console.log(newUser);
+        const validator = vine.compile(passwordSchema);
+        const payload = await validator.validate(passwords);
+
+        const finduser = await prisma.user.findUnique({
+            where: {
+                email: user.email,
+                
+            }
+        })
+
+        if (!checkPassword(payload.Oldpassword,finduser.password)) {
+            return res.status(400).json({
+                status: 400,
+                msg: 'Incorrect password    !!'
+            })
+        }
+
+        payload.password = hashPassword(payload.password);
+        
+        
+        
+
+        newUser = await prisma.user.update({
+            data: {
+                password:payload.password
+            }
+        });
+        
+        return res.json({ status: 200, msg: "Password changed Successfully ." });
+
+
+    }
+    catch (error) {
+        if (error instanceof errors.E_VALIDATION_ERROR) {
+            console.log(error.messages)
+            return res.status(400).json({ error: error.messages })
+        }
+        else {
+            console.error(error)
+            return res.status(500).json({ status: 500, msg: "something went wrong on server side" })
+        }
+    }
+}
+
 
 export async function refreshAccessToken(req, res) {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;
@@ -259,3 +310,4 @@ export async function refreshAccessToken(req, res) {
         return res.status(401).json({ status: 401, error: err?.message + " that is Refresh token is expired or used" });
     }
 } 
+

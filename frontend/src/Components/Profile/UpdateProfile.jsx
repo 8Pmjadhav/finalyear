@@ -34,7 +34,8 @@ const UpdateProfile = () => {
     try {
         const response = await axios.put(`/api/profile/updateProfile`, formData, {
           headers: {
-            'Content-Type': 'multipart/form-data'
+            'Content-Type': 'multipart/form-data',
+            'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
           }
         });
     
@@ -58,7 +59,7 @@ const UpdateProfile = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto mt-8 sm:mt-2 p-6 bg-white dark:bg-black rounded-lg shadow-md border border-gray-600">
+    <div className="max-w-md mx-auto mt-0 lg:mt-8 p-6 bg-white dark:bg-black rounded-lg shadow-md border border-gray-600">
       <h2 className="text-2xl font-semibold mb-6 dark:text-white">Update Profile</h2>
       {msg && <Success text={"Profile Updated Successfully"}/>}
       <form onSubmit={handleSubmit}>
@@ -71,7 +72,7 @@ const UpdateProfile = () => {
             id="avatar"
             accept="image/*"
             onChange={(e) => setAvatar(e.target.files[0])}
-            className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+            className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring w-full"
           />
         </div>
         <div className="mb-4">
@@ -83,7 +84,7 @@ const UpdateProfile = () => {
             id="backCover"
             accept="image/*"
             onChange={(e) => setBackCover(e.target.files[0])}
-            className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+            className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring w-full"
           />
         </div>
         <div className="mb-4">

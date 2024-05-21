@@ -34,7 +34,11 @@ const PostCard = ({ post, setRefetch0 ,setRefetch }) => {
 async function deletePost() {
   setLoading(true);
     try {
-      await axios.delete(`/api/posts/deleteTweet/${post.id}`)
+      await axios.delete(`/api/posts/deleteTweet/${post.id}`,{
+        headers:{
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
+        }
+      })
         .then((res) => {
           setRefetch0 && setRefetch0(prev => !prev);
           setRefetch && setRefetch(prev => !prev);
@@ -50,7 +54,11 @@ async function deletePost() {
 
   async function likePost() {
     try {
-      await axios.delete(`/api/posts/likeTweet/${post.id}`)
+      await axios.delete(`/api/posts/likeTweet/${post.id}`,{
+        headers:{
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+        }
+      })
         .then((res) => {
           setRefetch0 && setRefetch0(prev => !prev);
           setRefetch && setRefetch(prev => !prev);
@@ -104,7 +112,7 @@ async function deletePost() {
           )}</div>
       <div className="p-4">
         <Link to={`/posts/viewPost/${post.id}`}state={{ id:post.id }}>
-          <p className="text-gray-700 dark:text-gray-50">{post.content}</p>
+          <p className="text-gray-700 dark:text-gray-50 whitespace-pre-line">{post.content}</p>
         </Link>
         {(post?.image || post?.video) && (
           <div className={`relative mt-4 h-72 flex border-2 rounded-md border-black dark:border-white ${(post?.image && post?.video) ? 'justify-center' : ""}`}>

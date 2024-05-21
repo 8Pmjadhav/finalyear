@@ -49,7 +49,11 @@ export function GetProfile() {
   };
   async function getProfile() {
     try {
-      await axios.get(`/api/profile/profile?username=${username}`)
+      await axios.get(`/api/profile/profile?username=${username}`,{
+        headers:{
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+        },
+      })
         .then((response) => {
           setUser(response.data);
           // console.log(response.data);
@@ -64,7 +68,11 @@ export function GetProfile() {
 
   async function followUser() {
     try {
-      await axios.post('/api/follow/follow_un_User', { user_id: user.id })
+      await axios.post('/api/follow/follow_un_User', { user_id: user.id },{
+        headers:{
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+        },
+      })
         .then((res) => {
           setRefecth(prev => !prev);
           setFollow(prev => !prev);
@@ -130,7 +138,7 @@ export function GetProfile() {
 
               {/* Description */}
               <div className="px-6 py-4 md:px-8 md:py-6">
-                <p className="text-gray-700 dark:text-white text-sm md:text-base">
+                <p className="text-gray-700 dark:text-white whitespace-pre-line text-sm md:text-base">
                   {user.description}
                 </p>
 

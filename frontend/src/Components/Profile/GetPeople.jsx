@@ -24,6 +24,9 @@ export default function GetPeople(props) {
   async function getPeople() {
     try {
       await axios.get(`/api/follow/getPeople`, {
+        headers:{
+          'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+        },
         params: {
             flag,
           user_id,

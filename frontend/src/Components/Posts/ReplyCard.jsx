@@ -30,7 +30,15 @@ export default function ReplyCard({ reply, setRefetch }) {
 
     async function submitEditedReply() {
         try {
-            await axios.put(`/api/reply/editReply/${reply.id}`, { replyContent })
+            await axios.put(`/api/reply/editReply/${reply.id}`, { 
+                    replyContent:replyContent
+                },
+                {
+                    headers:{
+                        'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+                      },
+                }  
+             )
                 .then((res) => {
                     // console.log(replyContent);
                     setRefetch(prev => !prev);
@@ -46,7 +54,11 @@ export default function ReplyCard({ reply, setRefetch }) {
     async function deleteReply() {
         setDeleteLoading(true);
         try {
-            await axios.delete(`/api/reply/deleteReply/${reply.id}`)
+            await axios.delete(`/api/reply/deleteReply/${reply.id}`,{
+                headers:{
+                    'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
+                }
+            })
                 .then((res) => {
                     // console.log(res);
                     setDeleteLoading(false);
@@ -63,7 +75,7 @@ export default function ReplyCard({ reply, setRefetch }) {
     return (
         
         <>{loading ? <Loader/> :
-        <div className="max-w-xl mx-auto  bottom-2  dark:text-white border border-gray-600 shadow-md rounded-md overflow-hidden mb-1">
+        <div className="max-w-xl mx-auto bottom-2  dark:text-white border border-gray-600 shadow-md rounded-md overflow-hidden mb-1">
             <hr className='border border-gray-600 ' />
 
             <div className='flex justify-between'>
@@ -103,12 +115,12 @@ export default function ReplyCard({ reply, setRefetch }) {
                     </div>
                     )}</div>
             <div className="p-4">
-                {!editry ? <p className="text-black dark:text-white">{replyContent}</p> : (
+                {!editry ? <p className="text-black dark:text-white whitespace-pre-line">{replyContent}</p> : (
                     <textarea
                         id="content"
                         value={replyContent}
                         onChange={(e) => setReplyContent(e.target.value)}
-                        className="resize border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
+                        className="resize border  border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring h-28 w-full"
                     ></textarea>
                 )}
                 <div className="text-sm mt-3">

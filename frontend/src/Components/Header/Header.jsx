@@ -51,12 +51,12 @@ export default function Header() {
     navigate(`/search/${searchQuery}/posts/${flag = 3}`);
   }
   return (
-    <div className="lg:mx-96 md:mx-60 bg-cover border-b-2 border-gray-600 dark:text-white backdrop-blur-2xl fixed top-0 left-0 right-0 z-50  "
+    <div className="lg:mx-96 mdlglg:mx-60 mdlg:mx-40 md:mx-20  smmd:mx-0 bg-cover border-b-2 border-gray-600 dark:text-white backdrop-blur-2xl fixed top-0 left-0 right-0 z-50  "
       >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
           <img
-            className='h-10 hidden sm:block'
+            className='h-10  hidden smmd:block'
             src={logo} />
 
         </div>
@@ -77,7 +77,7 @@ export default function Header() {
             <Search className="h-5 w-5" />
           </button>
         </form>
-          <div className="lg:hidden">
+          <div className="lg:hidden md:hidden">
             <Menu onClick={toggleMenu} className="h-6 w-6 cursor-pointer dark:text-white" />
           </div>
           {(isMenuOpen && user)  && (

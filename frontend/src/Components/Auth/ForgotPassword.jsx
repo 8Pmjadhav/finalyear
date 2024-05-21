@@ -91,9 +91,9 @@ export default function ForgotPassword() {
         return <Loader />;
     }
 
-    if (accessToken) {
-        return <Navigate to={'/'} />;
-    }
+    // if (accessToken) {
+    //     return <Navigate to={'/'} />;
+    // }
 
     return (
         <section className='pt-20'>

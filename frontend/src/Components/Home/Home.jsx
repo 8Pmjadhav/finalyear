@@ -3,7 +3,6 @@ import Loader from '../Loader.jsx';
 import Sidebar from './Sidebar.jsx';
 
 
-import axios from 'axios';
 import { selectAccessToken } from '../../store/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
 import { Outlet } from 'react-router-dom';
@@ -37,7 +36,7 @@ export default function Home() {
       {/* Sidebar component */}
       <Sidebar  dispatch={dispatch}/>
       {/* Main content */}
-      <div className="flex-1 lg:p-10 pt-5  w-full   "
+      <div className="flex-1 lg:p-10 pt-5  w-full    "
       >
         <Outlet/>
       </div>
