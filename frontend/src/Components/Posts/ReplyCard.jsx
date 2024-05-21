@@ -1,12 +1,11 @@
 import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { GetTime } from "./basic";
-import axios from "axios";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice";
 import { Merge, Pencil, Trash2 } from "lucide-react";
 import ReactLoading from 'react-loading';
-import {Loader} from '../index.js';
+import {Loader, client} from '../index.js';
 
 
 
@@ -30,7 +29,7 @@ export default function ReplyCard({ reply, setRefetch }) {
 
     async function submitEditedReply() {
         try {
-            await axios.put(`/api/reply/editReply/${reply.id}`, { 
+            await client.put(`/api/reply/editReply/${reply.id}`, { 
                     replyContent:replyContent
                 },
                 {
@@ -54,7 +53,7 @@ export default function ReplyCard({ reply, setRefetch }) {
     async function deleteReply() {
         setDeleteLoading(true);
         try {
-            await axios.delete(`/api/reply/deleteReply/${reply.id}`,{
+            await client.delete(`/api/reply/deleteReply/${reply.id}`,{
                 headers:{
                     'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
                 }

@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
-import {Loader,SubmitButton} from '../index.js';
+import {Loader,SubmitButton, client} from '../index.js';
 import { useSelector } from 'react-redux';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { Link, Navigate } from 'react-router-dom';
@@ -37,7 +36,7 @@ export default function SignUp() {
     e.preventDefault();
     setSLoading(true);
     try {
-      await axios.post('/api/user/register', { username, email, password, password_confirmation })
+      await client.post('/api/user/register', { username, email, password, password_confirmation })
         .then((res) => {
           setOtpSent(true);
           setUserCreated(false);
@@ -54,7 +53,7 @@ export default function SignUp() {
     e.preventDefault();
     setSLoading(true);
     try {
-      await axios.post('/api/user/verifyOTP', { email, otp })
+      await client.post('/api/user/verifyOTP', { email, otp })
         .then((res) => {
           setUserCreated(true);
           setOtpSent(false);

@@ -1,14 +1,13 @@
-import axios from "axios";
 import { clearAccessToken, setAccessToken } from "../store/authSlice";
 import { serverDown, serverUp } from "../store/serverStatus";
-
+import client from "./client";
 
 export async function isAuthenticated(dispatch) {
     try {
 
         const accessToken = localStorage.getItem('accessToken');
 
-        await axios.get('/api/status')
+        await client.get('/api/status')
             .then((res) => {
                 console.log(res.data.msg);
                 dispatch(serverDown())
@@ -27,13 +26,13 @@ export async function isAuthenticated(dispatch) {
             console.log("Don't have Access token, Login with password");
             return;
         }
-        await axios.get('/api/user/getCurrentUser', {
+        await client.get('/api/user/getCurrentUser', {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
             })
             .then((res) => {
-                //console.log(res);
+                // console.log(res);
                 if (res.status === 200 && res.data.accessToken) {
                     const { accessToken, username, avatar, id } = res.data;
                     const user = { username, avatar, id };
@@ -63,7 +62,7 @@ export async function isAuthenticated(dispatch) {
 
 export async function logout(dispatch) {
     try {
-        await axios.post('/api/user/logout')
+        await client.post('/api/user/logout')
             .then((res) => console.log(res))
         localStorage.removeItem('accessToken');
         dispatch(clearAccessToken());

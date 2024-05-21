@@ -1,7 +1,6 @@
-import axios from "axios";
 import { useState, useEffect } from "react";
 import { Link, useParams, NavLink, Outlet } from "react-router-dom";
-import { Error404, Loader } from '../index.js'
+import { Error404, Loader, client } from '../index.js'
 import { useDispatch, useSelector } from "react-redux";
 import { selectUser } from "../../store/authSlice.js";
 import { Pencil } from "lucide-react";
@@ -49,7 +48,7 @@ export function GetProfile() {
   };
   async function getProfile() {
     try {
-      await axios.get(`/api/profile/profile?username=${username}`,{
+      await client.get(`/api/profile/profile?username=${username}`,{
         headers:{
           'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
         },
@@ -68,7 +67,7 @@ export function GetProfile() {
 
   async function followUser() {
     try {
-      await axios.post('/api/follow/follow_un_User', { user_id: user.id },{
+      await client.post('/api/follow/follow_un_User', { user_id: user.id },{
         headers:{
           'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
         },

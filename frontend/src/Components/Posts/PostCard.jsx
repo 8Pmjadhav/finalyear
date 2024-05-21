@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/authSlice.js';
 import ReactLoading from 'react-loading';
 import { GetTime } from './basic.jsx';
 import { MessageCircleCode, ThumbsUp,Trash2,Pencil } from 'lucide-react';
+import {client} from '../index.js';
 
 const PostCard = ({ post, setRefetch0 ,setRefetch }) => {
   const navigate = useNavigate();
@@ -34,7 +34,7 @@ const PostCard = ({ post, setRefetch0 ,setRefetch }) => {
 async function deletePost() {
   setLoading(true);
     try {
-      await axios.delete(`/api/posts/deleteTweet/${post.id}`,{
+      await client.delete(`/api/posts/deleteTweet/${post.id}`,{
         headers:{
           'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
         }
@@ -54,7 +54,7 @@ async function deletePost() {
 
   async function likePost() {
     try {
-      await axios.delete(`/api/posts/likeTweet/${post.id}`,{
+      await client.delete(`/api/posts/likeTweet/${post.id}`,{
         headers:{
           'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
         }
@@ -115,14 +115,14 @@ async function deletePost() {
           <p className="text-gray-700 dark:text-gray-50 whitespace-pre-line">{post.content}</p>
         </Link>
         {(post?.image || post?.video) && (
-          <div className={`relative mt-4 h-72 flex border-2 rounded-md border-black dark:border-white ${(post?.image && post?.video) ? 'justify-center' : ""}`}>
+          <div className={`relative mt-4 h-72 flex border rounded-md border-gray-600  ${(post?.image && post?.video) ? 'justify-center' : ""}`}>
             {post?.image && (
-              <img src={post.image} alt="Post Image" className={`${post.video ? "w-1/2" : "w-full"} h-full object-cover`} onClick={() => toggleModal('image')} />
+              <img src={post.image} alt="Post Image" className={`${post.video ? "w-1/2" : "w-full"} h-full object-contain`} onClick={() => toggleModal('image')} />
             )}
             {post?.video && (
               (extension === 'mp4' || extension === 'mkv') ?
-                (<video src={post.video} className={`${post.image ? "w-1/2" : "w-full"} h-full object-cover`} onClick={() => toggleModal('video')} controls></video>)
-                : (<img src={post.video} alt="Post Image" className="w-1/2 h-full object-cover" onClick={() => toggleModal('image1')} />)
+                (<video src={post.video} className={`${post.image ? "w-1/2" : "w-full"} h-full object-contain`} onClick={() => toggleModal('video')} controls></video>)
+                : (<img src={post.video} alt="Post Image" className="w-1/2 h-full object-contain" onClick={() => toggleModal('image1')} />)
             )}
           </div>
         )}

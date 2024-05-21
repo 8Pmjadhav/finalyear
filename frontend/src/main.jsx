@@ -6,7 +6,9 @@ import {
   Home, Contact, Login, SignUp, ForgotPassword,
   GetProfile, UpdateProfile,GetUserReplies,GetPeople,
    GetPosts,CreatePost, ViewPost, EditPost,
-  HandleSearch
+  HandleSearch,
+  Welcome,
+  Settings,ChangePassword , DeleteAccount
 } from './Components/index.js';
 import './index.css';
 import { Provider } from 'react-redux';
@@ -24,6 +26,20 @@ const router = createBrowserRouter([
         element: <Home />,
         children: [
           {
+            path:'settings',
+            element:<Settings/>,
+            children :[
+              {
+                path:'changePassword',
+                element:<ChangePassword/>
+              },
+              {
+                path:'deleteAccount',
+                element:<DeleteAccount/>
+              }
+            ]
+          },
+          {
             path:'search/:searchQuery',
             element:<HandleSearch/>,
             children:[
@@ -40,6 +56,10 @@ const router = createBrowserRouter([
                 element:<GetUserReplies/>
               }
             ]
+          },
+          {
+            path:'',
+            element:<Welcome/>
           },
           {
             path: 'contact',

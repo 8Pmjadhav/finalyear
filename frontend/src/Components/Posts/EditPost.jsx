@@ -1,8 +1,7 @@
 import React, { useState,useEffect } from 'react';
-import axios from 'axios';
 import { useLocation, useNavigate,useParams } from 'react-router-dom';
 
-import { Success,Error404,GoBackButton,SubmitButton } from '../index.js'
+import { Success,Error404,GoBackButton,SubmitButton, client } from '../index.js'
 import { Trash2 } from 'lucide-react';
 
 const EditPost = () => {
@@ -27,7 +26,7 @@ const EditPost = () => {
   useEffect(() => {
     (async () => {
         try {
-            await axios.get(`/api/posts/viewTweet/${pid}`,{
+            await client.get(`/api/posts/viewTweet/${pid}`,{
               headers:{
                 'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`
               }
@@ -69,7 +68,7 @@ if (!post) return <Error404 />
     formData.append('deleteiv',JSON.stringify(deleteiv)); 
 
     try {
-      const response = await axios.put(`/api/posts/editTweet/${post.id}`, formData, {
+      const response = await client.put(`/api/posts/editTweet/${post.id}`, formData, {
         headers: {
           'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
           'Content-Type': 'multipart/form-data'

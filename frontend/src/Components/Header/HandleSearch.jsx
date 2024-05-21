@@ -36,7 +36,7 @@ export default function HandleSearch() {
                       className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
                               ${location.pathname === `/search/${searchQuery}/people/${flag = 3}` && 'bg-blue-600'}`} to={`people/${flag = 3}`}
                     >
-                      <span className="mx-2 text-sm font-medium"> (People)</span>
+                      <span className="mx-2 text-sm font-medium"> (Users)</span>
                     </Link>
 
                   </li>
@@ -55,8 +55,9 @@ export default function HandleSearch() {
               </div>
             </nav>
           </header>
-          <Outlet />
+          
         </div>
+        <Outlet/>
       </div>
     </div>
   )

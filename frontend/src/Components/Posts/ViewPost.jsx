@@ -1,8 +1,7 @@
-import axios from "axios";
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { SendHorizonal } from "lucide-react";
-import { Error404, PostCard, ReplyCard, Loader, GoBackButton } from '../index.js'
+import { Error404, PostCard, ReplyCard, Loader, client } from '../index.js'
 import ReactLoading from 'react-loading';
 
 
@@ -24,7 +23,7 @@ export default function ViewPost() {
         setReply_loading(true);
         (async () => {
             try {
-                await axios.get(`/api/posts/viewTweet/${pid}`, {
+                await client.get(`/api/posts/viewTweet/${pid}`, {
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                     },
@@ -49,7 +48,7 @@ export default function ViewPost() {
         e.preventDefault();
         setReply_loading(true);
         try {
-            await axios.post(`/api/reply/post/${post.id}/doReply`, { newReply }, {
+            await client.post(`/api/reply/post/${post.id}/doReply`, { newReply }, {
                 headers: {
                     'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                 },
@@ -63,7 +62,7 @@ export default function ViewPost() {
         } catch (error) {
             console.log(error);
         }
-        setReply_loading(false);
+        
     }
 
 

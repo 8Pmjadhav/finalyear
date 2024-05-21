@@ -31,12 +31,24 @@ import { GoBackButton,SubmitButton } from "./common";
 
 import HandleSearch from "./Header/HandleSearch";
 
+import Welcome from "./Welcome";
+import client from "../hooks/client";
+
+import Settings from "./Auth/settings";
+import ChangePassword from "./Auth/ChangePassword";
+import DeleteAccount from "./Auth/DeleteAccount";
+
+export {client , Settings , ChangePassword , DeleteAccount};
+
 export {
     Header, Home, Contact, Login, SignUp, Footer, ForgotPassword,
     UpdateProfile, GetProfile,GetUserReplies,GetPeople,PeopleCard,
     GetPosts, CreatePost, ViewPost, EditPost, PostCard, ReplyCard,
     Danger, Success, Error500, Error404, Loader ,
     GoBackButton , SubmitButton,
-    HandleSearch
+    HandleSearch,
+    Welcome
 };
+
+
 

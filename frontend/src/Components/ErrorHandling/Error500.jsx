@@ -5,7 +5,7 @@ import React from 'react'
 const Error500 = () => {
   return (
     <div className="mt-20 flex items-center justify-center bg-gray-100 dark:bg-black">
-      <div className="max-w-md p-8 bg-white dark:bg-black shadow-lg rounded-lg dark:border-2 border-white">
+      <div className="max-w-md p-8 bg-white dark:bg-black shadow-lg rounded-lg border border-gray-600">
         <h2 className="text-3xl font-semibold mb-4 dark:text-white">500, Internal Server Error</h2>
         <p className="text-gray-700 dark:text-gray-50 mb-4">Oops! Something went wrong on our server. Please try again later.</p>
         <div className='flex justify-between'>

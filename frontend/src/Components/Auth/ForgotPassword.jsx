@@ -1,10 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
-import axios from 'axios';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
-import Loader from '../Loader.jsx';
+
 import { EmailInput, PasswordInput, SubmitButton, ConfirmPasswordInput, OTPInput, Success, Danger } from './comps/comps.jsx'
+import {client,Loader} from '../index.js';
 
 export default function ForgotPassword() {
 
@@ -40,7 +40,7 @@ export default function ForgotPassword() {
     const sendEmail = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/user/forgotPassword/getOTP', { email })
+            await client.post('/api/user/forgotPassword/getOTP', { email })
                 .then((res) => {
                     console.log(res);
                     setOtpSent(true);
@@ -57,7 +57,7 @@ export default function ForgotPassword() {
     const verifyOtpFP = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/user/forgotPassword/verifyOtp', { email, otp })
+            await client.post('/api/user/forgotPassword/verifyOtp', { email, otp })
                 .then((res) => {
                     setOtpVerify(true);
                     setOtpSent(false);
@@ -72,7 +72,7 @@ export default function ForgotPassword() {
     const resetPassword = async (e) => {
         e.preventDefault();
         try {
-            await axios.post('/api/user/forgotPassword/resetPassword', { email, password, password_confirmation, otp })
+            await client.post('/api/user/forgotPassword/resetPassword', { email, password, password_confirmation, otp })
                 .then((res) => {
                     setOtpVerify(false);
                     setOtpSent(false);

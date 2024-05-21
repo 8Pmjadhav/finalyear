@@ -1,8 +1,7 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
-import {Success,GoBackButton,SubmitButton} from '../index.js'
+import {Success,GoBackButton,SubmitButton, client} from '../index.js'
  
 const CreatePost = () => {
   const navigate = useNavigate();
@@ -29,7 +28,7 @@ const CreatePost = () => {
     formData.append('content', content);
 
     try {
-        const response = await axios.post(`/api/posts/postTweet`, formData, {
+        const response = await client.post(`/api/posts/postTweet`, formData, {
           headers: {
             'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`,
             'Content-Type': 'multipart/form-data'

@@ -2,8 +2,10 @@ import React from 'react';
 
 export default function Footer() {
   return (
-    <span className="block text-sm text-gray-500 sm:text-center dark:text-gray-400">© 2024 <a href="https://github.com/8Pmjadhav" className="hover:underline">PJ tweets™</a>. All Rights Reserved.</span>
-
+    // <span className="block text-sm text-gray-500 sm:text-transparent  justify-center fixed bottom-2 dark:text-gray-400">
+    //   © 2024 <a href="https://github.com/8Pmjadhav" className="hover:underline">PJ tweets™</a>. All Rights Reserved.
+    //   </span>
+    <div></div>
     // <section className="relative overflow-hidden bg-white py-8">
     //   <div className="container relative z-10 mx-auto px-4">
     //     <div className="-m-8 flex flex-wrap items-center justify-between">

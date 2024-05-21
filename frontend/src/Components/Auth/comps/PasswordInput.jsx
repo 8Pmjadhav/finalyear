@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { Eye,EyeOff } from "lucide-react";
 
 
-export function PasswordInput({ password, setPassword, isLoginPage }) {
+export function PasswordInput({ password, setPassword, isLoginPage,newp,currentp }) {
     const [showPassword, setShowPassword] = useState(false);
 
     const togglePasswordVisibility = () => {
@@ -15,10 +15,10 @@ export function PasswordInput({ password, setPassword, isLoginPage }) {
             <div className="flex items-center justify-between">
                 <label htmlFor="password" className="text-base font-medium text-gray-900 dark:text-gray-200">
                     {' '}
-                    Password{' '}
+                    {(newp && 'New ') || (currentp && 'Current ')}Password{' '}
                 </label>
                 {isLoginPage && (
-                    <Link to="/forgotPassword" title="" className="text-sm font-semibold text-black dark:text-white hover:underline">
+                    <Link to="/forgotPassword" title="" className="text-sm font-semibold text-blue-900 dark:text-blue-500 hover:underline">
                         {' '}
                         Forgot password?{' '}
                     </Link>

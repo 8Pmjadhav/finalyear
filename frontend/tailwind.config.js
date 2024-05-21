@@ -16,7 +16,7 @@ export default {
       
       'mdlg':'1340px',
       'mglglg':'1420px',
-      'lg': '1640px',
+      'lg': '1740px',
 
       // => @media (min-width: 1440px) { ... }
     },

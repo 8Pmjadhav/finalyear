@@ -5,7 +5,7 @@ import Sidebar from './Sidebar.jsx';
 
 import { selectAccessToken } from '../../store/authSlice';
 import { useDispatch, useSelector } from 'react-redux';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import Login from '../Auth/Login.jsx';
 
 
@@ -13,6 +13,7 @@ export default function Home() {
   
   const accessToken = useSelector(selectAccessToken);
   const dispatch = useDispatch();
+  const location = useLocation();
   // console.log(accessToken);
 
   const [loading, setLoading] = useState(true);
@@ -38,6 +39,7 @@ export default function Home() {
       {/* Main content */}
       <div className="flex-1 lg:p-10 pt-5  w-full    "
       >
+        
         <Outlet/>
       </div>
     </div>

@@ -1,12 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { Link, Navigate } from 'react-router-dom';
 import { ArrowRight } from 'lucide-react';
-import axios from 'axios';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAuthenticated } from '../../hooks/user.js';
 import {EmailInput,PasswordInput,Icon} from './comps/comps.jsx'
-import {Error500,Loader,SubmitButton} from '../index.js';
+import {Loader,SubmitButton, client} from '../index.js';
 
 export default function Login() {  
   
@@ -35,7 +34,7 @@ export default function Login() {
     e.preventDefault();
     setSLoading(true);
     try {
-      await axios.post('/api/user/login', { email, password })
+      await client.post('/api/user/login', { email, password })
         .then(async (res) => {
           //console.log(res);   
           localStorage.setItem('accessToken',res.data.accessToken);

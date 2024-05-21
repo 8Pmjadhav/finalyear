@@ -6,7 +6,7 @@ export  function GenerateACCESSToken (user){
         {
             id:user.id,
             username:user.username,
-            email:user.email
+            email:user.email,
         },
         process.env.ACCESS_TOKEN_SECRET,
         {

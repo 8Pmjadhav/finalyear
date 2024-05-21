@@ -214,6 +214,7 @@ export async function changePassword(req, res) {
         const user = req.user;
         //user = JSON.parse(user);
         //console.log(newUser);
+        const {oldPassword} = passwords;
         const validator = vine.compile(passwordSchema);
         const payload = await validator.validate(passwords);
 
@@ -223,8 +224,9 @@ export async function changePassword(req, res) {
                 
             }
         })
+        console.log(payload);
 
-        if (!checkPassword(payload.Oldpassword,finduser.password)) {
+        if (!checkPassword(oldPassword,finduser.password)) {
             return res.status(400).json({
                 status: 400,
                 msg: 'Incorrect password    !!'
@@ -236,7 +238,10 @@ export async function changePassword(req, res) {
         
         
 
-        newUser = await prisma.user.update({
+        await prisma.user.update({
+            where:{
+                id:user.id
+            },
             data: {
                 password:payload.password
             }
@@ -258,6 +263,9 @@ export async function changePassword(req, res) {
     }
 }
 
+export async function deleteAccount(req,res){
+    
+}
 
 export async function refreshAccessToken(req, res) {
     const incomingRefreshToken = req.cookies.refreshToken || req.body.refreshToken;

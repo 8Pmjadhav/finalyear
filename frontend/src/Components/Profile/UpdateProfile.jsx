@@ -1,6 +1,5 @@
 import React, { useState } from 'react';
-import axios from 'axios';
-import {Success,GoBackButton,SubmitButton} from '../index.js';
+import {Success,GoBackButton,SubmitButton,client} from '../index.js';
 
 import { useNavigate } from 'react-router-dom';
 
@@ -32,7 +31,7 @@ const UpdateProfile = () => {
     formData.append('gender', gender);
 
     try {
-        const response = await axios.put(`/api/profile/updateProfile`, formData, {
+        const response = await client.put(`/api/profile/updateProfile`, formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
             'Authorization' : `Bearer ${localStorage.getItem('accessToken')}`

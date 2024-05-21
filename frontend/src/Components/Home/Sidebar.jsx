@@ -28,7 +28,7 @@ export default function Sidebar({ dispatch }) {
         <img
           className="inline-block h-10 w-10 rounded-full"
           src={avatar}
-          alt="Dan_Abromov"
+          alt={username}
         />
         <span className={`${location.pathname === `/profile/${username}` && ' text-blue-600 underline'} font-bold text-lg`}>  @{username}</span>
       </Link>
@@ -73,13 +73,13 @@ export default function Sidebar({ dispatch }) {
               }}
             >{isDarkMode ? <SunMedium className="h-5 w-5" color='white' /> : <Moon className="h-5 w-5" />}
               <span className="mx-2 text-sm font-medium">Themes</span></button>
-            <a
+              <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                  ${location.pathname === '/allposts' && 'bg-blue-600'}`} href="#"
+                  ${location.pathname === '/settings/changePassword' && 'bg-blue-600'}`} to="/settings/changePassword"
             >
               <Wrench className="h-5 w-5" aria-hidden="true" />
-              <span className="mx-2 text-sm font-medium">Setting</span>
-            </a>
+              <span className="mx-2 text-sm font-medium">Settings</span>
+            </Link>
             <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
                   ${location.pathname === '/contact' && 'bg-blue-600'}`} to="/contact"
