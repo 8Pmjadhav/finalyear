@@ -35,8 +35,8 @@ export default function SignUp() {
   if(userCreated){
     setTimeout(()=>{
       setUserCreated(false)
-    },4000);
-    navigate('/login');
+    },3000);
+    // navigate('/login');
   }
 
   async function register(e) {
