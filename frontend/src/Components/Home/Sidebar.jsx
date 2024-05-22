@@ -38,14 +38,14 @@ export default function Sidebar({ dispatch }) {
             <label className="px-3 text-xs font-semibold uppercase text-gray-900 dark:text-gray-200">Posts</label>
             <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                  ${location.pathname === '/following_post/10' && 'bg-blue-600'}`}              to="/following_post/10"
+                  ${location.pathname === '/following_post/10' && 'bg-blue-600  text-white dark:text-white'}`}              to="/following_post/10"
             >
               <BarChart className="h-5 w-5" aria-hidden="true" />
               <span className="mx-2 text-sm font-medium">Following Posts</span>
             </Link>
             <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-              ${location.pathname === '/getposts/0' && 'bg-blue-600'}`}
+              ${location.pathname === '/getposts/0' && 'bg-blue-600 text-white dark:text-white'}`}
               to="/getposts/0"
             >
               <Wallet className="h-5 w-5" aria-hidden="true" />
@@ -53,7 +53,7 @@ export default function Sidebar({ dispatch }) {
             </Link>
             <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                  ${location.pathname === '/posts/createPost' && 'bg-blue-600'}`} to="/posts/createPost"
+                  ${location.pathname === '/posts/createPost' && 'bg-blue-600 text-white dark:text-white'}`} to="/posts/createPost"
             >
               <Newspaper className="h-5 w-5" aria-hidden="true" />
               <span className="mx-2 text-sm font-medium">Create Post</span>
@@ -75,18 +75,12 @@ export default function Sidebar({ dispatch }) {
               <span className="mx-2 text-sm font-medium">Themes</span></button>
               <Link
               className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                  ${location.pathname === '/settings/changePassword' && 'bg-blue-600'}`} to="/settings/changePassword"
+                  ${(location.pathname === '/settings/changePassword' || location.pathname === '/settings/deleteAccount') && 'bg-blue-600 text-white dark:text-white'}`} to="/settings/changePassword"
             >
               <Wrench className="h-5 w-5" aria-hidden="true" />
               <span className="mx-2 text-sm font-medium">Settings</span>
             </Link>
-            <Link
-              className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                  ${location.pathname === '/contact' && 'bg-blue-600'}`} to="/contact"
-            >
-              <Contact className="h-5 w-5" aria-hidden="true" />
-              <span className="mx-2 text-sm font-medium">Contact</span>
-            </Link>
+            
             <button
               type="button"
               onClick={() => logout(dispatch)}

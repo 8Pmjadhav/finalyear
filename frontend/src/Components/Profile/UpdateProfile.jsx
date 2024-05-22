@@ -13,10 +13,12 @@ const UpdateProfile = () => {
   const [gender, setGender] = useState('');
   const [profession,setProfession] = useState('');
   const [msg,setMsg] = useState();
+  const [errors,setErrors] = useState();
 
-  if(msg){
+  if(msg || errors){
     setTimeout(() => {
       setMsg(null);
+      setErrors(null);
     }, 3000);
   }
   const handleSubmit = async (event) => {

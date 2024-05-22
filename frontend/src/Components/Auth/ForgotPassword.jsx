@@ -97,7 +97,7 @@ export default function ForgotPassword() {
 
     return (
         <section className='pt-20'>
-            <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 border-2 border-solid dark:border-white border-black relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
+            <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 border border-gray-600 relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
                 <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
                     {(errors || msg) && (
                         errors ? <Danger errors={errors} /> : <Success text={msg} />

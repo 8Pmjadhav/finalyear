@@ -15,7 +15,7 @@ export function GetTime({timestamp}) {
         const amount = Math.floor(diffInMilliseconds / milliseconds);
         if (amount >= 1) {
             return (
-                <div className="flex items-center justify-between  dark:text-gray-200">
+                <div className="flex items-center justify-between  dark:text-gray-300">
                     <div >{`${amount} ${label}${amount > 1 ? 's' : ''}`} &middot; ago</div>
                 </div>
             );

@@ -2,10 +2,11 @@ import React, { useState, useEffect } from 'react';
 import {Loader,SubmitButton, client} from '../index.js';
 import { useSelector } from 'react-redux';
 import { selectAccessToken } from '../../store/authSlice.js';
-import { Link, Navigate } from 'react-router-dom';
+import { Link, Navigate, useNavigate } from 'react-router-dom';
 import { Success, Danger, UsernameInput, EmailInput, PasswordInput, ConfirmPasswordInput, OTPInput, Icon } from './comps/comps.jsx'
 
 export default function SignUp() {
+  const navigate = useNavigate();
   const accessToken = useSelector(selectAccessToken);
 
   const [username, setUsername] = useState("");
@@ -31,6 +32,12 @@ export default function SignUp() {
       // Clear the error after 3 seconds
     }, 3000);
   }
+  if(userCreated){
+    setTimeout(()=>{
+      setUserCreated(false)
+    },2000);
+    navigate('/login');
+  }
 
   async function register(e) {
     e.preventDefault();
@@ -40,6 +47,7 @@ export default function SignUp() {
         .then((res) => {
           setOtpSent(true);
           setUserCreated(false);
+          
         });
     } catch (error) {
       console.log(error);
@@ -80,9 +88,9 @@ export default function SignUp() {
     <section className='pt-20'>
       <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border border-gray-600 relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
-          {(errors || userCreated) ? (
+          {(errors || userCreated) && (
             errors ? <Danger errors={errors} /> : <Success text={"Account Created successfully , Login Now"}/>
-          ) : (
+          ) }
             <div>
               <Icon />
               <h2 className="text-center text-2xl font-bold leading-tight text-black dark:text-white">
@@ -101,7 +109,7 @@ export default function SignUp() {
                 )}
               </p>
             </div>
-          )}
+          
           <form onSubmit={otpSent ? verifyOtp : register} className="mt-8">
             <div className="space-y-5">
               {otpSent ? (

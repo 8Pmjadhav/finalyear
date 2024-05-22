@@ -46,7 +46,6 @@ model User {
   post       Post[]
   reply      Reply[]
   likes      Likes[]
-  notifications Notifications[]
   followers  Follow[] @relation("Followers") // Reference the "Followers" relation
   following  Follow[] @relation("Followings") // Reference the "Followings" relation
 }
@@ -73,6 +72,7 @@ model Reply {
   post_id    Int
   post       Post     @relation(fields: [post_id], references: [id], onDelete: Cascade)
   content    String?
+  likes       Likes[]
   created_At DateTime @default(now())
   updated_At DateTime @updatedAt
 }
@@ -81,19 +81,13 @@ model Likes {
   id      Int  @id @default(autoincrement())
   user_id Int
   user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  post_id Int
-  post    Post @relation(fields: [post_id], references: [id], onDelete: Cascade)
-
+  post_id Int?
+  post    Post? @relation(fields: [post_id], references: [id], onDelete: Cascade)
+  reply_id Int?
+  reply    Reply? @relation(fields: [reply_id], references: [id], onDelete: Cascade)
   created_At DateTime @default(now())
   updated_At DateTime @updatedAt
 
   @@unique([user_id, post_id]) // Composite unique constraint
 }
 
-model Notifications{
-  id      Int  @id @default(autoincrement())
-  user_id Int
-  user    User @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  message String @db.VarChar(255)
-  created_At DateTime @default(now())
-}

@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react';
 import { selectAccessToken } from '../../store/authSlice.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { isAuthenticated } from '../../hooks/user.js';
-import {EmailInput,PasswordInput,Icon} from './comps/comps.jsx'
+import {EmailInput,PasswordInput,Icon, Danger} from './comps/comps.jsx'
 import {Loader,SubmitButton, client} from '../index.js';
 
 export default function Login() {  
@@ -66,9 +66,7 @@ export default function Login() {
         <div className="flex items-center justify-center px-4 py-5 sm:px-6 sm:py-6 lg:px-8 lg:py-14 border border-gray-600 relative z-10 lg:w-96 bg-gray-50 dark:bg-black rounded-md">
           <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md">
             {errors && ( // Conditionally render error alert
-              <div className="p-4 mb-4 text-sm text-red-800 rounded-lg bg-red-50 dark:bg-gray-800 dark:text-red-400" role="alert">
-                {errors}
-              </div>
+              <Danger errors={errors}/>
             )}
             <Icon />
             <h2 className="text-center text-2xl font-bold leading-tight text-black dark:text-white">

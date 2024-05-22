@@ -1,8 +1,6 @@
-'use client'
-
 import { useDispatch, useSelector } from 'react-redux';
 import { selectUser } from '../../store/authSlice';
-import { BarChart, Wallet, Newspaper, BellRing, Paperclip, Brush, Wrench, Contact, Moon, SunMedium } from 'lucide-react'
+import { BarChart, Wallet, Newspaper,  Wrench, Contact, Moon, SunMedium } from 'lucide-react'
 
 import React, { useState, useEffect } from 'react';
 import { Link, NavLink, useLocation, useNavigate } from "react-router-dom";
@@ -44,14 +42,14 @@ export default function Header() {
   }
 
   // code related to search 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(' ');
   function handleSearch(e) {
     e.preventDefault();
     let flag;
     navigate(`/search/${searchQuery}/posts/${flag = 3}`);
   }
   return (
-    <div className="lg:mx-96 mdlglg:mx-60 mdlg:mx-40 md:mx-20  smmd:mx-0 bg-cover border-b-2 border-gray-600 dark:text-white backdrop-blur-2xl fixed top-0 left-0 right-0 z-50  "
+    <div className="lg:mx-96 mdlglg:mx-60 mdlg:mx-40 md:mx-20  smmd:mx-0 bg-cover border-b-2 border-gray-600 dark:text-white backdrop-blur-2xl fixed top-0 left-0 right-0 z-30  "
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-2 sm:px-6 lg:px-8">
         <div className="inline-flex items-center space-x-2">
@@ -155,13 +153,7 @@ export default function Header() {
                             <Wrench className="h-5 w-5" aria-hidden="true" />
                             <span className="mx-2 text-sm font-medium">Settings</span>
                           </Link>
-                          <Link
-                            className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-100 hover:text-gray-700
-                  ${location.pathname === '/contact' && 'bg-blue-600'}`} to="/contact"
-                          >
-                            <Contact className="h-5 w-5" aria-hidden="true" />
-                            <span className="mx-2 text-sm font-medium">Contact</span>
-                          </Link>
+                          
                           <button
                             type="button"
                             onClick={() => logout(dispatch)}

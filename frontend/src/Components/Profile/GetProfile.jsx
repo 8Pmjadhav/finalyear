@@ -147,20 +147,20 @@ export function GetProfile() {
               <div className="flex justify-around border-y border-gray-200 dark:text-white py-4">
               <Link
                   className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                              ${location.pathname === `/profile/${user.username}/following/${flag = 1}/${user.id}` && 'bg-blue-600'}`} to={`following/${flag = 1}/${user.id}`}
+                              ${location.pathname === `/profile/${user.username}/following/${flag = 1}/${user.id}` && 'bg-blue-600 text-white'}`} to={`following/${flag = 1}/${user.id}`}
                 >
                 <div className="text-center">
                   <h3 className="text-lg font-bold">{user._count?.following}</h3>
-                  <p className="text-gray-600">Followers</p>
+                  <p >Followers</p>
                 </div>
                 </Link>
                 <Link
                   className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                              ${location.pathname === `/profile/${user.username}/followers/${flag = 2}/${user.id}` && 'bg-blue-600'}`} to={`followers/${flag = 2}/${user.id}`}
+                              ${location.pathname === `/profile/${user.username}/followers/${flag = 2}/${user.id}` && 'bg-blue-600 text-white'}`} to={`followers/${flag = 2}/${user.id}`}
                 >
                   <div className="text-center">
                     <h3 className="text-lg font-bold">{user._count?.followers}</h3>
-                    <p className="text-gray-600">Following</p>
+                    <p >Following</p>
                   </div>
                 </Link>
 
@@ -174,7 +174,7 @@ export function GetProfile() {
                       <li>
                         <Link
                           className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                              ${location.pathname === `/profile/${user.username}/posts/${flag = 1}/${user.id}` && 'bg-blue-600'}`} to={`posts/${flag = 1}/${user.id}`}
+                              ${location.pathname === `/profile/${user.username}/posts/${flag = 1}/${user.id}` && 'bg-blue-600 text-white'}`} to={`posts/${flag = 1}/${user.id}`}
                         >
                           <span className="mx-2 text-sm font-medium">{user._count?.post} (Posts)</span>
                         </Link>
@@ -183,7 +183,7 @@ export function GetProfile() {
                       <li>
                         <Link
                           className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                              ${location.pathname === `/profile/${user.username}/replies/${user.id}` && 'bg-blue-600'}`} to={`replies/${user.id}`}
+                              ${location.pathname === `/profile/${user.username}/replies/${flag = 2}/${user.id}` && 'bg-blue-600 text-white'}`} to={`replies/${flag = 2}/${user.id}`}
                         >
                           <span className="mx-2 text-sm font-medium">{user._count?.reply} (Replies)</span>
                         </Link>
@@ -192,7 +192,7 @@ export function GetProfile() {
                       <li>
                         <Link
                           className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                              ${location.pathname === `/profile/${user.username}/likes/${flag = 2}/${user.id}` && 'bg-blue-600'}`} to={`likes/${flag = 2}/${user.id}`}
+                              ${location.pathname === `/profile/${user.username}/likes/${flag = 2}/${user.id}` && 'bg-blue-600 text-white'}`} to={`likes/${flag = 2}/${user.id}`}
                         >
                           <span className="mx-2 text-sm font-medium">{user._count?.likes} (likes)</span>
                         </Link>

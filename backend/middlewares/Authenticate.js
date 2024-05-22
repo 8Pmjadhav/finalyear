@@ -4,7 +4,7 @@ import prisma from "../DB/db.config.js";
 export const verifyJWT = async (req, res, next) => {
     try {
         const token = req?.cookies?.accessToken || req?.header("Authorization")?.replace("Bearer ", "")
-
+        // console.log(req);
         if (!token) {    
             return res.status(404).json({ status: 404, msg: 'token not found' })
         }

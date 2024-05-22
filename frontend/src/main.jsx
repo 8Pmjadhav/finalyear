@@ -82,7 +82,7 @@ const router = createBrowserRouter([
                 element:<GetPosts/>,
               },
               {
-                path:'replies/:user_id',
+                path:'replies/:flag/:user_id',
                 element: <GetUserReplies/>,
               },
               {

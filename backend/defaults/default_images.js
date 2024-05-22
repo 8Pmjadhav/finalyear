@@ -137,22 +137,33 @@ const poster = {
     id:'avatar/emcc8cuq0jbbulaea3jk',
     url:'https://res.cloudinary.com/dooomcx1j/image/upload/v1714800551/avatar/emcc8cuq0jbbulaea3jk.jpg'
 }
+function isLetter(char) {
+    return /^[a-zA-Z]$/.test(char);
+}
 
 export async function default_images(id,letter){
     try {
-
-        const image = cloud_ids.find(img => img.alphabet === letter.toUpperCase());
+        const isL = isLetter(letter);
+        let image;
+        if(isL){
+            image = cloud_ids.find(img => img.alphabet === letter?.toUpperCase());
+        }
+        else{
+            image = '../public/profile.jpg'
+        }
+        
 
         const img = await prisma.user.update({
             where:{
                 id
             },
             data:{
-                avatar:image.url || '../public/profile.jpg',
-                backcover:poster.url || '../public/poster.jpg'
+                avatar:image?.url || '../public/profile.jpg',
+                backcover:poster?.url || '../public/poster.jpg'
             }
         })
     } catch (error) {
-        return res.status(500).json({status:500,msg:error?.message + "Error while default Avatar"});
+        throw error;
+        // return res.status(500).json({status:500,msg:error?.message + "Error while default Avatar"});
     }
 }

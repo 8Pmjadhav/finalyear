@@ -5,15 +5,15 @@ export async function getTweets(req, res) {
   try {
     const currentDate = new Date();
     const user = req.user;
-    let {flag,user_id,searchQuery}  = req.query;  
-    flag = Number(flag);user_id = Number(user_id);searchQuery=String(searchQuery);
+    let {flag,user_id,searchQuery,filter}  = req.query;  
+    flag = Number(flag);user_id = Number(user_id);searchQuery=String(searchQuery);filter=Number(filter);
     // console.log(req.query,flag,user_id);
   
-    // Calculate the date 5 days ago
+    // Calculate the date 365 days ago
     const OneYearAgo = new Date(currentDate.getTime() - 365 * 24 * 60 * 60 * 1000);
     let posts = null;
-    // flag=10 following posts
-    if(flag===10){
+    
+    if(flag===10){              // flag=10 following posts
       posts = await prisma.post.findMany({
         where: {
           user:{
@@ -50,7 +50,7 @@ export async function getTweets(req, res) {
         ]
       });
     }
-    else if(flag===0){
+    else if(flag===0){          // all posts
        posts = await prisma.post.findMany({
         where: {
           created_At: {
@@ -84,7 +84,7 @@ export async function getTweets(req, res) {
         ]
       });
     }
-    else if(flag===1){
+    else if(flag===1){          // user's post
        posts = await prisma.post.findMany({
         where: {
           user_id:user_id
@@ -116,7 +116,7 @@ export async function getTweets(req, res) {
       });
       // console.log(posts);
     }
-    else if(flag === 2){
+    else if(flag === 2){        // posts liked by user
       posts = await prisma.post.findMany({
         where: {
           likes:{
@@ -152,7 +152,7 @@ export async function getTweets(req, res) {
       });
       console.log(posts);
     }
-    else if(flag === 3){
+    else if(flag === 3){        // posts search by content
       posts = await prisma.post.findMany({
         where: {
             content:{
@@ -188,9 +188,12 @@ export async function getTweets(req, res) {
       });
       // console.log(posts);
     }
+
+    if(filter===2){
+      posts.sort((a,b) => b._count.likes - a._count.likes);
+    }
     
 
-    // Calculate counts for replies and likes for each post
     return res
       .status(200)
       .json({ status: 200, posts });
@@ -204,6 +207,7 @@ export async function getTweets(req, res) {
 export async function viewTweet(req, res) {
   try {
     const { post_id } = req.params
+    const {filter} = req.query;
     const user = req.user;
     const postData = await prisma.post.findUnique({
       where: {
@@ -223,8 +227,19 @@ export async function viewTweet(req, res) {
                 username: true,
                 avatar: true
               }
+            },
+            likes:{
+              where: {
+                user_id:user.id
+              }
+            },
+            _count:{
+              select:{
+                likes:true
+              }
             }
           },
+          
           orderBy:[
             {
               created_At:'desc'
@@ -235,6 +250,7 @@ export async function viewTweet(req, res) {
           include: {
             user: {
               select: {
+                id:true,
                 username: true,
                 avatar: true
               }
@@ -249,29 +265,10 @@ export async function viewTweet(req, res) {
         },
       }
     });
-    // const post = await prisma.post.findUnique({
-    //     where: {
-    //         id:Number(post_id)
-    //     },
-    //     include: {
-    //         user: {
-    //             select: {
-    //                 username: true,
-    //                 avatar: true
-    //             }
-    //         },
-    //         reply:{
-
-    //         },
-    //         likes:{
-
-    //         }
-    //     },
-
-    // });
-
-    // Calculate counts for replies and likes for each post
-
+    if(Number(filter) === 2){
+      postData.reply.sort((a,b) => b._count.likes - a._count.likes);
+    }
+   
     return res
       .status(200)
       .json({ status: 200, postData });

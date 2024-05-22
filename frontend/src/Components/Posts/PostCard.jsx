@@ -112,7 +112,7 @@ async function deletePost() {
           )}</div>
       <div className="p-4">
         <Link to={`/posts/viewPost/${post.id}`}state={{ id:post.id }}>
-          <p className="text-gray-700 dark:text-gray-50 whitespace-pre-line">{post.content}</p>
+          <p className=" dark:text-gray-50 whitespace-pre-line">{post.content}</p>
         </Link>
         {(post?.image || post?.video) && (
           <div className={`relative mt-4 h-72 flex border rounded-md border-gray-600  ${(post?.image && post?.video) ? 'justify-center' : ""}`}>

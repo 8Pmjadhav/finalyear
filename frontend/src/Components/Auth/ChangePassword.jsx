@@ -38,7 +38,7 @@ export default function ChangePassword() {
         });
     } catch (error) {
     //   console.log(error);
-      let error1 = error.response.data.error?.username || error.response.data.error?.email || error.response.data.error?.password || error.response.data?.msg;
+      let error1 =  error.response.data.error?.password || error.response.data?.msg;
       setErrors(error1);
     }
     setSLoading(false);
@@ -53,13 +53,12 @@ export default function ChangePassword() {
     <section className='pt-10'>
       <div className=" px-4 py-5 sm:px-6 sm:py-8 lg:px-8 lg:py-14 lg:pb-10 border border-gray-600  z-10 lg:w-full bg-gray-50 dark:bg-black rounded-md">
         <div className="xl:mx-auto xl:w-full xl:max-w-sm 2xl:max-w-md ">
-          {(errors || msg) ? (
+          {(errors || msg) && (
             errors ? <Danger errors={errors} /> : <Success text={"Password Changed successfully"}/>
-          ) : (
-            <div>
+          ) }
+            <div className='flex justify-center'>
               <h3 > Change Password </h3>
             </div>
-          )}
           <form onSubmit={changePassword} className="mt-8">
             <div className="space-y-5">
                   <PasswordInput password={oldPassword} setPassword={setOldPassword} isLoginPage={true} currentp={true}/>

@@ -32,8 +32,9 @@ export async function follow_un_User(req, res) {
 export async function getPeople(req, res) {
     try {
         // const user = req.user;
-        let { flag, user_id, searchQuery } = req.query;
-        flag = Number(flag); user_id = Number(user_id); searchQuery = String(searchQuery);
+        let { flag, user_id, searchQuery,filter } = req.query;
+        flag = Number(flag); user_id = Number(user_id); 
+        searchQuery = String(searchQuery);filter = Number(filter);
         let people = null;
         if (flag === 1) {                       // Followers of user
             people = await prisma.follow.findMany({
@@ -104,6 +105,12 @@ export async function getPeople(req, res) {
 
 
             })
+        }
+        if(filter === 2){
+            console.log(
+                people
+            );
+            people.sort((a,b)=> b._count.following - a._count.following);
         }
         return res.status(200).json({ status: 200, msg: 'followers fetched successfully', people });
     } catch (error) {

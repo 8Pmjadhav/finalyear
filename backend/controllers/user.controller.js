@@ -7,6 +7,7 @@ import { GenerateACCESSToken, GenerateREFRESHToken } from "../Security/Tokens.js
 import {  sendOTPEmail } from "./email.controller.js";
 import { hashPassword,generateOTP, checkPassword } from "./basic.controller.js";
 import { default_images } from "../defaults/default_images.js";
+import { deleteOnCloudinary } from "../utils/cloudinary.js";
 
 const options = {
     httpOnly: true,
@@ -159,6 +160,7 @@ export async function login(req, res) {
             }
             const { accessToken, refreshToken } = await generateACCESSandREFRESHtokens(finduser.id);
 
+            console.log(finduser.email , ' logged In');
             return res
                 .status(200)
                 .cookie("accessToken", accessToken, { maxAge:1000* 60 *60 * 24   })
@@ -189,6 +191,8 @@ export async function login(req, res) {
 
 export async function logout(req, res) {
     // console.log(req.user);
+    const user = req.user;
+    console.log(req);
     await prisma.user.update({
         where: {
             id: req.user.id
@@ -198,6 +202,7 @@ export async function logout(req, res) {
         }
     });
 
+    console.log(user.email, ' logged out');
     return res
         .status(200)
         .clearCookie("accessToken", options)
@@ -246,7 +251,7 @@ export async function changePassword(req, res) {
                 password:payload.password
             }
         });
-        
+        console.log(user.email, ' changed Password');
         return res.json({ status: 200, msg: "Password changed Successfully ." });
 
 
@@ -264,7 +269,64 @@ export async function changePassword(req, res) {
 }
 
 export async function deleteAccount(req,res){
-    
+    try {
+        let {password} = req.body;
+        const user = req.user;
+        // console.log(user);
+       
+        const finduser = await prisma.user.findUnique({
+            where: {
+                email: user.email,
+                
+            }
+        })
+
+        if (!checkPassword(password,finduser.password)) {
+            return res.status(400).json({
+                status: 400,
+                msg: 'Incorrect password    !!'
+            })
+        }        
+        
+        const duser = await prisma.user.findFirst({
+            where:{
+                id:user.id
+            },
+            select:{
+                avatar_id:true,
+                backcover_id:true,
+                post:{
+                    select:{
+                        image_id:true,
+                        video_id:true
+                    }
+                }
+            }
+        });
+        console.log(duser);
+        duser.avatar_id && deleteOnCloudinary(duser.avatar_id);
+        duser.backcover_id && deleteOnCloudinary(duser.backcover_id);
+        duser.post.map(posttod => {
+            // console.log(posttod);
+            posttod.image_id && deleteOnCloudinary(posttod.image_id);
+            posttod.video_id && deleteOnCloudinary(posttod.video_id);
+        })
+
+        await prisma.user.delete({
+            where:{
+                id:user.id
+            }
+        })
+        console.log(user.email, ' deleted Account ');
+        return res.json({ status: 200, msg: "Account deleted Successfully .",duser });
+
+
+    }
+    catch (error) {
+        
+            console.error(error)
+            return res.status(500).json({ status: 500, msg: "something went wrong on server side" })
+    }
 }
 
 export async function refreshAccessToken(req, res) {

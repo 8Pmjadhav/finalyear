@@ -1,3 +1,4 @@
+import { useSelector } from "react-redux";
 import { clearAccessToken, setAccessToken } from "../store/authSlice";
 import { serverDown, serverUp } from "../store/serverStatus";
 import client from "./client";
@@ -5,23 +6,20 @@ import client from "./client";
 export async function isAuthenticated(dispatch) {
     try {
 
-        const accessToken = localStorage.getItem('accessToken');
-
         await client.get('/api/status')
             .then((res) => {
                 console.log(res.data.msg);
                 dispatch(serverDown())
             })
             .catch((err) => {
-                //console.log(err);
+                console.log('Server Down');
                 if (err.response && err.response.status === 500) {
-                    console.error(err.response)
+                    // console.error(err.response)
                     dispatch(serverUp());
-                    //return
+                    return;
                 }
             })
-
-
+        const accessToken = localStorage.getItem('accessToken');
         if (!accessToken) {
             console.log("Don't have Access token, Login with password");
             return;
@@ -30,7 +28,7 @@ export async function isAuthenticated(dispatch) {
             headers: {
                 'Authorization': `Bearer ${accessToken}`
             }
-            })
+        })
             .then((res) => {
                 // console.log(res);
                 if (res.status === 200 && res.data.accessToken) {
@@ -62,11 +60,20 @@ export async function isAuthenticated(dispatch) {
 
 export async function logout(dispatch) {
     try {
-        await client.post('/api/user/logout')
-            .then((res) => console.log(res))
-        localStorage.removeItem('accessToken');
-        dispatch(clearAccessToken());
+
+        await client.post('/api/user/logout', {}, {
+            headers: {
+                'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
+            }
+        })
+            .then((res) => {
+                console.log(res.msg);
+                localStorage.removeItem('accessToken');
+                dispatch(clearAccessToken());
+            })
+        // console.log(localStorage.getItem('accessToken'));
     } catch (error) {
+
         console.error("Error while logout : ", error);
     }
 }

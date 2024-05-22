@@ -34,7 +34,7 @@ import HandleSearch from "./Header/HandleSearch";
 import Welcome from "./Welcome";
 import client from "../hooks/client";
 
-import Settings from "./Auth/settings";
+import Settings from "./Auth/Settings";
 import ChangePassword from "./Auth/ChangePassword";
 import DeleteAccount from "./Auth/DeleteAccount";
 

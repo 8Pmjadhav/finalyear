@@ -71,13 +71,17 @@ export async function deleteReply(req, res) {
 }
 
 export async function getUserReplies(req, res) {
-    // const user = req.user;
-    const {flag,user_id,searchQuery} = req.query;
+    const user = req.user;
+    let {flag,user_id,searchQuery,filter} = req.query;
+    flag = Number(flag);user_id = Number(user_id);
+    searchQuery=String(searchQuery);filter=Number(filter);
+
     
     try {
-        // flag 1 for search reply content
         let reply = null;
-        if(flag){
+
+        
+        if(flag===1){                   // flag 1 for search reply content 
              reply = await prisma.reply.findMany({
                 where: {
                     content:{
@@ -91,6 +95,16 @@ export async function getUserReplies(req, res) {
                             username:true,
                             avatar:true
                         }
+                    },
+                    _count:{
+                        select:{
+                            likes:true
+                        }
+                    },
+                    likes:{
+                        where:{
+                            user_id:user.id
+                        }
                     }
                 },
                 orderBy:{
@@ -98,7 +112,7 @@ export async function getUserReplies(req, res) {
                 }
             })
         }
-        else{
+        else if(flag===2){              // flag 2 for user's replies     
              reply = await prisma.reply.findMany({
                 where: {
                     user_id:Number(user_id),
@@ -108,6 +122,16 @@ export async function getUserReplies(req, res) {
                         select:{
                             username:true,
                             avatar:true
+                        }
+                    },
+                    _count:{
+                        select:{
+                            likes:true
+                        }
+                    },
+                    likes:{
+                        where:{
+                            user_id:user.id
                         }
                     }
                 },
@@ -119,6 +143,9 @@ export async function getUserReplies(req, res) {
         
         if (reply) {
             // console.log(reply);
+            if(filter===2){
+                reply.sort((a,b)=> b._count.likes - a._count.likes);
+            }
             res.status(200).json({ status: 200, msg: "Replies fetched successfully",replies:reply });
         }
     } catch (error) {
@@ -127,3 +154,32 @@ export async function getUserReplies(req, res) {
 
 
 }
+
+export async function likeReply(req,res){
+    const user = req.user;
+    const { reply_id } = req.params;
+  
+    try {
+      const checkl = await prisma.likes.deleteMany({
+        where:{
+          user_id:user.id,
+          reply_id:Number(reply_id)
+        }
+      })
+    //   console.log(checkl);
+      if(!checkl.count){
+        await prisma.likes.create({
+          data:{
+            user_id:user.id,
+            reply_id:Number(reply_id)
+          }
+        })
+      }
+      res.status(200).json({ status: 200, msg: "reply like updated successfully" });
+  
+    } catch (error) {
+      res.status(400).json({ status: 200, msg: "Error while un/liking reply" });
+  
+    }
+    
+  }

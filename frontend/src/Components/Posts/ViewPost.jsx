@@ -12,6 +12,8 @@ export default function ViewPost() {
     const [post, setPost] = useState(pid);
     const [loading, setLoading] = useState(true);
     const [reply_loading, setReply_loading] = useState(false);
+    const [filter,setFilter] = useState(1);
+
 
     const [reply, setreply] = useState([]);
     const [likes, setLikes] = useState([]);
@@ -24,6 +26,9 @@ export default function ViewPost() {
         (async () => {
             try {
                 await client.get(`/api/posts/viewTweet/${pid}`, {
+                    params:{
+                        filter
+                    },
                     headers: {
                         'Authorization': `Bearer ${localStorage.getItem('accessToken')}`
                     },
@@ -39,7 +44,7 @@ export default function ViewPost() {
             }
         })();
         setReply_loading(false);
-    }, [refetch])
+    }, [refetch,filter])
     if (!post) return <Error404 />
 
 
@@ -62,16 +67,16 @@ export default function ViewPost() {
         } catch (error) {
             console.log(error);
         }
-        
+
     }
 
 
     return (loading ? (<Loader />) :
         <>
             <PostCard post={post} setRefetch={setRefetch} />
-            
+
             <div className="max-w-xl mx-auto  bottom-2 border  border-gray-600  shadow-md rounded-md overflow-hidden mb-4">
-            
+
                 <form className="flex w-full  space-x-1 " onSubmit={postReply}>
                     <input
                         className="flex-1 h-10 w-full rounded-md dark:text-white  bg-transparent px-3 py-1 text-sm placeholder:text-gray-600 dark:placeholder:text-gray-200 focus:outline-none focus:ring-1 focus:ring-black/30 focus:ring-offset-1 disabled:cursor-not-allowed disabled:opacity-50"
@@ -88,13 +93,29 @@ export default function ViewPost() {
                         {reply_loading ? <ReactLoading type='spin' color='#153448' height={'20px'} width={'20px'} className="mx-2" />
                             : <SendHorizonal fill="aqua" strokeWidth={1} className="h-8 w-8 mx-2" />}
                     </button>
-                    
+
                 </form>
             </div>
             {reply_loading ? <Loader /> :
-                reply.map((rep) => (
-                    <ReplyCard key={rep.id} reply={rep} setRefetch={setRefetch} />
-                ))
+                <div>
+                    <div className='fixed top-30 right-2 lg:right-96'>
+                        <div className="mb-4">
+                            <select
+                                id="filter"
+                                value={filter}
+                                onChange={(e) => setFilter(e.target.value)}
+                                className="appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
+                            >
+                                <option value="0">Select Filter</option>
+                                <option value="1">Latest</option>
+                                <option value="2">Popularity</option>
+                            </select>
+                        </div>
+                    </div>
+                    {reply.map((rep) => (
+                        <ReplyCard key={rep.id} reply={rep} setRefetch={setRefetch} />
+                    ))}
+                </div>
             }
         </>
     )

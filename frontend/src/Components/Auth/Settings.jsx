@@ -21,13 +21,13 @@ export default function Settings() {
                   <li>
                     <Link
                       className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
-                              ${location.pathname === `/settings/changePassword` && 'bg-blue-600'}`} to={`changePassword`}
+                              ${location.pathname === `/settings/changePassword` && 'bg-blue-600 text-white dark:text-white'}`} to={`changePassword`}
                     >
                       <span className="mx-2 text-sm font-medium"> (Change Password)</span>
                     </Link>
 
                   </li>
-                  <li>
+                  
                   <li>
                     <Link
                       className={`flex transform items-center rounded-lg px-3 py-2 text-gray-600 dark:text-gray-300 transition-colors duration-300 hover:bg-gray-400 dark:hover:bg-gray-600 
@@ -38,7 +38,7 @@ export default function Settings() {
 
                   </li>
 
-                  </li>
+                  
                   
                   
 
