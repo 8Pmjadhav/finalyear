@@ -1,0 +1,9 @@
+{
+    "rewrites": [
+      {
+        "source": "/api/(.*)",
+        "destination": "https://project-iunl.onrender.com/api/$1"
+      }
+    ]
+  }
+  
