@@ -9,12 +9,12 @@ export default defineConfig({
 
   //   }
   // }
-  // server:{
-  //   host:true,
-  //   proxy: {
-  //     '/api': {
-  //       target: 'http://localhost:3000',
-  //     },
-  //   },
-  // }
+  server:{
+    host:true,
+    proxy: {
+      '/api': {
+        target: 'https://project-iunl.onrender.com',
+      },
+    },
+  }
 })
