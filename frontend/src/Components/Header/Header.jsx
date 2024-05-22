@@ -42,12 +42,13 @@ export default function Header() {
   }
 
   // code related to search 
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(null);
   function handleSearch(e) {
     e.preventDefault();
     let flag;
-    searchQuery.trim();
-    if(searchQuery !== null ){
+    searchQuery?.trim();
+    if(searchQuery){
+      // console.log(searchQuery);
       navigate(`/search/${searchQuery}/posts/${flag = 3}`);
     }
     
