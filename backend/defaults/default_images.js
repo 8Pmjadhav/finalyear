@@ -149,7 +149,7 @@ export async function default_images(id,letter){
             image = cloud_ids.find(img => img.alphabet === letter?.toUpperCase());
         }
         else{
-            image = '../public/profile.jpg'
+            image = '/profile.jpg'
         }
         
 
@@ -158,8 +158,8 @@ export async function default_images(id,letter){
                 id
             },
             data:{
-                avatar:image?.url || '../public/profile.jpg',
-                backcover:poster?.url || '../public/poster.jpg'
+                avatar:image?.url || '/profile.jpg',
+                backcover:poster?.url || '/poster.jpg'
             }
         })
     } catch (error) {

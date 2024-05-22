@@ -42,11 +42,15 @@ export default function Header() {
   }
 
   // code related to search 
-  const [searchQuery, setSearchQuery] = useState(' ');
+  const [searchQuery, setSearchQuery] = useState('');
   function handleSearch(e) {
     e.preventDefault();
     let flag;
-    navigate(`/search/${searchQuery}/posts/${flag = 3}`);
+    searchQuery.trim();
+    if(searchQuery !== null ){
+      navigate(`/search/${searchQuery}/posts/${flag = 3}`);
+    }
+    
   }
   return (
     <div className="lg:mx-96 mdlglg:mx-60 mdlg:mx-40 md:mx-20  smmd:mx-0 bg-cover border-b-2 border-gray-600 dark:text-white backdrop-blur-2xl fixed top-0 left-0 right-0 z-30  "
