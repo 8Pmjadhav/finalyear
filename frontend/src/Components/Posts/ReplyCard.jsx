@@ -34,7 +34,7 @@ export default function ReplyCard({ reply, setRefetch }) {
         }
 
     }, [ ])
-
+    // console.log(reply);
     async function submitEditedReply() {
         try {
             await client.put(`/api/reply/editReply/${reply.id}`, {
@@ -102,11 +102,11 @@ export default function ReplyCard({ reply, setRefetch }) {
                 <hr className='border border-gray-600 ' />
 
                 <div className='flex justify-between'>
-                    <div className="flex items-center ">
+                    <div className="flex items-center p-4">
                         <Link to={`/posts/viewPost/${reply.post_id}`}><Merge className="h-5 w-5 " /></Link>
 
                         <Link to={`/profile/${reply.user.username}`}>
-                            <div className="flex items-center ">
+                            <div className="flex items-center p-4">
                                 <img src={reply.user.avatar} alt={reply.user.username} className="w-8 h-8 rounded-full mr-2" />
                                 <span className="font-semibold dark:text-white"> @{reply.user.username}{edit && ' (You)'}</span>
                             </div>

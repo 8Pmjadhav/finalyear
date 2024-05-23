@@ -7,9 +7,9 @@ import ReactLoading from 'react-loading';
 
 export default function ViewPost() {
     const params = useParams()
-    const pid = params.id;
+    const post_id = params.id;
     // console.log(location);
-    const [post, setPost] = useState(pid);
+    const [post, setPost] = useState(post_id);
     const [loading, setLoading] = useState(true);
     const [reply_loading, setReply_loading] = useState(false);
     const [filter,setFilter] = useState(1);
@@ -25,7 +25,7 @@ export default function ViewPost() {
         setReply_loading(true);
         (async () => {
             try {
-                await client.get(`/api/posts/viewTweet/${pid}`, {
+                await client.get(`/api/posts/viewTweet/${post_id}`, {
                     params:{
                         filter
                     },

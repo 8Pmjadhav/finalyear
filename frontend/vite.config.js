@@ -13,7 +13,7 @@ export default defineConfig({
     host:true,
     proxy: {
       '/api': {
-        target: 'https://project-iunl.onrender.com',
+        target: `${process.env.VITE_PRODUCTION === 'remote' ? '':'http://localhost:3000'}`,
       },
     },
   }

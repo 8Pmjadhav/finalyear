@@ -42,7 +42,7 @@ export default function Header() {
   }
 
   // code related to search 
-  const [searchQuery, setSearchQuery] = useState(null);
+  const [searchQuery, setSearchQuery] = useState('');
   function handleSearch(e) {
     e.preventDefault();
     let flag;
