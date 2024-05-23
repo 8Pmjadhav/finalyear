@@ -206,9 +206,11 @@ export async function getTweets(req, res) {
 
 export async function viewTweet(req, res) {
   try {
-    const { post_id } = req.params
-    const {filter} = req.query;
+    const { post_id } = req.params;
+    const { filter } = req.query;
     const user = req.user;
+
+    // Fetch the post data along with the user and likes
     const postData = await prisma.post.findUnique({
       where: {
         id: Number(post_id)
@@ -228,21 +230,15 @@ export async function viewTweet(req, res) {
                 avatar: true
               }
             },
-            likes:{
+            likes: {
               where: {
-                user_id:user.id
-              }
-            },
-            _count:{
-              select:{
-                likes:true
+                user_id: user.id
               }
             }
           },
-          
-          orderBy:[
+          orderBy: [
             {
-              created_At:'desc'
+              created_At: 'desc'
             }
           ]
         },
@@ -250,33 +246,62 @@ export async function viewTweet(req, res) {
           include: {
             user: {
               select: {
-                id:true,
+                id: true,
                 username: true,
                 avatar: true
               }
             }
           }
         },
-        _count:{
-          select:{
-            reply:true,
-            likes:true
+        _count: {
+          select: {
+            reply: true,
+            likes: true
           }
         },
       }
     });
-    if(Number(filter) === 2){
-      postData.reply.sort((a,b) => b._count.likes - a._count.likes);
+
+    // Fetch the like counts for replies separately
+    const replyIds = postData.reply.map(reply => reply.id);
+    const likeCounts = await prisma.likes.groupBy({
+      by: ['reply_id'],
+      where: {
+        reply_id: { in: replyIds }
+      },
+      _count: {
+        _all: true
+      }
+    });
+
+    // Create a map for like counts
+    const likeCountMap = likeCounts.reduce((acc, curr) => {
+      acc[curr.reply_id] = curr._count._all;
+      return acc;
+    }, {});
+
+    // Merge like counts into replies
+    postData.reply = postData.reply.map(reply => ({
+      ...reply,
+      _count: {
+        likes: likeCountMap[reply.id] || 0
+      }
+    }));
+
+    // Sort replies by like count if filter is 2
+    if (Number(filter) === 2) {
+      postData.reply.sort((a, b) => b._count.likes - a._count.likes);
     }
-   
-    return res
-      .status(200)
-      .json({ status: 200, postData });
+
+    return res.status(200).json({ status: 200, postData });
 
   } catch (error) {
     return res.status(500).json({ status: 500, msg: error?.message + "Error while getting Post" });
   }
 }
+
+
+
 
 export async function tweetPost(req, res) {
   try {

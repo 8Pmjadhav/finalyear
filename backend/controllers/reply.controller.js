@@ -69,91 +69,102 @@ export async function deleteReply(req, res) {
 
 
 }
-
 export async function getUserReplies(req, res) {
     const user = req.user;
-    let {flag,user_id,searchQuery,filter} = req.query;
-    flag = Number(flag);user_id = Number(user_id);
-    searchQuery=String(searchQuery);filter=Number(filter);
+    let { flag, user_id, searchQuery, filter } = req.query;
+    flag = Number(flag);
+    user_id = Number(user_id);
+    searchQuery = String(searchQuery);
+    filter = Number(filter);
 
-    
     try {
-        let reply = null;
+        let replies = null;
 
-        
-        if(flag===1){                   // flag 1 for search reply content 
-             reply = await prisma.reply.findMany({
+        if (flag === 1) { // flag 1 for search reply content 
+            replies = await prisma.reply.findMany({
                 where: {
-                    content:{
-                        contains:String(searchQuery),
-                        mode:'insensitive'
+                    content: {
+                        contains: String(searchQuery),
+                        mode: 'insensitive'
                     }
                 },
-                include:{
-                    user:{
-                        select:{
-                            username:true,
-                            avatar:true
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                            avatar: true
                         }
                     },
-                    _count:{
-                        select:{
-                            likes:true
-                        }
-                    },
-                    likes:{
-                        where:{
-                            user_id:user.id
+                    likes: {
+                        where: {
+                            user_id: user.id
                         }
                     }
                 },
-                orderBy:{
-                    created_At:'desc'
+                orderBy: {
+                    created_At: 'desc'
                 }
-            })
-        }
-        else if(flag===2){              // flag 2 for user's replies     
-             reply = await prisma.reply.findMany({
+            });
+        } else if (flag === 2) { // flag 2 for user's replies     
+            replies = await prisma.reply.findMany({
                 where: {
-                    user_id:Number(user_id),
+                    user_id: Number(user_id),
                 },
-                include:{
-                    user:{
-                        select:{
-                            username:true,
-                            avatar:true
+                include: {
+                    user: {
+                        select: {
+                            username: true,
+                            avatar: true
                         }
                     },
-                    _count:{
-                        select:{
-                            likes:true
-                        }
-                    },
-                    likes:{
-                        where:{
-                            user_id:user.id
+                    likes: {
+                        where: {
+                            user_id: user.id
                         }
                     }
                 },
-                orderBy:{
-                    created_At:'desc'
+                orderBy: {
+                    created_At: 'desc'
                 }
-            })
+            });
         }
-        
-        if (reply) {
-            // console.log(reply);
-            if(filter===2){
-                reply.sort((a,b)=> b._count.likes - a._count.likes);
+
+        if (replies) {
+            const replyIds = replies.map(reply => reply.id);
+            const likeCounts = await prisma.likes.groupBy({
+                by: ['reply_id'],
+                where: {
+                    reply_id: { in: replyIds }
+                },
+                _count: {
+                    _all: true
+                }
+            });
+
+            const likeCountMap = likeCounts.reduce((acc, curr) => {
+                acc[curr.reply_id] = curr._count._all;
+                return acc;
+            }, {});
+
+            replies = replies.map(reply => ({
+                ...reply,
+                _count: {
+                    likes: likeCountMap[reply.id] || 0
+                }
+            }));
+
+            if (filter === 2) {
+                replies.sort((a, b) => b._count.likes - a._count.likes);
             }
-            res.status(200).json({ status: 200, msg: "Replies fetched successfully",replies:reply });
+
+            res.status(200).json({ status: 200, msg: "Replies fetched successfully", replies });
         }
     } catch (error) {
-        res.status(400).json({ status: 400, msg: "Error while gating user reply" });
+        res.status(400).json({ status: 400, msg: "Error while fetching user replies" });
     }
-
-
 }
+
+
 
 export async function likeReply(req,res){
     const user = req.user;
