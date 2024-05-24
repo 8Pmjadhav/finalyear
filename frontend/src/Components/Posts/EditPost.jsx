@@ -130,7 +130,7 @@ if (!post) return <Error404 />
         </div>
         <div className="mb-4">
           <label htmlFor="video" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Video/Image no. 2
+            Video
           </label>
           <div className='flex space-x-3'>
           

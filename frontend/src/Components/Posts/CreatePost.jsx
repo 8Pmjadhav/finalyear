@@ -72,12 +72,12 @@ const CreatePost = () => {
         </div>
         <div className="mb-4">
           <label htmlFor="video" className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-2">
-            Video/Image
+            Video
           </label>
           <input
             type="file"
             id="video"
-            accept={"video/*" && "image/*"}
+            accept="video/*"
             onChange={(e) => setVideo(e.target.files[0])}
             className="w-full appearance-none border border-gray-600 rounded-md py-2 px-3 text-gray-700 dark:text-gray-200 dark:bg-gray-800 leading-tight focus:outline-none focus:ring"
           />

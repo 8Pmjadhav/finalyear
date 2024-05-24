@@ -47,7 +47,7 @@ export default function GetPosts(props) {
       setLoading(false);
     }
   }
-  console.log(posts);
+  // console.log(posts);
 
   return (
     <>

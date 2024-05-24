@@ -4,8 +4,8 @@ import { loginSchema, passwordSchema, registerSchema } from "../validations/auth
 import prisma from "../DB/db.config.js";
 import jwt from "jsonwebtoken";
 import { GenerateACCESSToken, GenerateREFRESHToken } from "../Security/Tokens.js";
-import {  sendOTPEmail } from "./email.controller.js";
-import { hashPassword,generateOTP, checkPassword } from "./basic.controller.js";
+import { sendOTPEmail } from "./email.controller.js";
+import { hashPassword, generateOTP, checkPassword } from "./basic.controller.js";
 import { default_images } from "../defaults/default_images.js";
 import { deleteOnCloudinary } from "../utils/cloudinary.js";
 
@@ -48,7 +48,7 @@ export async function getCurrentUser(req, res) {
             {
                 status: 200,
                 msg: "User Logged In",
-                id:user.id,
+                id: user.id,
                 username: user.username,
                 avatar: user.avatar,
                 accessToken: user.accessToken,
@@ -79,22 +79,36 @@ export async function register(req, res) {
                 ]
             }
         })
-        
+
         if (finduser) {
-            let errorMsg = '';
-            if (finduser.username === payload.username) {
-                errorMsg += 'name is already taken ';
+            if (!finduser.isVerified) {
+                await prisma.user.deleteMany({
+                    where: {
+                        isVerified: false
+                    }
+                });
+                return res.status(400).json({
+                    status: 400,
+                    msg: 'This time verify email with otp !!'
+                })
             }
-            if (finduser.email === payload.email) {
-                errorMsg += 'email is already taken ';
+            else {
+                let errorMsg = '';
+                if (finduser.username === payload.username) {
+                    errorMsg += 'name is already taken ';
+                }
+                if (finduser.email === payload.email) {
+                    errorMsg += 'email is already taken ';
+                }
+                console.log('already');
+                return res.status(400).json({ status: 400, msg: errorMsg });
             }
-            console.log('already');
-            return res.status(400).json({ status: 400, msg: errorMsg });
+
         }
 
         payload.password = hashPassword(payload.password);
-        const {otp,otpExpires} = generateOTP();
-        
+        const { otp, otpExpires } = generateOTP();
+
 
         newUser = await prisma.user.create({
             data: {
@@ -134,17 +148,17 @@ export async function login(req, res) {
         const finduser = await prisma.user.findUnique({
             where: {
                 email: payload.email,
-                
+
             }
         })
 
 
 
         if (finduser) {
-            if(!finduser.isVerified){
+            if (!finduser.isVerified) {
                 await prisma.user.deleteMany({
-                    where:{
-                        isVerified:false
+                    where: {
+                        isVerified: false
                     }
                 });
                 return res.status(400).json({
@@ -152,7 +166,7 @@ export async function login(req, res) {
                     msg: 'Email not verified SignUp with valid email !!'
                 })
             }
-            if (!checkPassword(payload.password,finduser.password)) {
+            if (!checkPassword(payload.password, finduser.password)) {
                 return res.status(400).json({
                     status: 400,
                     msg: 'Incorrect password    !!'
@@ -160,10 +174,10 @@ export async function login(req, res) {
             }
             const { accessToken, refreshToken } = await generateACCESSandREFRESHtokens(finduser.id);
 
-            console.log(finduser.email , ' logged In');
+            console.log(finduser.email, ' logged In');
             return res
                 .status(200)
-                .cookie("accessToken", accessToken, { maxAge:1000* 60 *60 * 24   })
+                .cookie("accessToken", accessToken, { maxAge: 1000 * 60 * 60 * 24 })
                 // .cookie("refreshToken", refreshToken, { maxAge: 60 * 60 * 24 * 10 * 1000 })
                 .json(
                     {
@@ -184,7 +198,7 @@ export async function login(req, res) {
             return res.status(400).json({ error: error.messages })
         }
         else {
-            return res.status(500).json({ status: 500, msg: "something went wrong in login on server side" ,error})
+            return res.status(500).json({ status: 500, msg: "something went wrong in login on server side", error })
         }
     }
 }
@@ -219,19 +233,19 @@ export async function changePassword(req, res) {
         const user = req.user;
         //user = JSON.parse(user);
         //console.log(newUser);
-        const {oldPassword} = passwords;
+        const { oldPassword } = passwords;
         const validator = vine.compile(passwordSchema);
         const payload = await validator.validate(passwords);
 
         const finduser = await prisma.user.findUnique({
             where: {
                 email: user.email,
-                
+
             }
         })
         console.log(payload);
 
-        if (!checkPassword(oldPassword,finduser.password)) {
+        if (!checkPassword(oldPassword, finduser.password)) {
             return res.status(400).json({
                 status: 400,
                 msg: 'Incorrect password    !!'
@@ -239,16 +253,16 @@ export async function changePassword(req, res) {
         }
 
         payload.password = hashPassword(payload.password);
-        
-        
-        
+
+
+
 
         await prisma.user.update({
-            where:{
-                id:user.id
+            where: {
+                id: user.id
             },
             data: {
-                password:payload.password
+                password: payload.password
             }
         });
         console.log(user.email, ' changed Password');
@@ -268,37 +282,37 @@ export async function changePassword(req, res) {
     }
 }
 
-export async function deleteAccount(req,res){
+export async function deleteAccount(req, res) {
     try {
-        let {password} = req.body;
+        let { password } = req.body;
         const user = req.user;
         // console.log(user);
-       
+
         const finduser = await prisma.user.findUnique({
             where: {
                 email: user.email,
-                
+
             }
         })
 
-        if (!checkPassword(password,finduser.password)) {
+        if (!checkPassword(password, finduser.password)) {
             return res.status(400).json({
                 status: 400,
                 msg: 'Incorrect password    !!'
             })
-        }        
-        
+        }
+
         const duser = await prisma.user.findFirst({
-            where:{
-                id:user.id
+            where: {
+                id: user.id
             },
-            select:{
-                avatar_id:true,
-                backcover_id:true,
-                post:{
-                    select:{
-                        image_id:true,
-                        video_id:true
+            select: {
+                avatar_id: true,
+                backcover_id: true,
+                post: {
+                    select: {
+                        image_id: true,
+                        video_id: true
                     }
                 }
             }
@@ -313,19 +327,19 @@ export async function deleteAccount(req,res){
         })
 
         await prisma.user.delete({
-            where:{
-                id:user.id
+            where: {
+                id: user.id
             }
         })
         console.log(user.email, ' deleted Account ');
-        return res.json({ status: 200, msg: "Account deleted Successfully .",duser });
+        return res.json({ status: 200, msg: "Account deleted Successfully .", duser });
 
 
     }
     catch (error) {
-        
-            console.error(error)
-            return res.status(500).json({ status: 500, msg: "something went wrong on server side" })
+
+        console.error(error)
+        return res.status(500).json({ status: 500, msg: "something went wrong on server side" })
     }
 }
 
@@ -379,5 +393,5 @@ export async function refreshAccessToken(req, res) {
     catch (err) {
         return res.status(401).json({ status: 401, error: err?.message + " that is Refresh token is expired or used" });
     }
-} 
+}
 

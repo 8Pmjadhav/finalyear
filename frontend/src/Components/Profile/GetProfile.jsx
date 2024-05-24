@@ -113,7 +113,7 @@ export function GetProfile() {
                     alt="Avatar"
                     onClick={() => toggleModal('avatar')}
                   />
-                  {edit && <Link to={`/profile/${user1.username}/update`}>
+                  {edit && <Link to={`/profile/${user1.username}/update`} state={{user}}>
                     <button className="absolute bottom-0 right-0 dark:bg-black bg-white mr-5  px-2 py-2 rounded-2xl hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
                       <Pencil className="h-5 w-5 " />
                     </button>

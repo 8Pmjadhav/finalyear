@@ -1,17 +1,21 @@
 import React, { useState } from 'react';
 import {Success,GoBackButton,SubmitButton,client} from '../index.js';
 
-import { useNavigate } from 'react-router-dom';
+import { useLocation, useNavigate } from 'react-router-dom';
 
 const UpdateProfile = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+
+  // console.log(location.state);
+  const oldprofile = location.state.user;
 
   const [loading,setLoading] = useState(false);
   const [avatar, setAvatar] = useState(null);
   const [backCover, setBackCover] = useState(null);
-  const [description, setDescription] = useState('');
-  const [gender, setGender] = useState('');
-  const [profession,setProfession] = useState('');
+  const [description, setDescription] = useState(oldprofile.description || '');
+  const [gender, setGender] = useState(oldprofile.gender || '');
+  const [profession,setProfession] = useState(oldprofile.profession || '');
   const [msg,setMsg] = useState();
   const [errors,setErrors] = useState();
 
@@ -43,7 +47,7 @@ const UpdateProfile = () => {
         if (response.status === 200) {
           const {data} = response;
           // setMsg(data.msg);
-          console.log('Profile updated successfully',data.user2);
+          console.log('Profile updated successfully');
           setLoading(false);
           navigate(`/profile/${data.user2.username}`)
           // Optionally, update UI or handle success case
@@ -56,7 +60,7 @@ const UpdateProfile = () => {
         // Optionally, handle error case
       }
     // Send formData to backend API for processing
-    console.log('Form submitted:', formData);
+    // console.log('Form submitted:', formData);
   };
 
   return (
