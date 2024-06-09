@@ -26,18 +26,7 @@ services:
       - database
     
     
-  
-  database:
-    image: postgres
-    container_name: database_c
-    environment:
-        POSTGRES_USER: postgres
-        POSTGRES_PASSWORD: pmjadhav
-        POSTGRES_DB: social
-    ports:
-      - "127.0.0.1:5432:5432"
-    networks:
-      - pgpostgres
+
       
   pgadmin:
     image: dpage/pgadmin4

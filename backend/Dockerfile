@@ -8,7 +8,7 @@ RUN npm install
 
 RUN npx prisma generate
 
-RUN npx prisma migrate dev --name migrate_to_docker
+# RUN npx prisma migrate dev --name migrate_to_docker
 
 # EXPOSE 3000
 
