@@ -11,3 +11,4 @@ Deploy link :
 
 Current Progress : 
 Working on docker for deployment
+backend image : ''' docker pull pmjadhav/social:1.0 '''
